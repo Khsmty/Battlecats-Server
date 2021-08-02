@@ -46,7 +46,7 @@ cron.schedule('* * * * *', async () => {
           .first().id
 
         client.channels.cache
-          .get('765570472577466368')
+          .get('871749703132381185')
           .send(`<@&${mentionRole}> ${event.name} (${event.date})`)
 
         if (eventData) {
