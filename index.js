@@ -6,54 +6,30 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
   }),
   serp = require('serp'),
   events = require('./events.json'),
+  done = require('./done.json'),
   json_save = require('json-pretty'),
   fs = require('fs'),
-  cron = require('node-cron'),
-  mongoose = require('mongoose')
+  cron = require('node-cron')
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-})
-
-const eventSchema = require('./eventSchema')
-
-cron.schedule('* * * * *', async () => {
+cron.schedule('* * * * *', () => {
   for (const event of events) {
     if (Date.parse(event.date) < Date.now()) {
-      let notification = true
+      if (!done[String(event.id)])
+        done[String(event.id)] = []
 
-      const eventData = await eventSchema.findOne(
-        {
-          id: event.id,
-        },
-        (e, eve) => {
-          if (!eve)
-            eventSchema.create({
-              id: event.id,
-              done: [event.date],
-            })
-          else if (eve.done.includes(event.date)) notification = false
-        }
-      )
+      if (done[String(event.id)].includes(event.date)) continue
 
-      if (notification) {
-        const mentionRole = client.guilds.cache
-          .get('755774191613247568')
-          .roles.cache.filter((role) => role.name === event.role)
-          .first().id
+      const mentionRole = client.guilds.cache
+        .get('755774191613247568')
+        .roles.cache.filter((role) => role.name === event.role)
+        .first().id
 
-        client.channels.cache
-          .get('871749703132381185')
-          .send(`<@&${mentionRole}> ${event.name} (${event.date})`)
+      client.channels.cache
+        .get('871749703132381185')
+        .send(`<@&${mentionRole}> ${event.name} (${event.date})`)
 
-        if (eventData) {
-          eventData.done.push(event.date)
-          await eventData.save()
-        }
-      }
+      done[String(event.id)].push(event.date)
+      fs.writeFileSync('./done.json', json_save(done))
     }
   }
 })
