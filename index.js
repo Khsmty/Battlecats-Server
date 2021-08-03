@@ -14,8 +14,7 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
 cron.schedule('* * * * *', () => {
   for (const event of events) {
     if (Date.parse(event.date) < Date.now()) {
-      if (!done[String(event.id)])
-        done[String(event.id)] = []
+      if (!done[String(event.id)]) done[String(event.id)] = []
 
       if (done[String(event.id)].includes(event.date)) continue
 
