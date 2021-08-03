@@ -25,8 +25,8 @@ cron.schedule('* * * * *', () => {
         .first().id
 
       client.channels.cache
-        .get('871749703132381185')
-        .send(`<@&${mentionRole}> ${event.name} (${event.date})`)
+        .get('805732155606171658')
+        .send(`<@&${mentionRole}> ${event.name}`)
 
       done[String(event.id)].push(event.date)
       fs.writeFileSync('./done.json', json_save(done))
