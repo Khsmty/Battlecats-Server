@@ -11,7 +11,7 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
   fs = require('fs'),
   cron = require('node-cron')
 
-cron.schedule('* * * * *', () => {
+cron.schedule('0,5,10,15,20,25,30,35,40,45,50,55 * * * *', () => {
   for (const event of events) {
     if (Date.parse(event.date) < Date.now()) {
       if (!done[String(event.id)]) done[String(event.id)] = []
@@ -24,7 +24,7 @@ cron.schedule('* * * * *', () => {
         .first().id
 
       client.channels.cache
-        .get('805732155606171658')
+        .get('871749703132381185')
         .send(`<@&${mentionRole}> ${event.name}`)
 
       done[String(event.id)].push(event.date)
