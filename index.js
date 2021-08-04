@@ -6,6 +6,7 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
   events = require('./events.json'),
   done = require('./done.json'),
   fs = require('fs'),
+  json_pretty = require('json-pretty'),
   cron = require('node-cron')
 
 cron.schedule('0,15 * * * *', () => {
@@ -27,7 +28,7 @@ cron.schedule('0,15 * * * *', () => {
       done[String(event.id)].push(event.date)
     }
   }
-  fs.writeFileSync('./done.json', done)
+  fs.writeFileSync('./done.json', json_pretty(done))
 })
 
 client.once('ready', () => {
