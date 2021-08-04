@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const { Client, Intents, MessageEmbed } = require('discord.js'),
   client = new Client({
     intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES,
@@ -7,7 +5,6 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
   serp = require('serp'),
   events = require('./events.json'),
   done = require('./done.json'),
-  json_save = require('json-pretty'),
   fs = require('fs'),
   cron = require('node-cron')
 
@@ -28,9 +25,9 @@ cron.schedule('0,5,10,15,20,25,30,35,40,45,50,55 * * * *', () => {
         .send(`<@&${mentionRole}> ${event.name}`)
 
       done[String(event.id)].push(event.date)
-      fs.writeFileSync('./done.json', json_save(done))
     }
   }
+  fs.writeFileSync('./done.json', done)
 })
 
 client.once('ready', () => {

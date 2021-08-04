@@ -5,9 +5,6 @@
   },
   "dependencies": {
     "discord.js": "discordjs/discord.js",
-    "dotenv": "^10.0.0",
-    "json-pretty": "^0.0.1",
-    "mongoose": "^5.13.5",
     "node-cron": "^3.0.0",
     "request": "^2.88.2",
     "serp": "^2.1.0"
