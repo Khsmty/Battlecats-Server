@@ -8,7 +8,7 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
   fs = require('fs'),
   cron = require('node-cron')
 
-cron.schedule('0,5,10,15,20,25,30,35,40,45,50,55 * * * *', () => {
+cron.schedule('0,15 * * * *', () => {
   for (const event of events) {
     if (Date.parse(event.date) < Date.now()) {
       if (!done[String(event.id)]) done[String(event.id)] = []
