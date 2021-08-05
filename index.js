@@ -4,20 +4,13 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
   }),
   serp = require('serp'),
   events = require('./events.json'),
-  done = require('./done.json'),
-  fs = require('fs'),
-  json_pretty = require('json-pretty'),
   cron = require('node-cron')
 
 cron.schedule('0,15 * * * *', () => {
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date)
 
-    if (0 <= timeLag && timeLag <= 1200000) {
-      if (!done[String(event.id)]) done[String(event.id)] = []
-
-      if (done[String(event.id)].includes(event.date)) continue
-
+    if (0 <= timeLag && timeLag <= 600000) {
       const mentionRole = client.guilds.cache
         .get('755774191613247568')
         .roles.cache.filter((role) => role.name === event.role)
@@ -26,11 +19,8 @@ cron.schedule('0,15 * * * *', () => {
       client.channels.cache
         .get('805732155606171658')
         .send(`<@&${mentionRole}> ${event.name}`)
-
-      done[String(event.id)].push(event.date)
     }
   }
-  fs.writeFileSync('./done.json', json_pretty(done))
 })
 
 client.once('ready', () => {
