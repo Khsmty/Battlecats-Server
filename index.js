@@ -10,7 +10,7 @@ cron.schedule('0,15 * * * *', () => {
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date)
 
-    if (0 <= timeLag && timeLag <= 600000) {
+    if (-60000 <= timeLag && timeLag <= 600000) {
       const mentionRole = client.guilds.cache
         .get('755774191613247568')
         .roles.cache.filter((role) => role.name === event.role)
