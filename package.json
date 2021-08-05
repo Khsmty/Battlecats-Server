@@ -5,7 +5,6 @@
   },
   "dependencies": {
     "discord.js": "discordjs/discord.js",
-    "json-pretty": "^0.0.1",
     "node-cron": "^3.0.0",
     "request": "^2.88.2",
     "serp": "^2.1.0"
