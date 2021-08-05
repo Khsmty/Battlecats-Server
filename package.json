@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "node index.js",
-    "format": "yarn prettier -w ."
+    "format": "npx prettier -w ."
   },
   "dependencies": {
     "discord.js": "discordjs/discord.js",
