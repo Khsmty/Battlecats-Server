@@ -1,1 +1,1 @@
-Bot: yarn start
+Bot: npm start
