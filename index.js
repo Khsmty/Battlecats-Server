@@ -11,7 +11,9 @@ const { Client, Intents, MessageEmbed } = require('discord.js'),
 
 cron.schedule('0,15 * * * *', () => {
   for (const event of events) {
-    if (Date.parse(event.date) < Date.now()) {
+    const timeLag = Date.now() - Date.parse(event.date)
+
+    if (0 <= timeLag && timeLag <= 1200000) {
       if (!done[String(event.id)]) done[String(event.id)] = []
 
       if (done[String(event.id)].includes(event.date)) continue
@@ -22,7 +24,7 @@ cron.schedule('0,15 * * * *', () => {
         .first().id
 
       client.channels.cache
-        .get('871749703132381185')
+        .get('805732155606171658')
         .send(`<@&${mentionRole}> ${event.name}`)
 
       done[String(event.id)].push(event.date)
