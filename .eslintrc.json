@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "standard",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "semi": false,
+        "trailingComma": "all"
+      }
+    ]
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "prettier"
+  ]
+}

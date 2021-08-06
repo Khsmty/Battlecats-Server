@@ -8,19 +8,21 @@ http
   })
   .listen(process.env.PORT)
 
-const { Client, Intents, MessageEmbed } = require('discord.js'),
-  client = new Client({
-    intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES,
-  }),
-  serp = require('serp'),
-  events = require('./events.json'),
-  cron = require('node-cron')
+const { Client, Intents, MessageEmbed } = require('discord.js')
+const client = new Client({
+  intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES,
+})
+const serp = require('serp')
+const events = require('./events.json')
+const cron = require('node-cron')
+const prefix = 'n.'
+const { inspect } = require('util')
 
 cron.schedule('0,15 * * * *', () => {
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date)
 
-    if (-60000 <= timeLag && timeLag <= 600000) {
+    if (timeLag >= -60000 && timeLag <= 600000) {
       const mentionRole = client.guilds.cache
         .get('755774191613247568')
         .roles.cache.filter((role) => role.name === event.role)
@@ -33,14 +35,40 @@ cron.schedule('0,15 * * * *', () => {
   }
 })
 
-client.once('ready', () => {
-  console.log(`${client.user.tag} でログインしました。`)
-})
+client
+  .once('ready', () => {
+    console.log(`${client.user.tag} でログインしました。`)
+  })
+  .on('message', async (message) => {
+    if (message.content.startsWith(prefix)) {
+      const _spl = message.content.trim().split(' ')
+      const command = _spl[0].slice(1)
+      const args = _spl.slice(1)
+      switch (command) {
+        case 'eval':
+          {
+            if (message.author.id === '723052392911863858') break
+
+            let evaled
+            try {
+              // eslint-disable-next-line no-eval
+              evaled = await eval(args.join(' '))
+              message.channel.send(inspect(evaled))
+              console.log(inspect(evaled))
+            } catch (error) {
+              console.error(error)
+              message.reply('there was an error during evaluation.')
+            }
+          }
+          break
+      }
+    }
+  })
 
 const commands = {
   async db(interaction) {
     try {
-      var options = {
+      const options = {
         host: 'google.co.jp',
         qs: {
           q:
@@ -58,7 +86,7 @@ const commands = {
           new MessageEmbed()
             .setTitle(`「${interaction.options.get('word').value}」の検索結果`)
             .setDescription(
-              `[${links[0].title}](https://www.google.co.jp${links[0].url})\n\n[${links[1].title}](https://www.google.co.jp${links[1].url})\n\n[${links[2].title}](https://www.google.co.jp${links[2].url})`
+              `[${links[0].title}](https://www.google.co.jp${links[0].url})\n\n[${links[1].title}](https://www.google.co.jp${links[1].url})\n\n[${links[2].title}](https://www.google.co.jp${links[2].url})`,
             ),
         ],
       })
@@ -70,20 +98,19 @@ const commands = {
         ephemeral: true,
       })
     }
-    return
   },
 
   async progress(interaction) {
     const img = async (user) => {
       try {
-        let n = await client.channels.cache
+        const n = await client.channels.cache
           .get('822771682157658122')
           .messages.fetch({ limit: 100 })
           .then((a) =>
             a
               .filter((a) => a.author.id === user && a.attachments.first())
               .first()
-              .attachments.map((a) => a.url)
+              .attachments.map((a) => a.url),
           )
         return n
       } catch {
@@ -122,7 +149,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
           .setTitle('メッセージ編集')
           .setAuthor(
             newMessage.author.tag,
-            newMessage.author.displayAvatarURL({ dynamic: true })
+            newMessage.author.displayAvatarURL({ dynamic: true }),
           )
           .setDescription(`メッセージに移動: [こちら](${newMessage.url})`)
           .addField('編集前', oldMessage.content || '*なし*')
@@ -131,17 +158,17 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
             '添付ファイル',
             newMessage.attachments
               .map((a) => `[URL](${a.proxyURL})`)
-              .join(', ') || '*なし*'
+              .join(', ') || '*なし*',
           )
           .addField(
             'チャンネル',
             `${newMessage.channel} (#${newMessage.channel.name}/${newMessage.channel.id})`,
-            true
+            true,
           )
           .addField(
             'カテゴリ',
             `${newMessage.channel.parent.name} (${newMessage.channel.parentId})`,
-            true
+            true,
           )
           .setTimestamp()
           .setColor('BLURPLE'),
@@ -159,23 +186,23 @@ client.on('messageDelete', (message) => {
           .setTitle('メッセージ削除')
           .setAuthor(
             message.author.tag,
-            message.author.displayAvatarURL({ dynamic: true })
+            message.author.displayAvatarURL({ dynamic: true }),
           )
           .addField('メッセージ', message.content || '*なし*')
           .addField(
             '添付ファイル',
             message.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') ||
-              '*なし*'
+              '*なし*',
           )
           .addField(
             'チャンネル',
             `${message.channel} (#${message.channel.name}/${message.channel.id})`,
-            true
+            true,
           )
           .addField(
             'カテゴリ',
             `${message.channel.parent.name} (${message.channel.parentId})`,
-            true
+            true,
           )
           .setTimestamp()
           .setColor('RED'),

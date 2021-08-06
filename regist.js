@@ -18,8 +18,8 @@ async function main() {
   const fetch = require('node-fetch')
 
   const response = await fetch(apiEndpoint, {
-    method: 'get',
-    //body: JSON.stringify(commandData),
+    method: 'post',
+    body: JSON.stringify(commandData),
     headers: {
       Authorization: 'Bot ' + botToken,
       'Content-Type': 'application/json',
