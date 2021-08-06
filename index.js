@@ -50,9 +50,23 @@ client
         try {
           // eslint-disable-next-line no-eval
           const evaled = await eval(args.join(' '))
-          message.reply(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
+          message.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle('出力')
+                .setDescription(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
+                .setColor('BLURPLE'),
+            ],
+          })
         } catch (e) {
-          message.reply(`\`\`\`js\n${e}\n\`\`\``)
+          message.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle('エラー')
+                .setDescription(`\`\`\`js\n${e}\n\`\`\``)
+                .setColor('RED'),
+            ],
+          })
         }
       }
     }
