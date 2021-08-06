@@ -1,5 +1,11 @@
 require('dotenv').config()
 
+const http = require('http')
+http.createServer(function (req, res) {
+  res.write('Hello world!')
+  res.end()
+}).listen(process.env.PORT)
+
 const { Client, Intents, MessageEmbed } = require('discord.js'),
   client = new Client({
     intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES,
