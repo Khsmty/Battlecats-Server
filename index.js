@@ -53,11 +53,9 @@ client
             try {
               // eslint-disable-next-line no-eval
               evaled = await eval(args.join(' '))
-              message.channel.send(inspect(evaled))
-              console.log(inspect(evaled))
-            } catch (error) {
-              console.error(error)
-              message.reply('there was an error during evaluation.')
+              message.reply(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
+            } catch (e) {
+              message.reply(`\`\`\`js\n${e}\n\`\`\``)
             }
           }
           break
