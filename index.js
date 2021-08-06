@@ -49,7 +49,7 @@ client
         // eslint-disable-next-line no-eval
         const evaled = await eval(args.join(' '));
         message.reply(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
-      } catch (error) {
+      } catch (e) {
         message.reply(`\`\`\`js\n${e}\n\`\`\``)
       }
     }
