@@ -112,16 +112,32 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
       embeds: [
         new MessageEmbed()
           .setTitle('メッセージ編集')
-          .setAuthor(newMessage.author.tag, newMessage.author.displayAvatarURL({ dynamic: true }))
+          .setAuthor(
+            newMessage.author.tag,
+            newMessage.author.displayAvatarURL({ dynamic: true })
+          )
           .setDescription(`メッセージに移動: [こちら](${newMessage.url})`)
           .addField('編集前', oldMessage.content)
           .addField('編集後', newMessage.content)
-          .addField('添付ファイル', newMessage.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') || '*なし*')
-          .addField('チャンネル', `${newMessage.channel} (#${newMessage.channel.name}/${newMessage.channel.id})`, true)
-          .addField('カテゴリ', `${newMessage.channel.parent.name} (${newMessage.channel.parentId})`, true)
+          .addField(
+            '添付ファイル',
+            newMessage.attachments
+              .map((a) => `[URL](${a.proxyURL})`)
+              .join(', ') || '*なし*'
+          )
+          .addField(
+            'チャンネル',
+            `${newMessage.channel} (#${newMessage.channel.name}/${newMessage.channel.id})`,
+            true
+          )
+          .addField(
+            'カテゴリ',
+            `${newMessage.channel.parent.name} (${newMessage.channel.parentId})`,
+            true
+          )
           .setTimestamp()
-          .setColor('BLURPLE')
-      ]
+          .setColor('BLURPLE'),
+      ],
     })
   }
 })
@@ -133,14 +149,29 @@ client.on('messageDelete', (message) => {
       embeds: [
         new MessageEmbed()
           .setTitle('メッセージ削除')
-          .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+          .setAuthor(
+            message.author.tag,
+            message.author.displayAvatarURL({ dynamic: true })
+          )
           .addField('削除前', message.content)
-          .addField('添付ファイル', message.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') || '*なし*')
-          .addField('チャンネル', `${message.channel} (#${message.channel.name}/${message.channel.id})`, true)
-          .addField('カテゴリ', `${message.channel.parent.name} (${message.channel.parentId})`, true)
+          .addField(
+            '添付ファイル',
+            message.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') ||
+              '*なし*'
+          )
+          .addField(
+            'チャンネル',
+            `${message.channel} (#${message.channel.name}/${message.channel.id})`,
+            true
+          )
+          .addField(
+            'カテゴリ',
+            `${message.channel.parent.name} (${message.channel.parentId})`,
+            true
+          )
           .setTimestamp()
-          .setColor('RED')
-      ]
+          .setColor('RED'),
+      ],
     })
   }
 })
