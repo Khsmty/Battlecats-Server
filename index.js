@@ -125,8 +125,8 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
             newMessage.author.displayAvatarURL({ dynamic: true })
           )
           .setDescription(`メッセージに移動: [こちら](${newMessage.url})`)
-          .addField('編集前', oldMessage.content)
-          .addField('編集後', newMessage.content)
+          .addField('編集前', oldMessage.content || '*なし*')
+          .addField('編集後', newMessage.content || '*なし*')
           .addField(
             '添付ファイル',
             newMessage.attachments
@@ -161,7 +161,7 @@ client.on('messageDelete', (message) => {
             message.author.tag,
             message.author.displayAvatarURL({ dynamic: true })
           )
-          .addField('削除前', message.content)
+          .addField('メッセージ', message.content || '*なし*')
           .addField(
             '添付ファイル',
             message.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') ||
