@@ -39,11 +39,12 @@ client
   .once('ready', () => {
     console.log(`${client.user.tag} でログインしました。`)
   }).on('messageCreate', async message => {
-    const args = message.content.split(/ +/);
+    if (message.content.startsWith(prefix)) {
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
     
     if (command === 'eval') {
-      if (message.author.id !== 'ownerID') return;
+      if (message.author.id !== '723052392911863858') return;
   
       try {
         // eslint-disable-next-line no-eval
@@ -53,6 +54,7 @@ client
         message.reply(`\`\`\`js\n${e}\n\`\`\``)
       }
     }
+  }
   })
 
 const commands = {
