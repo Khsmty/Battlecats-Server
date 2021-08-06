@@ -38,27 +38,19 @@ cron.schedule('0,15 * * * *', () => {
 client
   .once('ready', () => {
     console.log(`${client.user.tag} でログインしました。`)
-  })
-  .on('messageCreate', async (message) => {
-    if (message.content.startsWith(prefix)) {
-      const _spl = message.content.trim().split(' ')
-      const command = _spl[0].slice(1)
-      const args = _spl.slice(1)
-      switch (command) {
-        case 'eval':
-          {
-            if (message.author.id === '723052392911863858') break
-
-            let evaled
-            try {
-              // eslint-disable-next-line no-eval
-              evaled = await eval(args.join(' '))
-              message.reply(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
-            } catch (e) {
-              message.reply(`\`\`\`js\n${e}\n\`\`\``)
-            }
-          }
-          break
+  }).on('messageCreate', async message => {
+    const args = message.content.split(/ +/);
+    const command = args.shift().toLowerCase();
+    
+    if (command === 'eval') {
+      if (message.author.id !== 'ownerID') return;
+  
+      try {
+        // eslint-disable-next-line no-eval
+        const evaled = await eval(args.join(' '));
+        message.reply(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
+      } catch (error) {
+        message.reply(`\`\`\`js\n${e}\n\`\`\``)
       }
     }
   })
