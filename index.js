@@ -38,8 +38,7 @@ cron.schedule('0,15 * * * *', () => {
 client
   .once('ready', () => {
     console.log(`${client.user.tag} でログインしました。`)
-  })
-  .on('message', async (message) => {
+  }).on('messageCreate', async (message) => {
     if (message.content.startsWith(prefix)) {
       const _spl = message.content.trim().split(' ')
       const command = _spl[0].slice(1)
