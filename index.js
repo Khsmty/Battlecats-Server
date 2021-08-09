@@ -11,8 +11,10 @@ const prefix = 'n.'
 const { inspect } = require('util')
 
 cron.schedule('0,15 * * * *', () => {
-  client.channels.cache.get('871749703132381185').send('定期実行を開始しました。')
-  
+  client.channels.cache
+    .get('871749703132381185')
+    .send('定期実行を開始しました。')
+
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date)
 
@@ -28,7 +30,9 @@ cron.schedule('0,15 * * * *', () => {
     }
   }
 
-  client.channels.cache.get('871749703132381185').send('定期実行が完了しました。')
+  client.channels.cache
+    .get('871749703132381185')
+    .send('定期実行が完了しました。')
 })
 
 client
