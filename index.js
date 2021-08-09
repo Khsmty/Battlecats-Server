@@ -1,13 +1,5 @@
 require('dotenv').config()
 
-const http = require('http')
-http
-  .createServer(function (req, res) {
-    res.write('Hello world!')
-    res.end()
-  })
-  .listen(process.env.PORT)
-
 const { Client, Intents, MessageEmbed } = require('discord.js')
 const client = new Client({
   intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES,
@@ -19,6 +11,8 @@ const prefix = 'n.'
 const { inspect } = require('util')
 
 cron.schedule('0,15 * * * *', () => {
+  client.channels.cache.get('871749703132381185').send('定期実行を開始しました。')
+  
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date)
 
@@ -33,6 +27,8 @@ cron.schedule('0,15 * * * *', () => {
         .send(`<@&${mentionRole}> ${event.name}`)
     }
   }
+
+  client.channels.cache.get('871749703132381185').send('定期実行が完了しました。')
 })
 
 client
