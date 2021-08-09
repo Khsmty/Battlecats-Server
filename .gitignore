@@ -103,12 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-# Replit
-.replit
-
-# Event notification status
-done.json
-
 # Package lock file
 package-lock.json
 yarn.lock
