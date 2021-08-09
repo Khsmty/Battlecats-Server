@@ -150,7 +150,7 @@ client.on('interactionCreate', (interaction) => onInteraction(interaction))
 // メッセージ編集
 client.on('messageUpdate', (oldMessage, newMessage) => {
   if (newMessage.author.bot) return
-  
+
   if (newMessage.channel.guildId === '755774191613247568') {
     client.channels.cache.get('872863093359800330').send({
       embeds: [
@@ -189,7 +189,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 // メッセージ削除
 client.on('messageDelete', (message) => {
   if (message.author.bot) return
-  
+
   if (message.channel.guildId === '755774191613247568') {
     client.channels.cache.get('872863093359800330').send({
       embeds: [
