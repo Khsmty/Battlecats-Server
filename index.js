@@ -176,7 +176,9 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
           )
           .addField(
             'カテゴリ',
-            `${newMessage.channel.parent.name || '*なし*'} (${newMessage.channel.parentId || '*なし*'})`,
+            `${newMessage.channel.parent.name || '*なし*'} (${
+              newMessage.channel.parentId || '*なし*'
+            })`,
             true,
           )
           .setTimestamp()
@@ -212,7 +214,9 @@ client.on('messageDelete', (message) => {
           )
           .addField(
             'カテゴリ',
-            `${message.channel.parent.name || '*なし*'} (${message.channel.parentId || '*なし*'})`,
+            `${message.channel.parent.name || '*なし*'} (${
+              message.channel.parentId || '*なし*'
+            })`,
             true,
           )
           .setTimestamp()
