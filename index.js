@@ -15,7 +15,7 @@ const runNotify = (text) =>
     .get('871749703132381185')
     .send(`定期実行を${text}しました。`)
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('0,5,15,20 * * * *', async () => {
   runNotify('開始')
 
   for (const event of events) {
