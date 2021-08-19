@@ -23,7 +23,7 @@ cron.schedule('0,5,15,20 * * * *', async () => {
 
     if (timeLag >= -60000 && timeLag <= 600000) {
       const checkDuplicate = await client.channels.cache
-        .get('871749703132381185')
+        .get('805732155606171658')
         .messages.fetch({ limit: 5 })
       const result = await checkDuplicate.find(
         (msg) =>
@@ -34,7 +34,7 @@ cron.schedule('0,5,15,20 * * * *', async () => {
       if (result) continue
 
       const mentionRole = client.guilds.cache
-        .get('755774191613247568')
+        .get('805732155606171658')
         .roles.cache.filter((role) => role.name === event.role)
         .first().id
 
