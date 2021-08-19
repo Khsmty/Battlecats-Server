@@ -5,7 +5,7 @@ const client = new Client({
   intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES,
 })
 const serp = require('serp')
-const events = require('./events-test.json')
+const events = require('./events.json')
 const cron = require('node-cron')
 const prefix = 'n.'
 const { inspect } = require('util')
