@@ -10,41 +10,29 @@ const cron = require('node-cron')
 const prefix = 'n.'
 const { inspect } = require('util')
 
-const runNotify = (text) =>
+cron.schedule('0,15 * * * *', () => {
   client.channels.cache
     .get('871749703132381185')
-    .send(`定期実行を${text}しました。`)
-
-cron.schedule('0,5,15,20 * * * *', async () => {
-  runNotify('開始')
+    .send('定期実行を開始しました。')
 
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date)
 
     if (timeLag >= -60000 && timeLag <= 600000) {
-      const checkDuplicate = await client.channels.cache
-        .get('805732155606171658')
-        .messages.fetch({ limit: 5 })
-      const result = await checkDuplicate.find(
-        (msg) =>
-          msg.createdTimestamp + 600000 >= Date.parse(event.date) &&
-          msg.content.includes(event.name),
-      )
-
-      if (result) continue
-
       const mentionRole = client.guilds.cache
-        .get('805732155606171658')
+        .get('755774191613247568')
         .roles.cache.filter((role) => role.name === event.role)
         .first().id
 
       client.channels.cache
-        .get('871749703132381185')
+        .get('805732155606171658')
         .send(`<@&${mentionRole}> ${event.name}`)
     }
   }
 
-  runNotify('完了')
+  client.channels.cache
+    .get('871749703132381185')
+    .send('定期実行が完了しました。')
 })
 
 client
@@ -62,21 +50,14 @@ client
         try {
           // eslint-disable-next-line no-eval
           const evaled = await eval(args.join(' '))
-          message
-            .reply({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle('出力')
-                  .setDescription(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
-                  .setColor('BLURPLE'),
-              ],
-            })
-            .catch(() => {
-              console.log(inspect(evaled))
-              message.reply(
-                '送信可能文字数を超過したため、Consoleに出力しました。',
-              )
-            })
+          message.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle('出力')
+                .setDescription(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
+                .setColor('BLURPLE'),
+            ],
+          })
         } catch (e) {
           message.reply({
             embeds: [
