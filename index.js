@@ -315,12 +315,17 @@ async function onInteraction(interaction) {
 client.on('interactionCreate', (interaction) => onInteraction(interaction))
 
 client.on('messageReactionAdd', (reaction, user) => {
-  if (user.bot || reaction.message.guildId !== '755774191613247568' || reaction.message.channelId === '755803561715302490') return
+  if (
+    user.bot ||
+    reaction.message.guildId !== '755774191613247568' ||
+    reaction.message.channelId === '755803561715302490'
+  )
+    return
 
   const member = reaction.message.guild.members.cache.get(user.id)
   if (!member) return
 
-  if (!member.roles.cache.some(role => role.name === '管理権限')) return
+  if (!member.roles.cache.some((role) => role.name === '管理権限')) return
 
   reaction.message.member.roles.add('755893522267373609')
 })
