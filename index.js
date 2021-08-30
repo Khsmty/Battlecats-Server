@@ -314,6 +314,17 @@ async function onInteraction(interaction) {
 
 client.on('interactionCreate', (interaction) => onInteraction(interaction))
 
+client.on('messageReactionAdd', (reaction, user) => {
+  if (user.bot || reaction.message.guild.id !== '755774191613247568') return
+
+  const member = reaction.message.guild.members.cache.get(user.id)
+  if (!member) return
+
+  if (!member.roles.cache.some(role => role.name === '管理権限')) return
+
+  reaction.message.member.roles.add('755893522267373609')
+})
+
 // メッセージ編集
 client.on('messageUpdate', (oldMessage, newMessage) => {
   if (newMessage.author.bot) return
