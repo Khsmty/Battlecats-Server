@@ -4,6 +4,7 @@
     "format": "npx prettier -w ."
   },
   "dependencies": {
+    "discord-together": "^1.1.62",
     "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
     "node-cron": "^3.0.0",
