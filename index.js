@@ -315,7 +315,7 @@ async function onInteraction(interaction) {
 client.on('interactionCreate', (interaction) => onInteraction(interaction))
 
 client.on('messageReactionAdd', (reaction, user) => {
-  if (user.bot || reaction.message.guild.id !== '755774191613247568') return
+  if (user.bot || reaction.message.guildId !== '755774191613247568' || reaction.message.channelId === '755803561715302490') return
 
   const member = reaction.message.guild.members.cache.get(user.id)
   if (!member) return
