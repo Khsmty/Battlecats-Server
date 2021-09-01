@@ -32,7 +32,7 @@ cron.schedule('0,15 * * * *', () => {
     if (timeLag >= -60000 && timeLag <= 600000) {
       const mentionRole = client.guilds.cache
         .get('755774191613247568')
-        .roles.cache.filter((role) => role.name === event.role)
+        .roles.cache.filter((role) => role.name.includes(event.role))
         .first().id
 
       client.channels.cache
@@ -313,22 +313,6 @@ async function onInteraction(interaction) {
 }
 
 client.on('interactionCreate', (interaction) => onInteraction(interaction))
-
-client.on('messageReactionAdd', (reaction, user) => {
-  if (
-    user.bot ||
-    reaction.message.guildId !== '755774191613247568' ||
-    reaction.message.channelId === '755803561715302490'
-  )
-    return
-
-  const member = reaction.message.guild.members.cache.get(user.id)
-  if (!member) return
-
-  if (!member.roles.cache.some((role) => role.name === '管理権限')) return
-
-  reaction.message.member.roles.add('755893522267373609')
-})
 
 // メッセージ編集
 client.on('messageUpdate', (oldMessage, newMessage) => {
