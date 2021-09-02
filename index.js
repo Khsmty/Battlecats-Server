@@ -476,8 +476,6 @@ client
         }
       }
     } else if (interaction.isSelectMenu()) {
-      await interaction.deferReply({ ephemeral: true })
-
       switch (interaction.customId) {
         case 'chrole': {
           const chRoles = [
@@ -502,9 +500,10 @@ client
               userRoles.filter((i) => interaction.values.indexOf(i) === -1),
             )
 
-          await interaction.editReply(
-            '表示/非表示にするチャンネルを変更しました。',
-          )
+          await interaction.update({
+            content: '表示/非表示にするチャンネルを変更しました。',
+            components: [],
+          })
           break
         }
         case 'pgrole': {
@@ -524,7 +523,10 @@ client
           )
           interaction.member.roles.add(interaction.values)
 
-          await interaction.editReply('現在の進行状況を変更しました。')
+          await interaction.update({
+            content: '現在の進行状況を変更しました。',
+            components: [],
+          })
           break
         }
         case 'rlrole': {
@@ -550,7 +552,10 @@ client
               userRoles.filter((i) => interaction.values.indexOf(i) === -1),
             )
 
-          await interaction.editReply('ロールを変更しました。')
+          await interaction.update({
+            content: 'ロールを更新しました。',
+            components: [],
+          })
           break
         }
         case 'eventrole': {
@@ -585,7 +590,10 @@ client
               userRoles.filter((i) => interaction.values.indexOf(i) === -1),
             )
 
-          await interaction.editReply('通知を受け取るイベントを変更しました。')
+          await interaction.update({
+            content: '通知を受け取るイベントを変更しました。',
+            components: [],
+          })
           break
         }
       }
