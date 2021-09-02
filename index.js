@@ -88,7 +88,11 @@ client
         case 'db': {
           const search = await serp.search({
             host: 'google.co.jp',
-            qs: { q: `site:battlecats-db.com` },
+            qs: {
+              q: `${interaction.options.getString(
+                'word',
+              )}+site:battlecats-db.com`,
+            },
             num: 5,
           })
 
@@ -100,9 +104,27 @@ client
                 )
                 .setDescription(
                   search[0]
-                    ? search.map((item) => `[${item.title}](${item.url})`)
+                    ? search
+                        .map(
+                          (item) =>
+                            `[${item.title}](https://www.google.co.jp${item.url})`,
+                        )
+                        .join('\n\n')
                     : '*検索結果がありませんでした*',
-                ),
+                )
+                .setColor('YELLOW'),
+            ],
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageButton()
+                  .setLabel('他の検索結果')
+                  .setStyle('LINK')
+                  .setURL(
+                    `https://www.google.co.jp/search?q=${interaction.options.getString(
+                      'word',
+                    )}+site:battlecats-db.com`,
+                  ),
+              ),
             ],
           })
           break
@@ -266,7 +288,7 @@ client
                         ),
                     },
                     {
-                      label: '真レジェンド(👑2まで)を全クリア済み',
+                      label: '真レジェンドを全クリア済み(👑2まで)',
                       value: '785120614435651624',
                       emoji: '4️⃣',
                       default:
