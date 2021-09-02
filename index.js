@@ -6,6 +6,7 @@ const {
   MessageEmbed,
   MessageButton,
   MessageActionRow,
+  MessageSelectMenu,
 } = require('discord.js')
 const client = new Client({
   intents:
@@ -42,13 +43,11 @@ cron.schedule('0,15 * * * *', () => {
 
   client.channels.cache
     .get('871749703132381185')
-    .send('定期実行が完了しました。')
+    .send('定期実行を完了しました。')
 })
 
 client
-  .once('ready', () => {
-    console.log(`${client.user.tag} でログインしました。`)
-  })
+  .once('ready', () => console.log(`${client.user.tag} でログインしました。`))
   .on('messageCreate', async (message) => {
     if (message.content.startsWith('n.')) {
       const args = message.content.slice(2).trim().split(/ +/)
@@ -81,238 +80,517 @@ client
       }
     }
   })
+  .on('interactionCreate', async (interaction) => {
+    if (interaction.isCommand()) {
+      await interaction.deferReply()
 
-const commands = {
-  async db(interaction) {
-    try {
-      const options = {
-        host: 'google.co.jp',
-        qs: {
-          q:
-            interaction.options.get('word').value +
-            '+site:https://battlecats-db.com/',
-          filter: 0,
-          pws: 0,
-        },
-        num: 3,
+      switch (interaction.commandName) {
+        case 'db': {
+          const search = await serp.search({
+            host: 'google.co.jp',
+            qs: { q: `site:battlecats-db.com` },
+            num: 5,
+          })
+
+          interaction.editReply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(
+                  `“${interaction.options.getString('word')}” の検索結果`,
+                )
+                .setDescription(
+                  search[0]
+                    ? search.map((item) => `[${item.title}](${item.url})`)
+                    : '*検索結果がありませんでした*',
+                ),
+            ],
+          })
+          break
+        }
+        case 'progress': {
+          const img = async (user) => {
+            try {
+              const n = await client.channels.cache
+                .get('822771682157658122')
+                .messages.fetch({ limit: 100 })
+                .then((a) =>
+                  a
+                    .filter(
+                      (a) => a.author.id === user && a.attachments.first(),
+                    )
+                    .first()
+                    .attachments.map((a) => a.url),
+                )
+              return n
+            } catch {
+              return null
+            }
+          }
+          const res = await img(interaction.options.getUser('user').id)
+
+          if (res) {
+            await interaction.editReply({
+              files: res,
+            })
+          } else {
+            await interaction.editReply(
+              'メッセージが取得できませんでした。\nDiscord標準の検索機能を利用してください。',
+            )
+          }
+          break
+        }
+        case 'watch': {
+          if (!interaction.member.voice.channelId)
+            return interaction.editReply(
+              '先にボイスチャンネルに参加してください。',
+            )
+
+          new DiscordTogether(client)
+            .createTogetherCode(interaction.member.voice.channelId, 'youtube')
+            .then(async (invite) => {
+              await interaction.editReply({
+                embeds: [
+                  new MessageEmbed()
+                    .setTitle('YouTube')
+                    .setDescription('⚠️ モバイルアプリには対応していません。')
+                    .setColor('YELLOW'),
+                ],
+                components: [
+                  new MessageActionRow().addComponents(
+                    new MessageButton()
+                      .setLabel('クリックして視聴開始')
+                      .setStyle('LINK')
+                      .setURL(invite.code),
+                  ),
+                ],
+              })
+            })
+        }
       }
-      const links = await serp.search(options)
+    } else if (interaction.isButton()) {
+      await interaction.deferReply({ ephemeral: true })
 
-      await interaction.reply({
-        embeds: [
-          new MessageEmbed()
-            .setTitle(`「${interaction.options.get('word').value}」の検索結果`)
-            .setDescription(
-              `[${links[0].title}](https://www.google.co.jp${links[0].url})\n\n[${links[1].title}](https://www.google.co.jp${links[1].url})\n\n[${links[2].title}](https://www.google.co.jp${links[2].url})`,
-            ),
-        ],
-      })
-    } catch (error) {
-      await interaction.reply({
-        content: `「**${
-          interaction.options.get('word').value
-        }**」が見つかりませんでした。\n誤字/脱字等がないか確認の上、再度お試しください。`,
-        ephemeral: true,
-      })
-    }
-  },
+      switch (interaction.customId) {
+        case 'chrole': {
+          interaction.editReply({
+            content:
+              '表示/非表示にするチャンネルを選択してください。(複数選択可)',
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageSelectMenu()
+                  .setCustomId('chrole')
+                  .setMinValues(1)
+                  .addOptions([
+                    {
+                      label: 'ネタバレを非表示',
+                      value: '757465906786861166',
+                      emoji: '❌',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '757465906786861166',
+                        ),
+                    },
+                    {
+                      label: '宣伝を非表示',
+                      value: '757465944636260463',
+                      emoji: '❌',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '757465944636260463',
+                        ),
+                    },
+                    {
+                      label: 'にゃんこ以外の雑談を非表示',
+                      value: '757465986340225134',
+                      emoji: '❌',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '757465986340225134',
+                        ),
+                    },
+                    {
+                      label: 'スマブラチャンネルを表示',
+                      value: '868827768203382814',
+                      emoji: '⭕',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '868827768203382814',
+                        ),
+                    },
+                    {
+                      label: '全ロールを一括削除',
+                      value: 'clear',
+                      emoji: '🗑️',
+                    },
+                  ]),
+              ),
+            ],
+          })
+          break
+        }
+        case 'pgrole': {
+          interaction.editReply({
+            content: '現在の進行状況を選択してください。',
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageSelectMenu()
+                  .setCustomId('pgrole')
+                  .setMinValues(1)
+                  .setMaxValues(1)
+                  .addOptions([
+                    {
+                      label: '未来編第3章・大脱走を未クリア',
+                      value: '785121194063036417',
+                      emoji: '1️⃣',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '785121194063036417',
+                        ),
+                    },
+                    {
+                      label: '未来編第3章・大脱走をクリア済み',
+                      value: '785123537849155664',
+                      emoji: '2️⃣',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '785123537849155664',
+                        ),
+                    },
+                    {
+                      label: '宇宙編3章・古代の呪いをクリア済み',
+                      value: '797383308437749771',
+                      emoji: '3️⃣',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '797383308437749771',
+                        ),
+                    },
+                    {
+                      label: '真レジェンド(👑2まで)を全クリア済み',
+                      value: '785120614435651624',
+                      emoji: '4️⃣',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '785120614435651624',
+                        ),
+                    },
+                  ]),
+              ),
+            ],
+          })
+          break
+        }
+        case 'rlrole': {
+          interaction.editReply({
+            content: 'ロールを選択してください。(複数選択可)',
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageSelectMenu()
+                  .setCustomId('rlrole')
+                  .setMinValues(1)
+                  .addOptions([
+                    {
+                      label: 'にゃんこ関係について教えたい人',
+                      value: '757466064702537748',
+                      emoji: '🧑‍🏫',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '757466064702537748',
+                        ),
+                    },
+                    {
+                      label: '画像・動画リクエストOK',
+                      value: '856005613368246325',
+                      emoji: '🖼️',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '856005613368246325',
+                        ),
+                    },
+                    {
+                      label: 'メンションNG',
+                      value: '818062825024520243',
+                      emoji: '❌',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '818062825024520243',
+                        ),
+                    },
+                    {
+                      label: '音楽Bot操作',
+                      value: '871597096598396940',
+                      emoji: '🎵',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871597096598396940',
+                        ),
+                    },
+                    {
+                      label: '全ロールを一括削除',
+                      value: 'clear',
+                      emoji: '🗑️',
+                    },
+                  ]),
+              ),
+            ],
+          })
+          break
+        }
+        case 'eventrole': {
+          interaction.editReply({
+            content:
+              '開始時に通知を受け取るイベントを選択してください。(複数選択可)',
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageSelectMenu()
+                  .setCustomId('eventrole')
+                  .setMinValues(1)
+                  .addOptions([
+                    {
+                      label: '逆襲のカバちゃん',
+                      value: '871410296705658930',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871410296705658930',
+                        ),
+                    },
+                    {
+                      label: '極ゲリラ経験値にゃ！',
+                      value: '871410800575787041',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871410800575787041',
+                        ),
+                    },
+                    {
+                      label: '超極ゲリラ経験値にゃ！',
+                      value: '871410888429674536',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871410888429674536',
+                        ),
+                    },
+                    {
+                      label: 'トレジャーフェスティバル(日本編)',
+                      value: '871411418459684875',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871411418459684875',
+                        ),
+                    },
+                    {
+                      label: 'トレジャーフェスティバル(未来編)',
+                      value: '871411529482907679',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871411529482907679',
+                        ),
+                    },
+                    {
+                      label: 'トレジャーフェスティバル(宇宙編)',
+                      value: '871411632365006918',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871411632365006918',
+                        ),
+                    },
+                    {
+                      label: '悪魔ネコステージ',
+                      value: '876131805827301457',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '876131805827301457',
+                        ),
+                    },
+                    {
+                      label: '悪魔タンクネコステージ',
+                      value: '876132058936774676',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '876132058936774676',
+                        ),
+                    },
+                    {
+                      label: '開眼のネコフラワー',
+                      value: '876132175613935656',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '876132175613935656',
+                        ),
+                    },
+                    {
+                      label: 'イベント1',
+                      value: '871411756017279096',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871411756017279096',
+                        ),
+                    },
+                    {
+                      label: 'イベント2',
+                      value: '871411821985267732',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871411821985267732',
+                        ),
+                    },
+                    {
+                      label: 'イベント3',
+                      value: '871411874497961994',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871411874497961994',
+                        ),
+                    },
+                    {
+                      label: 'イベント4',
+                      value: '871411924460531742',
+                      emoji: '🔔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '871411924460531742',
+                        ),
+                    },
+                    {
+                      label: '全ロールを一括削除',
+                      value: 'clear',
+                      emoji: '🗑️',
+                    },
+                  ]),
+              ),
+            ],
+          })
+          break
+        }
+      }
+    } else if (interaction.isSelectMenu()) {
+      await interaction.deferReply({ ephemeral: true })
 
-  async progress(interaction) {
-    const img = async (user) => {
-      try {
-        const n = await client.channels.cache
-          .get('822771682157658122')
-          .messages.fetch({ limit: 100 })
-          .then((a) =>
-            a
-              .filter((a) => a.author.id === user && a.attachments.first())
-              .first()
-              .attachments.map((a) => a.url),
+      switch (interaction.customId) {
+        case 'chrole': {
+          const chRoles = [
+            '757465906786861166',
+            '757465944636260463',
+            '757465986340225134',
+            '868827768203382814',
+          ]
+
+          const userRoles = interaction.member.roles.cache
+            .map((role) => role.id)
+            .filter((f) => chRoles.includes(f))
+
+          if (interaction.values.includes('clear'))
+            await interaction.member.roles.remove(userRoles)
+          else if (userRoles.length < interaction.values.length)
+            interaction.member.roles.add(
+              interaction.values.filter((i) => userRoles.indexOf(i) === -1),
+            )
+          else
+            interaction.member.roles.remove(
+              userRoles.filter((i) => interaction.values.indexOf(i) === -1),
+            )
+
+          await interaction.editReply(
+            '表示/非表示にするチャンネルを変更しました。',
           )
-        return n
-      } catch {
-        return null
+          break
+        }
+        case 'pgrole': {
+          const pgRoles = [
+            '785121194063036417',
+            '785123537849155664',
+            '797383308437749771',
+            '785120614435651624',
+          ]
+
+          const userRoles = interaction.member.roles.cache
+            .map((role) => role.id)
+            .filter((f) => pgRoles.includes(f))
+
+          interaction.member.roles.remove(
+            userRoles.filter((i) => interaction.values.indexOf(i) === -1),
+          )
+          interaction.member.roles.add(interaction.values)
+
+          await interaction.editReply('現在の進行状況を変更しました。')
+          break
+        }
+        case 'rlrole': {
+          const customRoles = [
+            '757466064702537748',
+            '856005613368246325',
+            '818062825024520243',
+            '871597096598396940',
+          ]
+
+          const userRoles = interaction.member.roles.cache
+            .map((role) => role.id)
+            .filter((f) => customRoles.includes(f))
+
+          if (interaction.values.includes('clear'))
+            await interaction.member.roles.remove(userRoles)
+          else if (userRoles.length < interaction.values.length)
+            interaction.member.roles.add(
+              interaction.values.filter((i) => userRoles.indexOf(i) === -1),
+            )
+          else
+            interaction.member.roles.remove(
+              userRoles.filter((i) => interaction.values.indexOf(i) === -1),
+            )
+
+          await interaction.editReply('ロールを変更しました。')
+          break
+        }
+        case 'eventrole': {
+          const eventRoles = [
+            '871410296705658930',
+            '871410800575787041',
+            '871410888429674536',
+            '871411418459684875',
+            '871411529482907679',
+            '871411632365006918',
+            '876131805827301457',
+            '876132058936774676',
+            '876132175613935656',
+            '871411756017279096',
+            '871411821985267732',
+            '871411874497961994',
+            '871411924460531742',
+          ]
+
+          const userRoles = interaction.member.roles.cache
+            .map((role) => role.id)
+            .filter((f) => eventRoles.includes(f))
+
+          if (interaction.values.includes('clear'))
+            await interaction.member.roles.remove(userRoles)
+          else if (userRoles.length < interaction.values.length)
+            interaction.member.roles.add(
+              interaction.values.filter((i) => userRoles.indexOf(i) === -1),
+            )
+          else
+            interaction.member.roles.remove(
+              userRoles.filter((i) => interaction.values.indexOf(i) === -1),
+            )
+
+          await interaction.editReply('通知を受け取るイベントを変更しました。')
+          break
+        }
       }
     }
-    const res = await img(interaction.options.get('user').value)
-
-    if (res) {
-      return await interaction.reply({
-        files: res,
-      })
-    } else {
-      return await interaction.reply({
-        content:
-          'メッセージが取得できませんでした。\nDiscord標準の検索機能を利用してください。',
-        ephemeral: true,
-      })
-    }
-  },
-
-  async watch(interaction) {
-    const member = client.guilds.cache
-      .get(interaction.guild.id)
-      .members.cache.get(interaction.member.id)
-
-    if (!member.voice.channelId)
-      return interaction.reply({
-        content: '先にボイスチャンネルに参加してください。',
-        ephemeral: true,
-      })
-
-    new DiscordTogether(client)
-      .createTogetherCode(member.voice.channelId, 'youtube')
-      .then(async (invite) => {
-        await interaction.reply({
-          embeds: [
-            new MessageEmbed()
-              .setTitle('YouTube')
-              .setDescription('⚠️ モバイルアプリには対応していません。')
-              .setColor('YELLOW'),
-          ],
-          components: [
-            new MessageActionRow().addComponents(
-              new MessageButton()
-                .setLabel('クリックして視聴開始')
-                .setStyle('LINK')
-                .setURL(invite.code),
-            ),
-          ],
-        })
-      })
-  },
-}
-
-const menus = {
-  async rp_ch(interaction) {
-    await interaction.reply({
-      content: 'ロールを更新しました。',
-      ephemeral: true,
-    })
-
-    await interaction.member.roles.remove([
-      '757465906786861166',
-      '757465944636260463',
-      '757465986340225134',
-      '868827768203382814',
-    ])
-
-    if (interaction.values.includes('rp_ch_1'))
-      await interaction.member.roles.add('757465906786861166')
-    if (interaction.values.includes('rp_ch_2'))
-      await interaction.member.roles.add('757465944636260463')
-    if (interaction.values.includes('rp_ch_3'))
-      await interaction.member.roles.add('757465986340225134')
-    if (interaction.values.includes('rp_ch_4'))
-      await interaction.member.roles.add('868827768203382814')
-  },
-  async rp_pr(interaction) {
-    await interaction.reply({
-      content: 'ロールを更新しました。',
-      ephemeral: true,
-    })
-
-    await interaction.member.roles.remove([
-      '785121194063036417',
-      '785123537849155664',
-      '797383308437749771',
-      '785120614435651624',
-    ])
-
-    if (interaction.values.includes('rp_pr_1'))
-      await interaction.member.roles.add('785121194063036417')
-    else if (interaction.values.includes('rp_pr_2'))
-      await interaction.member.roles.add('785123537849155664')
-    else if (interaction.values.includes('rp_pr_3'))
-      await interaction.member.roles.add('797383308437749771')
-    else await interaction.member.roles.add('785120614435651624')
-  },
-  async rp_role(interaction) {
-    await interaction.reply({
-      content: 'ロールを更新しました。',
-      ephemeral: true,
-    })
-
-    await interaction.member.roles.remove([
-      '757466064702537748',
-      '856005613368246325',
-      '818062825024520243',
-      '871597096598396940',
-    ])
-
-    if (interaction.values.includes('clear')) return
-
-    if (interaction.values.includes('rp_role_1'))
-      await interaction.member.roles.add('757466064702537748')
-    if (interaction.values.includes('rp_role_2'))
-      await interaction.member.roles.add('856005613368246325')
-    if (interaction.values.includes('rp_role_3'))
-      await interaction.member.roles.add('818062825024520243')
-    if (interaction.values.includes('rp_role_4'))
-      await interaction.member.roles.add('871597096598396940')
-  },
-  async rp_noti(interaction) {
-    await interaction.reply({
-      content: 'ロールを更新しました。',
-      ephemeral: true,
-    })
-
-    await interaction.member.roles.remove([
-      '871410296705658930',
-      '871410800575787041',
-      '871410888429674536',
-      '871411418459684875',
-      '871411529482907679',
-      '871411632365006918',
-      '876131805827301457',
-      '876132058936774676',
-      '876132175613935656',
-      '871411756017279096',
-      '871411821985267732',
-      '871411874497961994',
-      '871411924460531742',
-    ])
-
-    if (interaction.values.includes('clear')) return
-
-    if (interaction.values.includes('rp_noti_1'))
-      await interaction.member.roles.add('871410296705658930')
-    if (interaction.values.includes('rp_noti_2'))
-      await interaction.member.roles.add('871410800575787041')
-    if (interaction.values.includes('rp_noti_3'))
-      await interaction.member.roles.add('871410888429674536')
-    if (interaction.values.includes('rp_noti_4'))
-      await interaction.member.roles.add('871411418459684875')
-    if (interaction.values.includes('rp_noti_5'))
-      await interaction.member.roles.add('871411529482907679')
-    if (interaction.values.includes('rp_noti_6'))
-      await interaction.member.roles.add('871411632365006918')
-    if (interaction.values.includes('rp_noti_7'))
-      await interaction.member.roles.add('876131805827301457')
-    if (interaction.values.includes('rp_noti_8'))
-      await interaction.member.roles.add('876132058936774676')
-    if (interaction.values.includes('rp_noti_9'))
-      await interaction.member.roles.add('876132175613935656')
-    if (interaction.values.includes('rp_noti_10'))
-      await interaction.member.roles.add('871411756017279096')
-    if (interaction.values.includes('rp_noti_11'))
-      await interaction.member.roles.add('871411821985267732')
-    if (interaction.values.includes('rp_noti_12'))
-      await interaction.member.roles.add('871411874497961994')
-    if (interaction.values.includes('rp_noti_13'))
-      await interaction.member.roles.add('871411924460531742')
-  },
-}
-
-async function onInteraction(interaction) {
-  if (interaction.isCommand())
-    return commands[interaction.commandName](interaction)
-  else if (interaction.isSelectMenu())
-    return menus[interaction.customId](interaction)
-}
-
-client
-  .on('interactionCreate', (interaction) => onInteraction(interaction))
+  })
   .on('messageUpdate', (oldMessage, newMessage) => {
     if (newMessage.author.bot) return
 
