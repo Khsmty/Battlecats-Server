@@ -501,7 +501,7 @@ client
             )
 
           await interaction.update({
-            content: '表示/非表示にするチャンネルを変更しました。',
+            content: '変更を保存しました。',
             components: [],
           })
           break
@@ -514,17 +514,13 @@ client
             '785120614435651624',
           ]
 
-          const userRoles = interaction.member.roles.cache
-            .map((role) => role.id)
-            .filter((f) => pgRoles.includes(f))
-
-          interaction.member.roles.remove(
-            userRoles.filter((i) => interaction.values.indexOf(i) === -1),
+          await interaction.member.roles.remove(
+            pgRoles.filter((i) => interaction.values.indexOf(i) === -1),
           )
-          interaction.member.roles.add(interaction.values)
+          await interaction.member.roles.add(interaction.values[0])
 
           await interaction.update({
-            content: '現在の進行状況を変更しました。',
+            content: '変更を保存しました。',
             components: [],
           })
           break
@@ -553,7 +549,7 @@ client
             )
 
           await interaction.update({
-            content: 'ロールを更新しました。',
+            content: '変更を保存しました。',
             components: [],
           })
           break
@@ -591,7 +587,7 @@ client
             )
 
           await interaction.update({
-            content: '通知を受け取るイベントを変更しました。',
+            content: '変更を保存しました。',
             components: [],
           })
           break
