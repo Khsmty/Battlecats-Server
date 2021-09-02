@@ -239,7 +239,7 @@ client
                   .setMaxValues(1)
                   .addOptions([
                     {
-                      label: '未来編第3章・大脱走を未クリア',
+                      label: '未来編3章・大脱走を未クリア',
                       value: '785121194063036417',
                       emoji: '1️⃣',
                       default:
@@ -248,7 +248,7 @@ client
                         ),
                     },
                     {
-                      label: '未来編第3章・大脱走をクリア済み',
+                      label: '未来編3章・大脱走をクリア済み',
                       value: '785123537849155664',
                       emoji: '2️⃣',
                       default:
