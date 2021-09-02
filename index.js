@@ -18,7 +18,6 @@ const { DiscordTogether } = require('discord-together')
 const serp = require('serp')
 const events = require('./events.json')
 const cron = require('node-cron')
-const prefix = 'n.'
 const { inspect } = require('util')
 
 cron.schedule('0,15 * * * *', () => {
@@ -51,8 +50,8 @@ client
     console.log(`${client.user.tag} でログインしました。`)
   })
   .on('messageCreate', async (message) => {
-    if (message.content.startsWith(prefix)) {
-      const args = message.content.slice(prefix.length).trim().split(/ +/)
+    if (message.content.startsWith('n.')) {
+      const args = message.content.slice(2).trim().split(/ +/)
       const command = args.shift().toLowerCase()
 
       if (command === 'eval') {
@@ -312,87 +311,85 @@ async function onInteraction(interaction) {
     return menus[interaction.customId](interaction)
 }
 
-client.on('interactionCreate', (interaction) => onInteraction(interaction))
+client
+  .on('interactionCreate', (interaction) => onInteraction(interaction))
+  .on('messageUpdate', (oldMessage, newMessage) => {
+    if (newMessage.author.bot) return
 
-// メッセージ編集
-client.on('messageUpdate', (oldMessage, newMessage) => {
-  if (newMessage.author.bot) return
+    if (newMessage.channel.guildId === '755774191613247568') {
+      client.channels.cache.get('872863093359800330').send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle('メッセージ編集')
+            .setAuthor(
+              newMessage.author.tag,
+              newMessage.author.displayAvatarURL({ dynamic: true }),
+            )
+            .setDescription(`メッセージに移動: [こちら](${newMessage.url})`)
+            .addField('編集前', oldMessage.content || '*なし*')
+            .addField('編集後', newMessage.content || '*なし*')
+            .addField(
+              '添付ファイル',
+              newMessage.attachments
+                .map((a) => `[URL](${a.proxyURL})`)
+                .join(', ') || '*なし*',
+            )
+            .addField(
+              'チャンネル',
+              `${newMessage.channel} (#${newMessage.channel.name}/${newMessage.channel.id})`,
+              true,
+            )
+            .addField(
+              'カテゴリ',
+              `${
+                newMessage.channel.parent
+                  ? newMessage.channel.parent.name
+                  : '*なし*'
+              } (${newMessage.channel.parentId || '*なし*'})`,
+              true,
+            )
+            .setTimestamp()
+            .setColor('BLURPLE'),
+        ],
+      })
+    }
+  })
+  .on('messageDelete', (message) => {
+    if (message.author.bot) return
 
-  if (newMessage.channel.guildId === '755774191613247568') {
-    client.channels.cache.get('872863093359800330').send({
-      embeds: [
-        new MessageEmbed()
-          .setTitle('メッセージ編集')
-          .setAuthor(
-            newMessage.author.tag,
-            newMessage.author.displayAvatarURL({ dynamic: true }),
-          )
-          .setDescription(`メッセージに移動: [こちら](${newMessage.url})`)
-          .addField('編集前', oldMessage.content || '*なし*')
-          .addField('編集後', newMessage.content || '*なし*')
-          .addField(
-            '添付ファイル',
-            newMessage.attachments
-              .map((a) => `[URL](${a.proxyURL})`)
-              .join(', ') || '*なし*',
-          )
-          .addField(
-            'チャンネル',
-            `${newMessage.channel} (#${newMessage.channel.name}/${newMessage.channel.id})`,
-            true,
-          )
-          .addField(
-            'カテゴリ',
-            `${
-              newMessage.channel.parent
-                ? newMessage.channel.parent.name
-                : '*なし*'
-            } (${newMessage.channel.parentId || '*なし*'})`,
-            true,
-          )
-          .setTimestamp()
-          .setColor('BLURPLE'),
-      ],
-    })
-  }
-})
-
-// メッセージ削除
-client.on('messageDelete', (message) => {
-  if (message.author.bot) return
-
-  if (message.channel.guildId === '755774191613247568') {
-    client.channels.cache.get('872863093359800330').send({
-      embeds: [
-        new MessageEmbed()
-          .setTitle('メッセージ削除')
-          .setAuthor(
-            message.author.tag,
-            message.author.displayAvatarURL({ dynamic: true }),
-          )
-          .addField('メッセージ', message.content || '*なし*')
-          .addField(
-            '添付ファイル',
-            message.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') ||
-              '*なし*',
-          )
-          .addField(
-            'チャンネル',
-            `${message.channel} (#${message.channel.name}/${message.channel.id})`,
-            true,
-          )
-          .addField(
-            'カテゴリ',
-            `${
-              message.channel.parent ? message.channel.parent.name : '*なし*'
-            } (${message.channel.parentId || '*なし*'})`,
-            true,
-          )
-          .setTimestamp()
-          .setColor('RED'),
-      ],
-    })
-  }
-})
+    if (message.channel.guildId === '755774191613247568') {
+      client.channels.cache.get('872863093359800330').send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle('メッセージ削除')
+            .setAuthor(
+              message.author.tag,
+              message.author.displayAvatarURL({ dynamic: true }),
+            )
+            .addField('メッセージ', message.content || '*なし*')
+            .addField(
+              '添付ファイル',
+              message.attachments
+                .map((a) => `[URL](${a.proxyURL})`)
+                .join(', ') || '*なし*',
+            )
+            .addField(
+              'チャンネル',
+              `${message.channel} (#${message.channel.name}/${message.channel.id})`,
+              true,
+            )
+            .addField(
+              'カテゴリ',
+              `${
+                message.channel.parent ? message.channel.parent.name : '*なし*'
+              } (${message.channel.parentId || '*なし*'})`,
+              true,
+            )
+            .setTimestamp()
+            .setColor('RED'),
+        ],
+      })
+    }
+  })
 
 client.login(process.env.DISCORD_TOKEN)
