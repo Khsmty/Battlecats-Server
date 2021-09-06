@@ -12,7 +12,7 @@ const client = new Client({
   intents:
     Intents.FLAGS.GUILDS |
     Intents.FLAGS.GUILD_MESSAGES |
-    Intents.FLAGS.MEMBERS |
+    Intents.FLAGS.GUILD_MEMBERS |
     Intents.FLAGS.GUILD_VOICE_STATES,
 })
 const { DiscordTogether } = require('discord-together')
@@ -63,7 +63,11 @@ client
             embeds: [
               new MessageEmbed()
                 .setTitle('出力')
-                .setDescription(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
+                .setDescription(
+                  `\`\`\`js\n${
+                    inspect(evaled).length >= 6000 ? inspect(evaled) : ''
+                  }\n\`\`\``,
+                )
                 .setColor('BLURPLE'),
             ],
           })
@@ -82,8 +86,6 @@ client
   })
   .on('interactionCreate', async (interaction) => {
     if (interaction.isCommand()) {
-      await interaction.deferReply()
-
       switch (interaction.commandName) {
         case 'db': {
           const search = await serp.search({
@@ -96,7 +98,7 @@ client
             num: 5,
           })
 
-          interaction.editReply({
+          await interaction.reply({
             embeds: [
               new MessageEmbed()
                 .setTitle(
@@ -151,11 +153,11 @@ client
           const res = await img(interaction.options.getUser('user').id)
 
           if (res) {
-            await interaction.editReply({
+            await interaction.reply({
               files: res,
             })
           } else {
-            await interaction.editReply(
+            await interaction.reply(
               'メッセージが取得できませんでした。\nDiscord標準の検索機能を利用してください。',
             )
           }
@@ -163,14 +165,12 @@ client
         }
         case 'watch': {
           if (!interaction.member.voice.channelId)
-            return interaction.editReply(
-              '先にボイスチャンネルに参加してください。',
-            )
+            return interaction.reply('先にボイスチャンネルに参加してください。')
 
           new DiscordTogether(client)
             .createTogetherCode(interaction.member.voice.channelId, 'youtube')
             .then(async (invite) => {
-              await interaction.editReply({
+              await interaction.reply({
                 embeds: [
                   new MessageEmbed()
                     .setTitle('YouTube')
@@ -190,13 +190,12 @@ client
         }
       }
     } else if (interaction.isButton()) {
-      await interaction.deferReply({ ephemeral: true })
-
       switch (interaction.customId) {
         case 'chrole': {
-          interaction.editReply({
+          interaction.reply({
             content:
               '表示/非表示にするチャンネルを選択してください。(複数選択可)',
+            ephemeral: true,
             components: [
               new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -251,8 +250,9 @@ client
           break
         }
         case 'pgrole': {
-          interaction.editReply({
+          interaction.reply({
             content: '現在の進行状況を選択してください。',
+            ephemeral: true,
             components: [
               new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -303,8 +303,9 @@ client
           break
         }
         case 'rlrole': {
-          interaction.editReply({
+          interaction.reply({
             content: 'ロールを選択してください。(複数選択可)',
+            ephemeral: true,
             components: [
               new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -359,9 +360,10 @@ client
           break
         }
         case 'eventrole': {
-          interaction.editReply({
+          interaction.reply({
             content:
               '開始時に通知を受け取るイベントを選択してください。(複数選択可)',
+            ephemeral: true,
             components: [
               new MessageActionRow().addComponents(
                 new MessageSelectMenu()
