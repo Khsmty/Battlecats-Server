@@ -230,12 +230,12 @@ client
                         ),
                     },
                     {
-                      label: 'スマブラチャンネルを表示',
-                      value: '868827768203382814',
+                      label: '他ゲーチャンネルの設定を表示',
+                      value: '884754990462279730',
                       emoji: '⭕',
                       default:
                         interaction.member.roles.cache.has(
-                          '868827768203382814',
+                          '884754990462279730',
                         ),
                     },
                     {
@@ -250,65 +250,73 @@ client
           break
         }
         case 'pgrole': {
-          interaction.reply({
-            content: '現在の進行状況を選択してください。',
-            ephemeral: true,
-            components: [
-              new MessageActionRow().addComponents(
-                new MessageSelectMenu()
-                  .setCustomId('pgrole')
-                  .setMinValues(1)
-                  .setMaxValues(1)
-                  .addOptions([
-                    {
-                      label: '未来編3章・大脱走を未クリア',
-                      value: '785121194063036417',
-                      emoji: '1️⃣',
-                      default:
-                        interaction.member.roles.cache.has(
-                          '785121194063036417',
-                        ),
-                    },
-                    {
-                      label: '未来編3章・大脱走をクリア済み',
-                      value: '785123537849155664',
-                      emoji: '2️⃣',
-                      default:
-                        interaction.member.roles.cache.has(
-                          '785123537849155664',
-                        ),
-                    },
-                    {
-                      label: '宇宙編3章・古代の呪いをクリア済み',
-                      value: '797383308437749771',
-                      emoji: '3️⃣',
-                      default:
-                        interaction.member.roles.cache.has(
-                          '797383308437749771',
-                        ),
-                    },
-                    {
-                      label: '魔界編・大厄災のはじまりをクリア済み',
-                      value: '785120614435651624',
-                      emoji: '4️⃣',
-                      default:
-                        interaction.member.roles.cache.has(
-                          '785120614435651624',
-                        ),
-                    },
-                    {
-                      label: 'アプデ待ち勢',
-                      value: '884397503829671958',
-                      emoji: '5️⃣',
-                      default:
-                        interaction.member.roles.cache.has(
-                          '884397503829671958',
-                        ),
-                    },
-                  ]),
-              ),
-            ],
-          })
+          interaction
+            .reply({
+              content: '現在の進行状況を選択してください。',
+              ephemeral: true,
+              components: [
+                new MessageActionRow().addComponents(
+                  new MessageSelectMenu()
+                    .setCustomId('pgrole')
+                    .setMinValues(1)
+                    .setMaxValues(1)
+                    .addOptions([
+                      {
+                        label: '未来編3章・大脱走を未クリア',
+                        value: '785121194063036417',
+                        emoji: '1️⃣',
+                        default:
+                          interaction.member.roles.cache.has(
+                            '785121194063036417',
+                          ),
+                      },
+                      {
+                        label: '未来編3章・大脱走をクリア済み',
+                        value: '785123537849155664',
+                        emoji: '2️⃣',
+                        default:
+                          interaction.member.roles.cache.has(
+                            '785123537849155664',
+                          ),
+                      },
+                      {
+                        label: '宇宙編3章・古代の呪いをクリア済み',
+                        value: '797383308437749771',
+                        emoji: '3️⃣',
+                        default:
+                          interaction.member.roles.cache.has(
+                            '797383308437749771',
+                          ),
+                      },
+                      {
+                        label: '魔界編・大厄災のはじまりをクリア済み',
+                        value: '785120614435651624',
+                        emoji: '4️⃣',
+                        default:
+                          interaction.member.roles.cache.has(
+                            '785120614435651624',
+                          ),
+                      },
+                      {
+                        label: 'アプデ待ち勢',
+                        value: '884397503829671958',
+                        emoji: '5️⃣',
+                        default:
+                          interaction.member.roles.cache.has(
+                            '884397503829671958',
+                          ),
+                      },
+                    ]),
+                ),
+              ],
+            })
+            .catch((e) => {
+              interaction.reply({
+                content:
+                  '進行状況ロールが2つ以上ついているため設定できません。\nリーダー又はサブリーダーにロールの消去を依頼してください。',
+                ephemeral: true,
+              })
+            })
           break
         }
         case 'rlrole': {
@@ -346,15 +354,6 @@ client
                       default:
                         interaction.member.roles.cache.has(
                           '818062825024520243',
-                        ),
-                    },
-                    {
-                      label: '音楽Bot操作',
-                      value: '871597096598396940',
-                      emoji: '🎵',
-                      default:
-                        interaction.member.roles.cache.has(
-                          '871597096598396940',
                         ),
                     },
                     {
@@ -507,6 +506,45 @@ client
           })
           break
         }
+        case 'gmrole': {
+          interaction.reply({
+            content: '表示させたい他ゲーチャンネルを選ぶにゃ〜(複数選択可)',
+            ephemeral: true,
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageSelectMenu()
+                  .setCustomId('gmrole')
+                  .setMinValues(1)
+                  .addOptions([
+                    {
+                      label: '大乱闘スマッシュブラザーズ',
+                      value: '868827768203382814',
+                      emoji: '⚔',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '868827768203382814',
+                        ),
+                    },
+                    {
+                      label: 'ポケットモンスター',
+                      value: '884724976173842502',
+                      emoji: '⚾',
+                      default:
+                        interaction.member.roles.cache.has(
+                          '884724976173842502',
+                        ),
+                    },
+                    {
+                      label: '全ロールを一括削除',
+                      value: 'clear',
+                      emoji: '🗑️',
+                    },
+                  ]),
+              ),
+            ],
+          })
+          break
+        }
       }
     } else if (interaction.isSelectMenu()) {
       switch (interaction.customId) {
@@ -515,7 +553,7 @@ client
             '757465906786861166',
             '757465944636260463',
             '757465986340225134',
-            '868827768203382814',
+            '884754990462279730',
           ]
 
           const userRoles = interaction.member.roles.cache
@@ -534,7 +572,7 @@ client
             )
 
           await interaction.update({
-            content: '変更を保存しました。',
+            content: '変更を保存したにゃ！',
             components: [],
           })
           break
@@ -564,7 +602,6 @@ client
             '757466064702537748',
             '856005613368246325',
             '818062825024520243',
-            '871597096598396940',
           ]
 
           const userRoles = interaction.member.roles.cache
@@ -621,7 +658,31 @@ client
             )
 
           await interaction.update({
-            content: '変更を保存しました。',
+            content: '変更を保存したにゃ！',
+            components: [],
+          })
+          break
+        }
+        case 'gmrole': {
+          const gmRoles = ['868827768203382814', '884724976173842502']
+
+          const userRoles = interaction.member.roles.cache
+            .map((role) => role.id)
+            .filter((f) => gmRoles.includes(f))
+
+          if (interaction.values.includes('clear'))
+            await interaction.member.roles.remove(userRoles)
+          else if (userRoles.length < interaction.values.length)
+            interaction.member.roles.add(
+              interaction.values.filter((i) => userRoles.indexOf(i) === -1),
+            )
+          else
+            interaction.member.roles.remove(
+              userRoles.filter((i) => interaction.values.indexOf(i) === -1),
+            )
+
+          await interaction.update({
+            content: '変更を保存したにゃ！',
             components: [],
           })
           break
@@ -633,78 +694,86 @@ client
     if (newMessage.author.bot) return
 
     if (newMessage.channel.guildId === '755774191613247568') {
-      client.channels.cache.get('872863093359800330').send({
-        embeds: [
-          new MessageEmbed()
-            .setTitle('メッセージ編集')
-            .setAuthor(
-              newMessage.author.tag,
-              newMessage.author.displayAvatarURL({ dynamic: true }),
-            )
-            .setDescription(`メッセージに移動: [こちら](${newMessage.url})`)
-            .addField('編集前', oldMessage.content || '*なし*')
-            .addField('編集後', newMessage.content || '*なし*')
-            .addField(
-              '添付ファイル',
-              newMessage.attachments
-                .map((a) => `[URL](${a.proxyURL})`)
-                .join(', ') || '*なし*',
-            )
-            .addField(
-              'チャンネル',
-              `${newMessage.channel} (#${newMessage.channel.name}/${newMessage.channel.id})`,
-              true,
-            )
-            .addField(
-              'カテゴリ',
-              `${
-                newMessage.channel.parent
-                  ? newMessage.channel.parent.name
-                  : '*なし*'
-              } (${newMessage.channel.parentId || '*なし*'})`,
-              true,
-            )
-            .setTimestamp()
-            .setColor('BLURPLE'),
-        ],
-      })
+      client.channels.cache
+        .get('872863093359800330')
+        .send({
+          embeds: [
+            new MessageEmbed()
+              .setTitle('メッセージ編集')
+              .setAuthor(
+                newMessage.author.tag,
+                newMessage.author.displayAvatarURL({ dynamic: true }),
+              )
+              .setDescription(`メッセージに移動: [こちら](${newMessage.url})`)
+              .addField('編集前', oldMessage.content || '*なし*')
+              .addField('編集後', newMessage.content || '*なし*')
+              .addField(
+                '添付ファイル',
+                newMessage.attachments
+                  .map((a) => `[URL](${a.proxyURL})`)
+                  .join(', ') || '*なし*',
+              )
+              .addField(
+                'チャンネル',
+                `${newMessage.channel} (#${newMessage.channel.name}/${newMessage.channel.id})`,
+                true,
+              )
+              .addField(
+                'カテゴリ',
+                `${
+                  newMessage.channel.parent
+                    ? newMessage.channel.parent.name
+                    : '*なし*'
+                } (${newMessage.channel.parentId || '*なし*'})`,
+                true,
+              )
+              .setTimestamp()
+              .setColor('BLURPLE'),
+          ],
+        })
+        .catch(() => {})
     }
   })
   .on('messageDelete', (message) => {
     if (message.author.bot) return
 
     if (message.channel.guildId === '755774191613247568') {
-      client.channels.cache.get('872863093359800330').send({
-        embeds: [
-          new MessageEmbed()
-            .setTitle('メッセージ削除')
-            .setAuthor(
-              message.author.tag,
-              message.author.displayAvatarURL({ dynamic: true }),
-            )
-            .addField('メッセージ', message.content || '*なし*')
-            .addField(
-              '添付ファイル',
-              message.attachments
-                .map((a) => `[URL](${a.proxyURL})`)
-                .join(', ') || '*なし*',
-            )
-            .addField(
-              'チャンネル',
-              `${message.channel} (#${message.channel.name}/${message.channel.id})`,
-              true,
-            )
-            .addField(
-              'カテゴリ',
-              `${
-                message.channel.parent ? message.channel.parent.name : '*なし*'
-              } (${message.channel.parentId || '*なし*'})`,
-              true,
-            )
-            .setTimestamp()
-            .setColor('RED'),
-        ],
-      })
+      client.channels.cache
+        .get('872863093359800330')
+        .send({
+          embeds: [
+            new MessageEmbed()
+              .setTitle('メッセージ削除')
+              .setAuthor(
+                message.author.tag,
+                message.author.displayAvatarURL({ dynamic: true }),
+              )
+              .addField('メッセージ', message.content || '*なし*')
+              .addField(
+                '添付ファイル',
+                message.attachments
+                  .map((a) => `[URL](${a.proxyURL})`)
+                  .join(', ') || '*なし*',
+              )
+              .addField(
+                'チャンネル',
+                `${message.channel} (#${message.channel.name}/${message.channel.id})`,
+                true,
+              )
+              .addField(
+                'カテゴリ',
+                `${
+                  message.channel.parent
+                    ? message.channel.parent.name
+                    : '*なし*'
+                } (${message.channel.parentId || '*なし*'})`,
+                true,
+              )
+              .setTimestamp()
+              .setColor('RED'),
+          ],
+        })
+        .catch(() => {})
     }
   })
 
