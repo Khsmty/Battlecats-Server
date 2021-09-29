@@ -7,7 +7,9 @@
     "discord-together": "^1.1.62",
     "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
+    "jsdom": "^17.0.0",
     "node-cron": "^3.0.0",
+    "node-fetch": "^2.6.2",
     "request": "^2.88.2",
     "serp": "^2.1.0"
   },

@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+// const fetch = require('node-fetch')
 const {
   Client,
   Intents,
@@ -219,6 +220,13 @@ client.on('interactionCreate', async (interaction) => {
                     emoji: '❌',
                     default:
                       interaction.member.roles.cache.has('757465986340225134'),
+                  },
+                  {
+                    label: '進捗状況・入手キャラの報告を非表示',
+                    value: '889288956015939595',
+                    emoji: '❌',
+                    default:
+                      interaction.member.roles.cache.has('889288956015939595'),
                   },
                   {
                     label: '他ゲーチャンネルの設定を表示',
@@ -526,6 +534,7 @@ client.on('interactionCreate', async (interaction) => {
           '757465906786861166',
           '757465944636260463',
           '757465986340225134',
+          '889288956015939595',
           '884754990462279730',
         ]
 
