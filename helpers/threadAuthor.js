@@ -1,6 +1,10 @@
 module.exports = function (topic) {
-  const spl1 = topic.split('<@')[1]
-  const spl2 = spl1.split('>')[0]
+  let spl
+  if (topic.includes('!')) {
+    spl = topic.split('<!@')[1]
+  } else {
+    spl = topic.split('<@')[1]
+  }
 
-  return spl2
+  return spl.split('>')[0]
 }
