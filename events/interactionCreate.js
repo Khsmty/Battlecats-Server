@@ -3,7 +3,7 @@ const { MessageActionRow, MessageSelectMenu } = require('discord.js')
 module.exports = {
   name: 'interactionCreate',
   async execute(interaction) {
-    if (interaction.isCommand) {
+    if (interaction.isCommand()) {
       const command = interaction.client.commands.get(interaction.commandName)
 
       if (!command) return
