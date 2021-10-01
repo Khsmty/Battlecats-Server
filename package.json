@@ -1,9 +1,11 @@
 {
   "scripts": {
-    "start": "node index.js",
-    "format": "npx eslint . --fix"
+    "start": "node index",
+    "lint": "npx eslint . --fix",
+    "regist": "node regist"
   },
   "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
     "discord-together": "^1.1.62",
     "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
