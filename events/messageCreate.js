@@ -6,7 +6,7 @@ module.exports = {
   async execute(message) {
     if (message.author.bot) return
 
-    if (message.channelId === '893407507618349056') {
+    if (message.channelId === '757612691517997147') {
       const msg = await message.reply({
         embeds: [
           new MessageEmbed()
@@ -20,6 +20,7 @@ module.exports = {
           new MessageActionRow().addComponents([
             new MessageButton()
               .setLabel('OK')
+              .setEmoji('✅')
               .setStyle('SUCCESS')
               .setCustomId('thread-create-ok'),
             new MessageButton()
@@ -33,7 +34,7 @@ module.exports = {
       const ifilter = (i) => i.user.id === message.author.id
       const collector = msg.createMessageComponentCollector({
         filter: ifilter,
-        time: 5000,
+        time: 30000,
       })
 
       collector.on('collect', async (i) => {
@@ -51,7 +52,7 @@ module.exports = {
               new MessageEmbed()
                 .setTitle('操作方法')
                 .setDescription(
-                  '`/close`: スレッドを解決済みとしてマークします。\n`/delete`: 解決済みのスレッドを削除します。\n`/reopen`: スレッドを再度未解決としてマークします。\n`/rename`: スレッドのタイトルを変更します。\n\n※スレッドの最終メッセージから3日が経過すると、自動で解決済みとしてマークされます。',
+                  '`/close`: スレッドをCloseします。\n`/delete`: 解決済みのスレッドを削除します。\n`/reopen`: スレッドを再度Openします。\n\n※スレッドの最終メッセージから3日が経過すると、自動でCloseされます。',
                 )
                 .setColor('BLURPLE'),
               new MessageEmbed()

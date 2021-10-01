@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const { Client, Collection } = require('discord.js')
+const { Client, Collection, MessageEmbed } = require('discord.js')
 const client = new Client({
   intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_VOICE_STATES'],
 })
@@ -8,7 +8,7 @@ const events = require('./events.json')
 const cron = require('node-cron')
 const fs = require('fs')
 
-cron.schedule('0,15 * * * *', () => {
+cron.schedule('0,15 * * * *', async () => {
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date)
 
@@ -21,6 +21,30 @@ cron.schedule('0,15 * * * *', () => {
       client.channels.cache
         .get('805732155606171658')
         .send(`<@&${mentionRole}> ${event.name}`)
+    }
+  }
+
+  const threadOpenCategory = client.channels.cache
+    .get('756959797806366851')
+    .children.cache.filter(
+      (channel) =>
+        !['757612691517997147', '757612691517997147'].includes(channel.id),
+    )
+    .map((channel) => channel)
+  for (const channel of threadOpenCategory) {
+    if (channel.lastMessage.createdTimestamp < Date.now() - 259200000) {
+      await channel.setParent('759465634236727316')
+
+      channel.send({
+        embed: [
+          new MessageEmbed()
+            .setTitle('Close済み')
+            .setDescription(
+              '3日以上メッセージがなかったため、自動Closeしました。\nこのスレッドを引き続き使用したい場合は、`/reopen` コマンドでスレッドをReopenしてください。',
+            )
+            .setColor('RED'),
+        ],
+      })
     }
   }
 })
