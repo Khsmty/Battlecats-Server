@@ -54,7 +54,7 @@ module.exports = {
           for (let i = 0; i < rows.length; i++) {
             const userData = await message.client.users.fetch(rows[i].userId)
 
-            message.channel.send({
+            await message.channel.send({
               content: `**${i + 1}**位 **${userData.username}**#${
                 userData.discriminator
               } さん`,
