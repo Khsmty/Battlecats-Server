@@ -14,7 +14,7 @@ module.exports = {
         return message.reply('必要な引数が不足しています。')
 
       const sendImage = await message.client.channels.cache
-        .get('893781545301721150')
+        .get('893791664278220840')
         .send({
           files: [
             {
