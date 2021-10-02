@@ -7,6 +7,16 @@ const client = new Client({
 const events = require('./events.json')
 const cron = require('node-cron')
 const fs = require('fs')
+const { createConnection } = require('mysql')
+
+client.con = createConnection({
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASS,
+  database: process.env.MYSQL_DB,
+  charset: 'utf8mb4',
+})
+client.con.connect()
 
 cron.schedule('0,15 * * * *', async () => {
   for (const event of events) {
@@ -57,6 +67,16 @@ const commandFiles = fs
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`)
   client.commands.set(command.data.name, command)
+}
+
+client.messageCommands = new Collection()
+const messageCommandFiles = fs
+  .readdirSync('./messageCommands')
+  .filter((file) => file.endsWith('.js'))
+
+for (const file of messageCommandFiles) {
+  const command = require(`./messageCommands/${file}`)
+  client.messageCommands.set(command.name, command)
 }
 
 const eventFiles = fs

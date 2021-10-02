@@ -1,5 +1,4 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
-const { inspect } = require('util')
 
 module.exports = {
   name: 'messageCreate',
@@ -114,35 +113,13 @@ module.exports = {
       const args = message.content.slice(2).trim().split(/ +/)
       const command = args.shift().toLowerCase()
 
-      if (command === 'eval') {
-        if (message.author.id !== '723052392911863858') return
+      if (!message.client.messageCommands.has(command)) return
 
-        try {
-          // eslint-disable-next-line no-eval
-          const evaled = await eval(args.join(' '))
-          message
-            .reply({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle('出力')
-                  .setDescription(`\`\`\`js\n${inspect(evaled)}\n\`\`\``)
-                  .setColor('BLURPLE'),
-              ],
-            })
-            .catch((e) => {
-              console.log(inspect(evaled))
-              message.reply('コンソールへ出力しました。')
-            })
-        } catch (e) {
-          message.reply({
-            embeds: [
-              new MessageEmbed()
-                .setTitle('エラー')
-                .setDescription(`\`\`\`js\n${e}\n\`\`\``)
-                .setColor('RED'),
-            ],
-          })
-        }
+      try {
+        message.client.messageCommands.get(command).execute(message, args)
+      } catch (error) {
+        console.error(error)
+        message.reply('エラーが発生しました。')
       }
     }
   },

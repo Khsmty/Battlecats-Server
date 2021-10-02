@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
-const serp = require('serp')
+const { google } = require('googleapis')
+const customSearch = google.customsearch('v1')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,27 +16,23 @@ module.exports = {
   async execute(interaction) {
     const query = interaction.options.getString('query')
 
-    const search = await serp.search({
-      host: 'google.co.jp',
-      qs: {
-        q: `${query}+site:battlecats-db.com`,
-      },
-      num: 5,
+    const result = await customSearch.cse.list({
+      auth: process.env.GOOGLE_API_KEY,
+      cx: 'd5d85493077d946a9',
+      q: query,
     })
+    const results = result.data.items
+      ? result.data.items
+          .map((item) => `[${item.title}](${item.link})`)
+          .slice(0, 5)
+      : []
 
     await interaction.reply({
       embeds: [
         new MessageEmbed()
           .setTitle(`「${query}」の検索結果`)
           .setDescription(
-            search[0]
-              ? search
-                  .map(
-                    (item) =>
-                      `[${item.title}](https://www.google.co.jp${item.url})`,
-                  )
-                  .join('\n\n')
-              : '*検索結果がありませんでした*',
+            results[0] ? results.join('\n\n') : '*検索結果がありませんでした*',
           )
           .setColor('YELLOW'),
       ],
