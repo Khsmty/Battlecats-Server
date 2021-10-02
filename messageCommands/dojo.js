@@ -2,7 +2,7 @@ module.exports = {
   name: 'dojo',
   async execute(message, args) {
     if (
-      !message.member.roles.cache.has('723654829275578981') &&
+      !message.member.roles.cache.has('868797324699242507') &&
       !message.member.permissions.has('ADMINISTRATOR')
     )
       return
