@@ -11,32 +11,44 @@ module.exports = {
         .setRequired(true),
     ),
   async execute(interaction) {
-    const img = async (user) => {
+    await interaction.deferReply()
+
+    const userId = interaction.options.getUser('user').id
+    const messages = []
+    let beforeId
+
+    for (let i = 0; i < 5; i++) {
       try {
-        const n = await interaction.client.channels.cache
+        const fetchMsgs = await interaction.client.channels.cache
           .get('822771682157658122')
-          .messages.fetch({ limit: 100 })
-          .then((a) =>
-            a
-              .filter((a) => a.author.id === user && a.attachments.first())
-              .first()
-              .attachments.map((a) => a.url),
-          )
-        return n
-      } catch {
-        return null
+          .messages.fetch({ limit: 100, before: beforeId })
+
+        beforeId = fetchMsgs.last().id
+
+        const messageWithImages = await fetchMsgs
+          .filter((msg) => msg.attachments.first() && msg.author.id === userId)
+          .map((msg) => msg)
+
+        for (const msg of messageWithImages) {
+          messages.push(msg)
+        }
+      } catch (e) {
+        continue
       }
     }
-    const res = await img(interaction.options.getUser('user').id)
 
-    if (res) {
-      await interaction.reply({
-        files: res,
-      })
-    } else {
-      await interaction.reply(
-        'メッセージが取得できませんでした。\nDiscord標準の検索機能を利用してください。',
+    if (!messages[0])
+      return interaction.editReply('進行状況が見つかりませんでした。')
+
+    const images = []
+    await messages
+      .filter(
+        (msg) => messages[0].createdTimestamp - msg.createdTimestamp < 300000,
       )
-    }
+      .forEach((msg) =>
+        msg.attachments.forEach((attachment) => images.push(attachment.url)),
+      )
+
+    await interaction.editReply({ files: images })
   },
 }

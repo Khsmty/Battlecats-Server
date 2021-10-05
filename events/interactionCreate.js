@@ -1,4 +1,8 @@
-const { MessageActionRow, MessageSelectMenu } = require('discord.js')
+const {
+  MessageEmbed,
+  MessageActionRow,
+  MessageSelectMenu,
+} = require('discord.js')
 
 module.exports = {
   name: 'interactionCreate',
@@ -21,6 +25,37 @@ module.exports = {
       }
     } else if (interaction.isButton()) {
       switch (interaction.customId) {
+        case 'rule-en': {
+          interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle('Welcome')
+                .setDescription(
+                  'Welcome to the "アプリにゃんこ大戦争", a fan community of The battle cats!\n\nWe have many members, from advanced players to beginners.\n\nThe primary language of this server is Japanese.\nMany of our members do not speak English.\nPlease be considerate by using [Google Translate](https://translate.google.com/).\n\n> **What you can do with this server**\n- Questions and discussions about the The battle cats\n- Post your creative works\n- Score events and other events',
+                )
+                .setColor('#fffab0'),
+              new MessageEmbed()
+                .setTitle('Rules')
+                .setDescription(
+                  "The following actions will result in usage restrictions on the server.\nPlease use the server with good morals and manners.\n\n- Violation of the [Discord's terms of service](https://discord.com/terms).\n- Violation of the [PONOS application license agreement](https://ponos.s3.dualstack.ap-northeast-1.amazonaws.com/reg/license/index.html).\n- Requesting or exposing personal information.\n- Attachment of content that prohibits viewing by people under 18 years old.\n- Other items that the administrator deems inappropriate.\n\nIf you find any rule violation, please contact <#815703267765780491>.\n* In general, we cannot intervene in personal problems.",
+                )
+                .setColor('#c0ffb0'),
+              new MessageEmbed()
+                .setDescription(
+                  '> **About Strike**\nThis is the number of points for violations. It is given when there is a rule violation.\nWhen Strikes accumulate, punishments are automatically applied.\n\n> **BCU and spoiler information**\nPlease be sure to post any BCU (Battle Cats Ultimate) scraps or spoiler information at <#760081975255367711>.\n\nSome people do not like spoilers and are looking forward to the official announcement. We ask for your cooperation.',
+                )
+                .setColor('#c0ffb0'),
+              new MessageEmbed()
+                .setTitle(':beginner: Dear Newcomer')
+                .setDescription(
+                  "Write a greeting and introduce yourself!\nIt lets people know who you are.\n↳ <#755803561715302490>\n\nLet's post Officer's Club and Cat Dictionary!\nIf you know the characters you have in advance, it will be easier for them to advise you.\n↳ <#822771682157658122>\n\nYou can customize the channels you view, the icon to the right of your name,\nand event notifications.\n↳ <#879299491117817866>",
+                )
+                .setColor('#b0eaff'),
+            ],
+            ephemeral: true,
+          })
+          break
+        }
         case 'chrole': {
           interaction.reply({
             content: '表示/非表示にするチャンネルを選ぶにゃ～(複数選択可)',

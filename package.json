@@ -7,6 +7,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
+    "@iamtraction/google-translate": "^1.1.2",
     "discord-api-types": "^0.23.1",
     "discord-together": "^1.1.62",
     "discord.js": "^13.0.1",
