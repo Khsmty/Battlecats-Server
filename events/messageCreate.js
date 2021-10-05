@@ -5,6 +5,10 @@ module.exports = {
   async execute(message) {
     if (message.author.bot) return
 
+    if (message.channel.type === 'GUILD_NEWS') {
+      message.crosspost()
+    }
+
     if (message.channelId === '757612691517997147') {
       const msg = await message.reply({
         embeds: [
