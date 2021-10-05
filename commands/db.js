@@ -23,7 +23,10 @@ module.exports = {
     })
     const results = result.data.items
       ? result.data.items
-          .map((item) => `[${item.title}](${item.link})`)
+          .map(
+            (item) =>
+              `[${item.title.replace('にゃんこ大戦争DB ', '')}](${item.link})`,
+          )
           .slice(0, 5)
       : []
 
