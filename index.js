@@ -1,3 +1,10 @@
+require('http')
+  .createServer(function (req, res) {
+    res.write('It works!')
+    res.end()
+  })
+  .listen(process.env.PORT || 8080)
+
 require('dotenv').config()
 
 const { Client, Collection, MessageEmbed } = require('discord.js')
