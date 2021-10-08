@@ -1,1 +1,1 @@
-web: npm run regist && npm start
+web: npm start
