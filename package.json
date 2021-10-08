@@ -4,6 +4,9 @@
     "lint": "npx eslint . --fix",
     "regist": "node regist"
   },
+  "engines": {
+    "node": "16.9.1"
+  },
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
