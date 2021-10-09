@@ -49,7 +49,10 @@ cron.schedule('0,15 * * * *', async () => {
     )
     .map((channel) => channel)
   for (const channel of threadOpenCategory) {
-    if (channel.lastMessage.createdTimestamp < Date.now() - 259200000) {
+    let lastMessage = await channel.messages.fetch({ limit: 1 })
+    lastMessage = lastMessage.first()
+
+    if (lastMessage.createdTimestamp + 226800000 < Date.now()) {
       await channel.setParent('759465634236727316')
 
       channel.send({
