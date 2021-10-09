@@ -43,7 +43,7 @@ cron.schedule('0,15 * * * *', async () => {
 
   const threadOpenCategory = client.channels.cache
     .get('756959797806366851')
-    .children.cache.filter(
+    .children.filter(
       (channel) =>
         !['757612691517997147', '757612691517997147'].includes(channel.id),
     )
