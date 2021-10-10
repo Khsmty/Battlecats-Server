@@ -1,47 +1,47 @@
-import { MessageEmbed, Message } from 'discord.js'
+import { MessageEmbed, Message } from "discord.js";
 
 module.exports = {
-  name: 'messageDelete',
+  name: "messageDelete",
   async execute(message: Message) {
-    if (message.author.bot) return
+    if (message.author.bot) return;
 
-    if (message.channel.guildId === '755774191613247568') {
+    if (message.channel.guildId === "755774191613247568") {
       message.client.channels.cache
-        .get('872863093359800330')
+        .get("872863093359800330")
         .send({
           embeds: [
             new MessageEmbed()
-              .setTitle('メッセージ削除')
+              .setTitle("メッセージ削除")
               .setAuthor(
                 message.author.tag,
-                message.author.displayAvatarURL({ dynamic: true }),
+                message.author.displayAvatarURL({ dynamic: true })
               )
-              .addField('メッセージ', message.content || '*なし*')
+              .addField("メッセージ", message.content || "*なし*")
               .addField(
-                '添付ファイル',
+                "添付ファイル",
                 message.attachments
                   .map((a) => `[URL](${a.proxyURL})`)
-                  .join(', ') || '*なし*',
+                  .join(", ") || "*なし*"
               )
               .addField(
-                'チャンネル',
+                "チャンネル",
                 `${message.channel} (#${message.channel.name}/${message.channel.id})`,
-                true,
+                true
               )
               .addField(
-                'カテゴリ',
+                "カテゴリ",
                 `${
                   message.channel.parent
                     ? message.channel.parent.name
-                    : '*なし*'
-                } (${message.channel.parentId || '*なし*'})`,
-                true,
+                    : "*なし*"
+                } (${message.channel.parentId || "*なし*"})`,
+                true
               )
               .setTimestamp()
-              .setColor('RED'),
+              .setColor("RED"),
           ],
         })
-        .catch(() => {})
+        .catch(() => {});
     }
   },
-}
+};
