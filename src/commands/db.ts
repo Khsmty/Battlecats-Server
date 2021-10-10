@@ -1,6 +1,7 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
-const { google } = require('googleapis')
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js'
+import { google } from 'googleapis'
+
 const customSearch = google.customsearch('v1')
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
         .setDescription('検索キーワードを入力してください。')
         .setRequired(true),
     ),
-  async execute(interaction) {
+  async execute(interaction: CommandInteraction) {
     const query = interaction.options.getString('query')
 
     const result = await customSearch.cse.list({

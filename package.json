@@ -24,6 +24,8 @@
     "serp": "^2.1.0"
   },
   "devDependencies": {
+    "@types/mysql": "^2.15.19",
+    "@types/node-cron": "^3.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -33,6 +35,8 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0",
-    "prettier": "^2.3.2"
+    "node": "^16.10.0",
+    "prettier": "^2.3.2",
+    "typescript": "^4.4.3"
   }
 }

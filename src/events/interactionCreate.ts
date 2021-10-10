@@ -1,12 +1,8 @@
-const {
-  MessageEmbed,
-  MessageActionRow,
-  MessageSelectMenu,
-} = require('discord.js')
+import { MessageEmbed, MessageActionRow, MessageSelectMenu, Interaction } from 'discord.js'
 
 module.exports = {
   name: 'interactionCreate',
-  async execute(interaction) {
+  async execute(interaction: Interaction) {
     if (interaction.isCommand()) {
       const command = interaction.client.commands.get(interaction.commandName)
 

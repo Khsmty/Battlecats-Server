@@ -1,18 +1,18 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js'
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('close')
-    .setDescription('スレッドをCloseします。'),
-  async execute(interaction) {
+    .setName('delete')
+    .setDescription('スレッドを削除します。'),
+  async execute(interaction: CommandInteraction) {
     if (
-      interaction.channel.parentId !== '756959797806366851' ||
+      interaction.channel.parentId !== '759465634236727316' ||
       !interaction.channel.topic
     ) {
       return interaction.reply({
         content:
-          '・Close済みのスレッド\n・スレッドではないチャンネル\nはCloseできません。',
+          '・Closeされていないスレッド\n・スレッドではないチャンネル\nは削除できません。',
         ephemeral: true,
       })
     }
@@ -26,7 +26,7 @@ module.exports = {
       !interaction.member.permissions.has('ADMINISTRATOR')
     ) {
       return interaction.reply({
-        content: 'あなたはスレッドの作成者でないため、Closeできません。',
+        content: 'あなたはスレッドの作成者でないため、削除できません。',
         ephemeral: true,
       })
     }
@@ -34,7 +34,7 @@ module.exports = {
     await interaction.reply({
       embeds: [
         new MessageEmbed()
-          .setDescription(`スレッドをCloseします。\nよろしいですか？`)
+          .setDescription(`スレッドを削除します。\nよろしいですか？`)
           .setFooter('30秒経過すると自動キャンセルされます。')
           .setColor('YELLOW'),
       ],
@@ -44,11 +44,11 @@ module.exports = {
             .setLabel('OK')
             .setEmoji('✅')
             .setStyle('SUCCESS')
-            .setCustomId('thread-close-ok'),
+            .setCustomId('thread-delete-ok'),
           new MessageButton()
             .setLabel('キャンセル')
             .setStyle('DANGER')
-            .setCustomId('thread-close-cancel'),
+            .setCustomId('thread-delete-cancel'),
         ]),
       ],
     })
@@ -62,22 +62,22 @@ module.exports = {
     })
 
     collector.on('collect', async (i) => {
-      if (i.customId === 'thread-close-ok') {
-        await interaction.channel.setParent('759465634236727316')
-
-        i.update({
+      if (i.customId === 'thread-delete-ok') {
+        interaction.client.channels.cache.get('759053620322369568').send({
           embeds: [
             new MessageEmbed()
-              .setDescription('スレッドをCloseしました。')
-              .setColor('GREEN'),
+              .setTitle(interaction.channel.name)
+              .setFooter(`Deleted by ${interaction.user.tag}`)
+              .setTimestamp(),
           ],
-          components: [],
         })
-      } else if (i.customId === 'thread-close-cancel') {
+
+        await interaction.channel.delete()
+      } else if (i.customId === 'thread-delete-cancel') {
         i.update({
           embeds: [
             new MessageEmbed()
-              .setDescription('スレッドのCloseをキャンセルしました。')
+              .setDescription('スレッドの削除をキャンセルしました。')
               .setColor('RED'),
           ],
           components: [],
@@ -90,7 +90,7 @@ module.exports = {
         msg.edit({
           embeds: [
             new MessageEmbed()
-              .setDescription('スレッドのCloseを自動キャンセルしました。')
+              .setDescription('スレッドの削除を自動キャンセルしました。')
               .setColor('RED'),
           ],
           components: [],

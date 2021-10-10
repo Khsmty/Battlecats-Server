@@ -1,8 +1,8 @@
-const { MessageEmbed } = require('discord.js')
+import { MessageEmbed, Message } from 'discord.js'
 
 module.exports = {
   name: 'messageDelete',
-  async execute(message) {
+  async execute(message: Message) {
     if (message.author.bot) return
 
     if (message.channel.guildId === '755774191613247568') {

@@ -1,4 +1,5 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { CommandInteraction } from 'discord.js'
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,7 +11,7 @@ module.exports = {
         .setDescription('進行状況を検索するユーザーを入力してください。')
         .setRequired(true),
     ),
-  async execute(interaction) {
+  async execute(interaction: CommandInteraction) {
     await interaction.deferReply()
 
     const userId = interaction.options.getUser('user').id

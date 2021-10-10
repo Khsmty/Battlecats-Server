@@ -1,8 +1,8 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+import { MessageEmbed, MessageActionRow, MessageButton, Interaction, Message } from 'discord.js'
 
 module.exports = {
   name: 'messageCreate',
-  async execute(message) {
+  async execute(message: Message) {
     if (message.author.bot) return
 
     if (message.channel.type === 'GUILD_NEWS') {
@@ -34,7 +34,7 @@ module.exports = {
         ],
       })
 
-      const ifilter = (i) => i.user.id === message.author.id
+      const ifilter = (i: Interaction) => i.user.id === message.author.id
       const collector = msg.createMessageComponentCollector({
         filter: ifilter,
         time: 30000,

@@ -1,8 +1,8 @@
-const { MessageEmbed } = require('discord.js')
+import { MessageEmbed, Message } from 'discord.js'
 
 module.exports = {
   name: 'messageUpdate',
-  async execute(oldMessage, newMessage) {
+  async execute(oldMessage: Message, newMessage: Message) {
     if (newMessage.author.bot) return
 
     if (newMessage.channel.guildId === '755774191613247568') {

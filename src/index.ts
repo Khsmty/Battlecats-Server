@@ -1,29 +1,34 @@
-require('http')
-  .createServer(function (req, res) {
-    res.write('It works!')
-    res.end()
+import { Client, Collection, MessageEmbed, TextChannel, Role } from 'discord.js'
+import { config } from 'dotenv'
+import { createConnection } from 'mysql'
+import cron from 'node-cron'
+import http from 'http'
+import events from '../events.json'
+import 'fs'
+
+// dotenv
+config()
+
+// Webサーバーの作成
+http
+  .createServer((req, res) => {
+    res.end('It works!')
   })
   .listen(process.env.PORT || 8080)
 
-require('dotenv').config()
-
-const { Client, Collection, MessageEmbed } = require('discord.js')
-const client = new Client({
+const client: Client = new Client({
   intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_VOICE_STATES'],
 })
-const events = require('./events.json')
-const cron = require('node-cron')
-const fs = require('fs')
-const { createConnection } = require('mysql')
 
-client.con = createConnection({
+// MySQLサーバーへ接続
+client.db = createConnection({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASS,
   database: process.env.MYSQL_DB,
   charset: 'utf8mb4',
 })
-client.con.connect()
+client.db.connect()
 
 cron.schedule('0,15 * * * *', async () => {
   for (const event of events) {
@@ -32,7 +37,7 @@ cron.schedule('0,15 * * * *', async () => {
     if (timeLag >= -60000 && timeLag <= 600000) {
       const mentionRole = client.guilds.cache
         .get('755774191613247568')
-        .roles.cache.filter((role) => role.name.includes(event.role))
+        .roles.cache.filter((role: Role): role is Required<Role> => role.name.includes(event.role))
         .first().id
 
       client.channels.cache
@@ -44,10 +49,10 @@ cron.schedule('0,15 * * * *', async () => {
   const threadOpenCategory = client.channels.cache
     .get('756959797806366851')
     .children.filter(
-      (channel) =>
+      (channel: TextChannel) =>
         !['757612691517997147', '757612691517997147'].includes(channel.id),
     )
-    .map((channel) => channel)
+    .map((channel: TextChannel) => channel)
   for (const channel of threadOpenCategory) {
     let lastMessage = await channel.messages.fetch({ limit: 1 })
     lastMessage = lastMessage.first()

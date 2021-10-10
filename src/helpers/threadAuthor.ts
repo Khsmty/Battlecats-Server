@@ -1,4 +1,4 @@
-module.exports = function (topic) {
+module.exports = function (topic: String) {
   let spl
   if (topic.includes('!')) {
     spl = topic.split('<@!')[1]
