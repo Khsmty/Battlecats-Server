@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js';
+import { Message, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js';
 
 module.exports = {
   data: new SlashCommandBuilder().setName('close').setDescription('スレッドをCloseします。'),
   async execute(interaction: CommandInteraction) {
-    if (interaction.channel.parentId !== '756959797806366851' || !interaction.channel.topic) {
+    if (interaction.channel!.parentId !== '756959797806366851' || !interaction.channel!.topic) {
       return interaction.reply({
         content: '・Close済みのスレッド\n・スレッドではないチャンネル\nはCloseできません。',
         ephemeral: true,
@@ -35,15 +35,15 @@ module.exports = {
       ],
     });
 
-    const msg = await interaction.fetchReply();
+    const msg: any = await interaction.fetchReply();
 
-    const ifilter = (i) => i.user.id === interaction.user.id;
+    const ifilter = (i: { user: { id: string; }; }) => i.user.id === interaction.user.id;
     const collector = msg.createMessageComponentCollector({
       filter: ifilter,
       time: 30000,
     });
 
-    collector.on('collect', async (i) => {
+    collector.on('collect', async (i: { customId: string; update: (arg0: { embeds: MessageEmbed[]; components: never[]; }) => void; }) => {
       if (i.customId === 'thread-close-ok') {
         await interaction.channel.setParent('759465634236727316');
 
@@ -59,7 +59,7 @@ module.exports = {
       }
     });
 
-    collector.on('end', (collected) => {
+    collector.on('end', (collected: { size: number; }) => {
       if (collected.size === 0) {
         msg.edit({
           embeds: [new MessageEmbed().setDescription('スレッドのCloseを自動キャンセルしました。').setColor('RED')],

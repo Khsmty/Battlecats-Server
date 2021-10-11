@@ -12,6 +12,6 @@ export default class Bot {
     database: process.env.MYSQL_DB,
     charset: 'utf8mb4',
   });
-  static commands = new Collection();
-  static messageCommands = new Collection();
+  static commands: Collection<String, any> = new Collection();
+  static messageCommands: Collection<String, any> = new Collection();
 }

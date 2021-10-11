@@ -1,5 +1,5 @@
-import { Client, MessageEmbed, TextChannel, Role } from 'discord.js';
-import Bot from './structures/Bot';
+import { MessageEmbed, TextChannel, Role } from 'discord.js';
+import Bot from './Components/Bot';
 import { config } from 'dotenv';
 import cron from 'node-cron';
 import http from 'http';

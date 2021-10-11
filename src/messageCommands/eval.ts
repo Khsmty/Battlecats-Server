@@ -1,10 +1,9 @@
-const { inspect } = require('util');
-
-import { MessageEmbed, Message } from 'discord.js'
+import { inspect } from 'util';
+import { MessageEmbed, Message } from 'discord.js';
 
 module.exports = {
   name: 'eval',
-  async execute(message: Message, args) {
+  async execute(message: Message, args: any[]) {
     if (message.author.id !== '723052392911863858') return;
 
     try {

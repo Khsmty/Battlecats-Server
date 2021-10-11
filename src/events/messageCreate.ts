@@ -1,41 +1,27 @@
-import {
-  MessageEmbed,
-  MessageActionRow,
-  MessageButton,
-  Interaction,
-  Message,
-} from "discord.js";
+import { MessageEmbed, MessageActionRow, MessageButton, Interaction, Message } from 'discord.js';
+import Bot from '../Components/Bot';
 
 module.exports = {
-  name: "messageCreate",
+  name: 'messageCreate',
   async execute(message: Message) {
     if (message.author.bot) return;
 
-    if (message.channel.type === "GUILD_NEWS") {
+    if (message.channel.type === 'GUILD_NEWS') {
       message.crosspost();
     }
 
-    if (message.channelId === "757612691517997147") {
+    if (message.channelId === '757612691517997147') {
       const msg = await message.reply({
         embeds: [
           new MessageEmbed()
-            .setDescription(
-              `「${message.content}」でスレッドを作成します。\nよろしいですか？`
-            )
-            .setFooter("30秒経過すると自動キャンセルされます。")
-            .setColor("YELLOW"),
+            .setDescription(`「${message.content}」でスレッドを作成します。\nよろしいですか？`)
+            .setFooter('30秒経過すると自動キャンセルされます。')
+            .setColor('YELLOW'),
         ],
         components: [
           new MessageActionRow().addComponents([
-            new MessageButton()
-              .setLabel("OK")
-              .setEmoji("✅")
-              .setStyle("SUCCESS")
-              .setCustomId("thread-create-ok"),
-            new MessageButton()
-              .setLabel("キャンセル")
-              .setStyle("DANGER")
-              .setCustomId("thread-create-cancel"),
+            new MessageButton().setLabel('OK').setEmoji('✅').setStyle('SUCCESS').setCustomId('thread-create-ok'),
+            new MessageButton().setLabel('キャンセル').setStyle('DANGER').setCustomId('thread-create-cancel'),
           ]),
         ],
       });
@@ -46,90 +32,70 @@ module.exports = {
         time: 30000,
       });
 
-      collector.on("collect", async (i) => {
-        if (i.customId === "thread-create-ok") {
-          const createThread = await message.guild.channels.create(
-            message.content,
-            {
-              topic: `${message.author} のスレッド`,
-              parent: message.channel.parent,
-            }
-          );
+      collector.on('collect', async (i) => {
+        if (i.customId === 'thread-create-ok') {
+          const createThread = await message.guild?.channels.create(message.content, {
+            topic: `${message.author} のスレッド`,
+            parent: message.channel.parent,
+          });
 
-          const threadMsg = await createThread.send({
+          const threadMsg = await createThread?.send({
             embeds: [
               new MessageEmbed()
-                .setTitle("操作方法")
+                .setTitle('操作方法')
                 .setDescription(
-                  "`/close`: スレッドをCloseします。\n`/delete`: 解決済みのスレッドを削除します。\n`/reopen`: スレッドを再度Openします。\n\n※スレッドの最終メッセージから3日が経過すると、自動でCloseされます。"
+                  '`/close`: スレッドをCloseします。\n`/delete`: 解決済みのスレッドを削除します。\n`/reopen`: スレッドを再度Openします。\n\n※スレッドの最終メッセージから3日が経過すると、自動でCloseされます。'
                 )
-                .setColor("BLURPLE"),
+                .setColor('BLURPLE'),
               new MessageEmbed()
-                .setAuthor(
-                  message.author.tag,
-                  message.author.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
                 .setTitle(message.content)
-                .setColor("YELLOW")
+                .setColor('YELLOW')
                 .setTimestamp(),
             ],
           });
-          threadMsg.pin();
+          threadMsg?.pin();
 
           i.update({
-            embeds: [
-              new MessageEmbed()
-                .setDescription("スレッドを作成しました。")
-                .setColor("GREEN"),
-            ],
+            embeds: [new MessageEmbed().setDescription('スレッドを作成しました。').setColor('GREEN')],
             components: [
               new MessageActionRow().addComponents(
                 new MessageButton()
-                  .setLabel("スレッドへジャンプ")
-                  .setStyle("LINK")
-                  .setURL(
-                    `https://discord.com/channels/${message.guildId}/${createThread.id}`
-                  )
+                  .setLabel('スレッドへジャンプ')
+                  .setStyle('LINK')
+                  .setURL(`https://discord.com/channels/${message.guildId}/${createThread?.id}`)
               ),
             ],
           });
-        } else if (i.customId === "thread-create-cancel") {
+        } else if (i.customId === 'thread-create-cancel') {
           i.update({
-            embeds: [
-              new MessageEmbed()
-                .setDescription("スレッドの作成をキャンセルしました。")
-                .setColor("RED"),
-            ],
+            embeds: [new MessageEmbed().setDescription('スレッドの作成をキャンセルしました。').setColor('RED')],
             components: [],
           });
         }
       });
 
-      collector.on("end", (collected) => {
+      collector.on('end', (collected) => {
         if (collected.size === 0) {
           msg.edit({
-            embeds: [
-              new MessageEmbed()
-                .setDescription("スレッドの作成を自動キャンセルしました。")
-                .setColor("RED"),
-            ],
+            embeds: [new MessageEmbed().setDescription('スレッドの作成を自動キャンセルしました。').setColor('RED')],
             components: [],
           });
         }
       });
     }
 
-    if (message.content.startsWith("n.")) {
+    if (message.content.startsWith('n.')) {
       const args = message.content.slice(2).trim().split(/ +/);
-      const command = args.shift().toLowerCase();
+      const command: String = args.shift()!.toLowerCase();
 
-      if (!message.client.messageCommands.has(command)) return;
+      if (!Bot.messageCommands.has(command)) return;
 
       try {
-        message.client.messageCommands.get(command).execute(message, args);
+        Bot.messageCommands.get(command).execute(message, args);
       } catch (error) {
         console.error(error);
-        message.reply("エラーが発生しました。");
+        message.reply('エラーが発生しました。');
       }
     }
   },
