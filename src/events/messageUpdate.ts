@@ -1,4 +1,4 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { MessageEmbed, Message, TextChannel } from 'discord.js';
 
 module.exports = {
   name: 'messageUpdate',
@@ -6,11 +6,10 @@ module.exports = {
     if (newMessage.author.bot) return;
 
     const messageChannel: any = newMessage.channel;
-    const logChannel: any = newMessage.client.channels.cache
-        .get('872863093359800330')
 
     if (newMessage.guildId === '755774191613247568' || newMessage.guildId === '796606104410783784') {
-      logChannel.send({
+      (newMessage.client.channels.cache.get('872863093359800330') as TextChannel)
+        ?.send({
           embeds: [
             new MessageEmbed()
               .setTitle('メッセージ編集')
@@ -22,11 +21,7 @@ module.exports = {
                 '添付ファイル',
                 newMessage.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') || '*なし*'
               )
-              .addField(
-                'チャンネル',
-                `${messageChannel} (#${messageChannel.name}/${messageChannel.id})`,
-                true
-              )
+              .addField('チャンネル', `${messageChannel} (#${messageChannel.name}/${messageChannel.id})`, true)
               .addField(
                 'カテゴリ',
                 `${messageChannel.parent ? messageChannel.parent.name : '*なし*'} (${

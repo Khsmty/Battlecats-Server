@@ -1,19 +1,19 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Message, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js';
+import { TextChannel, Permissions, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js';
 
 module.exports = {
   data: new SlashCommandBuilder().setName('close').setDescription('スレッドをCloseします。'),
   async execute(interaction: CommandInteraction) {
-    if (interaction.channel!.parentId !== '756959797806366851' || !interaction.channel!.topic) {
+    if ((interaction.channel as TextChannel)!.parentId !== '756959797806366851' || !(interaction.channel as TextChannel)!.topic) {
       return interaction.reply({
         content: '・Close済みのスレッド\n・スレッドではないチャンネル\nはCloseできません。',
         ephemeral: true,
       });
     }
 
-    const authorId = require('../helpers/threadAuthor')(interaction.channel.topic);
+    const authorId = require('../helpers/threadAuthor')((interaction.channel as TextChannel)!.topic);
 
-    if (authorId !== interaction.user.id && !interaction.member.permissions.has('ADMINISTRATOR')) {
+    if (authorId !== interaction.user.id && !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')) {
       return interaction.reply({
         content: 'あなたはスレッドの作成者でないため、Closeできません。',
         ephemeral: true,
@@ -37,29 +37,32 @@ module.exports = {
 
     const msg: any = await interaction.fetchReply();
 
-    const ifilter = (i: { user: { id: string; }; }) => i.user.id === interaction.user.id;
+    const ifilter = (i: { user: { id: string } }) => i.user.id === interaction.user.id;
     const collector = msg.createMessageComponentCollector({
       filter: ifilter,
       time: 30000,
     });
 
-    collector.on('collect', async (i: { customId: string; update: (arg0: { embeds: MessageEmbed[]; components: never[]; }) => void; }) => {
-      if (i.customId === 'thread-close-ok') {
-        await interaction.channel.setParent('759465634236727316');
+    collector.on(
+      'collect',
+      async (i: { customId: string; update: (arg0: { embeds: MessageEmbed[]; components: never[] }) => void }) => {
+        if (i.customId === 'thread-close-ok') {
+          await (interaction.channel as TextChannel)!.setParent('759465634236727316');
 
-        i.update({
-          embeds: [new MessageEmbed().setDescription('スレッドをCloseしました。').setColor('GREEN')],
-          components: [],
-        });
-      } else if (i.customId === 'thread-close-cancel') {
-        i.update({
-          embeds: [new MessageEmbed().setDescription('スレッドのCloseをキャンセルしました。').setColor('RED')],
-          components: [],
-        });
+          i.update({
+            embeds: [new MessageEmbed().setDescription('スレッドをCloseしました。').setColor('GREEN')],
+            components: [],
+          });
+        } else if (i.customId === 'thread-close-cancel') {
+          i.update({
+            embeds: [new MessageEmbed().setDescription('スレッドのCloseをキャンセルしました。').setColor('RED')],
+            components: [],
+          });
+        }
       }
-    });
+    );
 
-    collector.on('end', (collected: { size: number; }) => {
+    collector.on('end', (collected: { size: number }) => {
       if (collected.size === 0) {
         msg.edit({
           embeds: [new MessageEmbed().setDescription('スレッドのCloseを自動キャンセルしました。').setColor('RED')],

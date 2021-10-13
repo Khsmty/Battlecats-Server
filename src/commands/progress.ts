@@ -1,32 +1,29 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { Message, Snowflake, TextChannel, Collection, CommandInteraction } from 'discord.js';
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("progress")
-    .setDescription("メンバーの進行状況を検索します。")
+    .setName('progress')
+    .setDescription('メンバーの進行状況を検索します。')
     .addUserOption((option) =>
-      option
-        .setName("user")
-        .setDescription("進行状況を検索するユーザーを入力してください。")
-        .setRequired(true)
+      option.setName('user').setDescription('進行状況を検索するユーザーを入力してください。').setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {
     await interaction.deferReply();
 
-    const userId = interaction.options.getUser("user").id;
-    const messages = [];
+    const userId = interaction.options.getUser('user').id;
+    const messages: Message[] = [];
     let beforeId;
 
     for (let i = 0; i < 5; i++) {
       try {
-        const fetchMsgs = await interaction.client.channels.cache
-          .get("822771682157658122")
-          .messages.fetch({ limit: 100, before: beforeId });
+        const fetchMsgs: Collection<Snowflake, Message> = await (interaction.client.channels.cache
+          .get('822771682157658122') as TextChannel)
+          ?.messages.fetch({ limit: 100, before: beforeId });
 
-        beforeId = fetchMsgs.last().id;
+        beforeId = fetchMsgs!.last()!.id;
 
-        const messageWithImages = await fetchMsgs
+        const messageWithImages = fetchMsgs
           .filter((msg) => msg.attachments.first() && msg.author.id === userId)
           .map((msg) => msg);
 
@@ -38,17 +35,12 @@ module.exports = {
       }
     }
 
-    if (!messages[0])
-      return interaction.editReply("進行状況が見つかりませんでした。");
+    if (!messages[0]) return interaction.editReply('進行状況が見つかりませんでした。');
 
-    const images = [];
-    await messages
-      .filter(
-        (msg) => messages[0].createdTimestamp - msg.createdTimestamp < 300000
-      )
-      .forEach((msg) =>
-        msg.attachments.forEach((attachment) => images.push(attachment.url))
-      );
+    const images: string[] = [];
+    messages
+      .filter((msg) => messages[0].createdTimestamp - msg.createdTimestamp < 300000)
+      .forEach((msg) => msg.attachments.forEach((attachment) => images.push(attachment.url)));
 
     await interaction.editReply({ files: images });
   },

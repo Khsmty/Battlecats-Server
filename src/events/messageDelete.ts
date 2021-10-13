@@ -1,4 +1,4 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { MessageEmbed, Message, TextChannel } from 'discord.js';
 
 module.exports = {
   name: 'messageDelete',
@@ -6,10 +6,10 @@ module.exports = {
     if (message.author.bot) return;
 
     const messageChannel: any = message.channel;
-    const logChannel: any = message.client.channels.cache.get('872863093359800330');
 
     if (message.guildId === '755774191613247568' || message.guildId === '796606104410783784') {
-      logChannel.send({
+      (message.client.channels.cache.get('872863093359800330') as TextChannel)
+        .send({
           embeds: [
             new MessageEmbed()
               .setTitle('メッセージ削除')

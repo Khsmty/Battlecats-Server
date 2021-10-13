@@ -1,4 +1,4 @@
-import { MessageEmbed, MessageActionRow, MessageSelectMenu, Interaction } from 'discord.js';
+import { MessageEmbed, MessageActionRow, MessageSelectMenu, Interaction, GuildMemberRoleManager } from 'discord.js';
 import Bot from '../Components/Bot';
 
 module.exports = {
@@ -67,7 +67,7 @@ module.exports = {
                       label: 'ネタバレを非表示',
                       value: '757465906786861166',
                       emoji: '❌',
-                      default: interaction.member!.roles.cache.has('757465906786861166'),
+                      default: (interaction.member!.roles as GuildMemberRoleManager).cache.has('757465906786861166'),
                     },
                     {
                       label: '宣伝を非表示',
@@ -394,8 +394,8 @@ module.exports = {
         case 'rlrole': {
           const customRoles = ['757466064702537748', '856005613368246325', '818062825024520243'];
 
-          const userRoles = interaction.member!.roles.cache
-            .map((role) => role.id)
+          const userRoles = interaction
+            .member!.roles.cache.map((role) => role.id)
             .filter((f) => customRoles.includes(f));
 
           if (interaction.values.includes('clear')) await interaction.member!.roles.remove(userRoles);
@@ -428,7 +428,9 @@ module.exports = {
             '885915967937474652',
             '885915963860598844',
           ];
-          const userRoles = interaction.member!.roles.cache.map((role) => role.id).filter((f) => eventRoles.includes(f));
+          const userRoles = (interaction.member!.roles as GuildMemberRoleManager).cache
+            .map((role) => role.id)
+            .filter((f) => eventRoles.includes(f));
 
           if (interaction.values.includes('clear')) await interaction.member!.roles.remove(userRoles);
           else if (userRoles.length < interaction.values.length)
