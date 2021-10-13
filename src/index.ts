@@ -62,12 +62,17 @@ cron.schedule('0,15 * * * *', async () => {
 
 setInterval(() => {
   Bot.db.query('SELECT * FROM `threadCloseQueue`', (e: any, rows: any) => {
+    if (!rows || !rows[0]) return;
+
     for (const row of rows) {
       if (row.date <= Date.now()) {
-        const channel = client.channels.cache.get(row.channel) as TextChannel;
-        channel?.setName('空きチャンネル');
-        channel?.setParent(config.threadClosedCategoryId);
+        const channel = client.channels.cache.get(row.channelId) as TextChannel;
+        channel.send({ embeds: [new MessageEmbed().setDescription('Closeされました。').setColor('RED')] });
 
+        channel.setName('空きチャンネル');
+        channel.setParent(config.threadClosedCategoryId);
+
+        // スレッド一覧の埋め込み色を赤色にする
         (client.channels.cache.get(config.threadCreateChannel) as TextChannel)?.messages
           .fetch(rows[0].listMessageId)
           .then((msg) => {
@@ -76,11 +81,20 @@ setInterval(() => {
             });
           });
 
+        // Closeキューから削除
         Bot.db.query('DELETE FROM `threadCloseQueue` WHERE `channelId` = ?', [row.channelId]);
+        // チャンネルを空きチャンネルとしてマーク
+        Bot.db.query('UPDATE `threadChannels` SET `inUse` = ? WHERE `channelId` = ?', [false, row.channelId]);
+        // スレッドをClose済としてマーク
+        Bot.db.query('UPDATE `threads` SET `closed` = ? WHERE `channelId` = ? AND `closed` = ?', [
+          true,
+          row.channelId,
+          false,
+        ]);
       }
     }
   });
-}, 10000);
+}, 600000);
 
 const commandFiles = fs.readdirSync('./dist/Commands').filter((file) => file.endsWith('.js'));
 

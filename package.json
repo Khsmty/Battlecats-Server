@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "npx tsc && node dist/index",
+    "start": "node dist/index",
+    "build": "npx tsc",
     "lint": "npx prettier . --fix",
     "regist": "node dist/regist"
   },

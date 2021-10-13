@@ -281,13 +281,13 @@ module.exports = {
                       default: (interaction.member!.roles as GuildMemberRoleManager).cache.has('871411874497961994'),
                     },
                     {
-                      label: '未設定 (イベント1)',
+                      label: '女王の研究報告3 (イベント1)',
                       value: '885915916213305375',
                       emoji: '🔔',
                       default: (interaction.member!.roles as GuildMemberRoleManager).cache.has('885915916213305375'),
                     },
                     {
-                      label: '未設定 (イベント2)',
+                      label: '女王の研究報告4 (イベント2)',
                       value: '885915963860598844',
                       emoji: '🔔',
                       default: (interaction.member!.roles as GuildMemberRoleManager).cache.has('885915963860598844'),

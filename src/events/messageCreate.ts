@@ -15,6 +15,18 @@ module.exports = {
 
     // スレッド作成
     if (message.channelId === config.threadCreateChannel) {
+      if (!message.content) {
+        message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(':x: エラー')
+              .setDescription('メッセージ内容がないため、スレッドを作成できません。')
+              .setColor('RED'),
+          ],
+        });
+        return; 
+      }
+
       Bot.db.query('SELECT * FROM `threadChannels` WHERE `inUse` = ?', [false], (e, rows) => {
         if (!rows[0]) {
           message.reply({
@@ -50,7 +62,7 @@ module.exports = {
                       new MessageEmbed()
                         .setTitle('操作方法')
                         .setDescription(
-                          '`/close`: スレッドをCloseします。\n`/delete`: 解決済みのスレッドを削除します。\n`/reopen`: スレッドを再度Openします。\n\n※スレッドの最終メッセージから3日が経過すると、自動でCloseされます。'
+                          '`/close`: スレッドをCloseします。\n`/rename`: スレッドのタイトルを変更します。\n\n※スレッドの最終メッセージから2日が経過すると、自動でCloseされます。'
                         )
                         .setColor('BLURPLE'),
                       new MessageEmbed()
@@ -87,6 +99,14 @@ module.exports = {
             }
           );
         }
+      });
+    }
+
+    if ((message.channel as TextChannel).parentId === config.threadOpenCategoryId) {
+      Bot.db.query('SELECT * FROM `threadCloseQueue` WHERE `channelId` = ?', [message.channelId], (e, rows) => {
+        if (!rows || !rows[0]) return;
+
+        Bot.db.query('DELETE FROM `threadCloseQueue` WHERE `channelId` = ?', [message.channelId]);
       });
     }
 

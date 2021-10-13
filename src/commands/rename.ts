@@ -4,13 +4,23 @@ import Bot from '../Components/Bot';
 import config from '../config.json';
 
 module.exports = {
-  data: new SlashCommandBuilder().setName('close').setDescription('スレッドをCloseします。(取り消し不可)'),
+  data: new SlashCommandBuilder()
+    .setName('rename')
+    .setDescription('スレッドのタイトルを変更します。')
+    .addStringOption((option) =>
+      option.setName('new-title').setDescription('スレッドの新しいタイトルを入力してください。').setRequired(true)
+    ),
   async execute(interaction: CommandInteraction) {
+    const newTitle: any = interaction.options.getString('new-title');
+
     const commandChannel = interaction.channel as TextChannel;
     if (commandChannel?.parentId !== config.threadOpenCategoryId) {
       return interaction.reply({
         embeds: [
-          new MessageEmbed().setTitle(':x: エラー').setDescription('このチャンネルはCloseできません。').setColor('RED'),
+          new MessageEmbed()
+            .setTitle(':x: エラー')
+            .setDescription('このチャンネルはスレッドではありません。')
+            .setColor('RED'),
         ],
         ephemeral: true,
       });
@@ -28,26 +38,28 @@ module.exports = {
             embeds: [
               new MessageEmbed()
                 .setTitle(':x: エラー')
-                .setDescription('このスレッドをCloseする権限がありません。')
+                .setDescription('このスレッドのタイトルを変更する権限がありません。')
                 .setColor('RED'),
             ],
             ephemeral: true,
           });
         } else {
+          Bot.db.query('UPDATE `threads` SET `title` = ? WHERE `channelId` = ? AND `closed` = ?', [
+            newTitle,
+            interaction.channelId,
+            false,
+          ]);
+
+          (interaction.channel as TextChannel).setName(newTitle);
+
           interaction.reply({
             embeds: [
               new MessageEmbed()
                 .setTitle(':white_check_mark: 成功')
-                .setDescription('1時間後にCloseされます。\nメッセージを送信するとCloseをキャンセルできます。')
+                .setDescription(`スレッドのタイトルを「${newTitle}」に変更しました。`)
                 .setColor('GREEN'),
-            ],
-          });
-
-          Bot.db.query('INSERT INTO `threadCloseQueue` (`channelId`, `date`, `listMessageId`) VALUES (?, ?, ?)', [
-            interaction.channelId,
-            new Date(Date.now() + 3600000),
-            rows[0].listMessageId,
-          ]);
+            ]
+          })
         }
       }
     );
