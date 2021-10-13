@@ -3,6 +3,7 @@ import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } fro
 import { google } from 'googleapis';
 
 const customSearch = google.customsearch('v1');
+google.options({ auth: process.env.GOOGLE_API_KEY });
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,12 +16,16 @@ module.exports = {
     const query = interaction.options.getString('query');
 
     const result = await customSearch.cse.list({
-      auth: process.env.GOOGLE_API_KEY,
       cx: 'd5d85493077d946a9',
-      q: query,
+      q: query || undefined,
     });
     const results = result.data.items
-      ? result.data.items.map((item) => `[${item.title!.replace('にゃんこ大戦争DB ', '')}](${item.link})`).slice(0, 5)
+      ? result.data.items
+          .map(
+            (item: { title?: string | null; link?: string | null }) =>
+              `[${item.title!.replace('にゃんこ大戦争DB ', '')}](${item.link})`
+          )
+          .slice(0, 5)
       : [];
 
     await interaction.reply({

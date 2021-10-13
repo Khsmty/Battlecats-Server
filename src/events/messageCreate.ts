@@ -1,92 +1,97 @@
-import { MessageEmbed, MessageActionRow, MessageButton, Interaction, Message } from 'discord.js';
+import { MessageEmbed, MessageActionRow, MessageButton, Interaction, TextChannel, Message } from 'discord.js';
 import Bot from '../Components/Bot';
+import config from '../config.json';
 
 module.exports = {
   name: 'messageCreate',
   async execute(message: Message) {
+    // Botによるメッセージは無視する
     if (message.author.bot) return;
 
+    // お知らせ自動公開
     if (message.channel.type === 'GUILD_NEWS') {
       message.crosspost();
     }
 
-    if (message.channelId === '757612691517997147') {
-      const msg = await message.reply({
-        embeds: [
-          new MessageEmbed()
-            .setDescription(`「${message.content}」でスレッドを作成します。\nよろしいですか？`)
-            .setFooter('30秒経過すると自動キャンセルされます。')
-            .setColor('YELLOW'),
-        ],
-        components: [
-          new MessageActionRow().addComponents([
-            new MessageButton().setLabel('OK').setEmoji('✅').setStyle('SUCCESS').setCustomId('thread-create-ok'),
-            new MessageButton().setLabel('キャンセル').setStyle('DANGER').setCustomId('thread-create-cancel'),
-          ]),
-        ],
-      });
-
-      const ifilter = (i: Interaction) => i.user.id === message.author.id;
-      const collector = msg.createMessageComponentCollector({
-        filter: ifilter,
-        time: 30000,
-      });
-
-      collector.on('collect', async (i) => {
-        if (i.customId === 'thread-create-ok') {
-          const createThread = await message.guild?.channels.create(message.content, {
-            topic: `${message.author} のスレッド`,
-            parent: message.channel.parent,
-          });
-
-          const threadMsg = await createThread?.send({
+    // スレッド作成
+    if (message.channelId === config.threadCreateChannel) {
+      Bot.db.query('SELECT * FROM `threadChannels` WHERE `inUse` = ?', [false], (e, rows) => {
+        if (!rows[0]) {
+          message.reply({
             embeds: [
               new MessageEmbed()
-                .setTitle('操作方法')
-                .setDescription(
-                  '`/close`: スレッドをCloseします。\n`/delete`: 解決済みのスレッドを削除します。\n`/reopen`: スレッドを再度Openします。\n\n※スレッドの最終メッセージから3日が経過すると、自動でCloseされます。'
-                )
-                .setColor('BLURPLE'),
-              new MessageEmbed()
-                .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-                .setTitle(message.content)
-                .setColor('YELLOW')
-                .setTimestamp(),
+                .setTitle(':x: エラー')
+                .setDescription('空きチャンネルがありません。管理スタッフへ連絡してください。')
+                .setColor('RED'),
             ],
           });
-          threadMsg?.pin();
+          return;
+        } else {
+          const useChannelDb = rows[Math.floor(Math.random() * rows.length)];
 
-          i.update({
-            embeds: [new MessageEmbed().setDescription('スレッドを作成しました。').setColor('GREEN')],
-            components: [
-              new MessageActionRow().addComponents(
-                new MessageButton()
-                  .setLabel('スレッドへジャンプ')
-                  .setStyle('LINK')
-                  .setURL(`https://discord.com/channels/${message.guildId}/${createThread?.id}`)
-              ),
-            ],
-          });
-        } else if (i.customId === 'thread-create-cancel') {
-          i.update({
-            embeds: [new MessageEmbed().setDescription('スレッドの作成をキャンセルしました。').setColor('RED')],
-            components: [],
-          });
-        }
-      });
+          Bot.db.query('UPDATE `threadChannels` SET `inUse` = ? WHERE `channelId` = ?', [true, useChannelDb.channelId]);
 
-      collector.on('end', (collected) => {
-        if (collected.size === 0) {
-          msg.edit({
-            embeds: [new MessageEmbed().setDescription('スレッドの作成を自動キャンセルしました。').setColor('RED')],
-            components: [],
-          });
+          const useChannel: any = message.client.channels.cache.get(useChannelDb.channelId);
+
+          useChannel.setParent(config.threadOpenCategoryId);
+          useChannel.setName(message.content);
+
+          Bot.db.query(
+            'INSERT INTO `threads` (`channelId`, `ownerId`, `title`) VALUES (?, ?, ?)',
+            [useChannel.id, message.author.id, message.content],
+            (e) => {
+              Bot.db.query(
+                'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
+                [useChannel.id, false],
+                async (e, rows) => {
+                  const firstMessage: Message = await useChannel.send({
+                    content: `${message.author} スレッドを作成しました。`,
+                    embeds: [
+                      new MessageEmbed()
+                        .setTitle('操作方法')
+                        .setDescription(
+                          '`/close`: スレッドをCloseします。\n`/delete`: 解決済みのスレッドを削除します。\n`/reopen`: スレッドを再度Openします。\n\n※スレッドの最終メッセージから3日が経過すると、自動でCloseされます。'
+                        )
+                        .setColor('BLURPLE'),
+                      new MessageEmbed()
+                        .setAuthor(`ID: ${rows[0].ID}`)
+                        .setTitle(message.content)
+                        .addField(
+                          '作成者',
+                          `**${message.author.username}**#${message.author.discriminator} (${message.author})`
+                        )
+                        .setColor('YELLOW'),
+                    ],
+                  });
+
+                  const listMessage = await message.reply({
+                    embeds: [
+                      new MessageEmbed()
+                        .setAuthor(`ID: ${rows[0].ID}`)
+                        .setTitle(message.content)
+                        .addField(
+                          '作成者',
+                          `**${message.author.username}**#${message.author.discriminator} (${message.author})`
+                        )
+                        .addField('リンク', `[最初のメッセージ](${firstMessage.url})`)
+                        .setColor('GREEN'),
+                    ],
+                  });
+
+                  Bot.db.query(
+                    'UPDATE `threads` SET `firstMessageUrl` = ?, `listMessageId` = ? WHERE `channelId` = ? AND `closed` = ?',
+                    [firstMessage.url, listMessage.id, useChannel.id, false]
+                  );
+                }
+              );
+            }
+          );
         }
       });
     }
 
-    if (message.content.startsWith('n.')) {
-      const args = message.content.slice(2).trim().split(/ +/);
+    if (message.content.startsWith(config.prefix)) {
+      const args = message.content.slice(config.prefix.length).trim().split(/ +/);
       const command: String = args.shift()!.toLowerCase();
 
       if (!Bot.messageCommands.has(command)) return;

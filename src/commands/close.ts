@@ -1,74 +1,63 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { TextChannel, Permissions, MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js';
+import {
+  TextChannel,
+  Permissions,
+  MessageEmbed,
+  MessageActionRow,
+  MessageButton,
+  CommandInteraction,
+} from 'discord.js';
+import Bot from '../Components/Bot';
+import config from '../config.json';
 
 module.exports = {
-  data: new SlashCommandBuilder().setName('close').setDescription('スレッドをCloseします。'),
+  data: new SlashCommandBuilder().setName('close').setDescription('スレッドをCloseします。(取り消し不可)'),
   async execute(interaction: CommandInteraction) {
-    if ((interaction.channel as TextChannel)!.parentId !== '756959797806366851' || !(interaction.channel as TextChannel)!.topic) {
+    const commandChannel = interaction.channel as TextChannel;
+    if (commandChannel?.parentId !== config.threadOpenCategoryId) {
       return interaction.reply({
-        content: '・Close済みのスレッド\n・スレッドではないチャンネル\nはCloseできません。',
+        embeds: [
+          new MessageEmbed().setTitle(':x: エラー').setDescription('このチャンネルはCloseできません。').setColor('RED'),
+        ],
         ephemeral: true,
       });
     }
 
-    const authorId = require('../helpers/threadAuthor')((interaction.channel as TextChannel)!.topic);
-
-    if (authorId !== interaction.user.id && !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')) {
-      return interaction.reply({
-        content: 'あなたはスレッドの作成者でないため、Closeできません。',
-        ephemeral: true,
-      });
-    }
-
-    await interaction.reply({
-      embeds: [
-        new MessageEmbed()
-          .setDescription(`スレッドをCloseします。\nよろしいですか？`)
-          .setFooter('30秒経過すると自動キャンセルされます。')
-          .setColor('YELLOW'),
-      ],
-      components: [
-        new MessageActionRow().addComponents([
-          new MessageButton().setLabel('OK').setEmoji('✅').setStyle('SUCCESS').setCustomId('thread-close-ok'),
-          new MessageButton().setLabel('キャンセル').setStyle('DANGER').setCustomId('thread-close-cancel'),
-        ]),
-      ],
-    });
-
-    const msg: any = await interaction.fetchReply();
-
-    const ifilter = (i: { user: { id: string } }) => i.user.id === interaction.user.id;
-    const collector = msg.createMessageComponentCollector({
-      filter: ifilter,
-      time: 30000,
-    });
-
-    collector.on(
-      'collect',
-      async (i: { customId: string; update: (arg0: { embeds: MessageEmbed[]; components: never[] }) => void }) => {
-        if (i.customId === 'thread-close-ok') {
-          await (interaction.channel as TextChannel)!.setParent('759465634236727316');
-
-          i.update({
-            embeds: [new MessageEmbed().setDescription('スレッドをCloseしました。').setColor('GREEN')],
-            components: [],
+    Bot.db.query(
+      'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
+      [interaction.channelId, false],
+      async (e, rows) => {
+        if (
+          rows[0].ownerId !== interaction.user.id &&
+          !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')
+        ) {
+          return interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(':x: エラー')
+                .setDescription('このスレッドをCloseする権限がありません。')
+                .setColor('RED'),
+            ],
+            ephemeral: true,
           });
-        } else if (i.customId === 'thread-close-cancel') {
-          i.update({
-            embeds: [new MessageEmbed().setDescription('スレッドのCloseをキャンセルしました。').setColor('RED')],
-            components: [],
+        } else {
+          const closeMsg = await interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(':white_check_mark: 成功')
+                .setDescription('30秒後ぐらいにCloseされます。\nメッセージを送信するとCloseをキャンセルできます。')
+                .setColor('GREEN'),
+            ],
           });
+
+          Bot.db.query('INSERT INTO `threadCloseQueue` (`channelId`, `date`, `listMessageId`, `closeMessageId`) VALUES (?, ?, ?, ?)', [
+            interaction.channelId,
+            new Date(Date.now() + 30000), // 3600000,
+            rows[0].listMessageId,
+            closeMsg.id,
+          ]);
         }
       }
     );
-
-    collector.on('end', (collected: { size: number }) => {
-      if (collected.size === 0) {
-        msg.edit({
-          embeds: [new MessageEmbed().setDescription('スレッドのCloseを自動キャンセルしました。').setColor('RED')],
-          components: [],
-        });
-      }
-    });
   },
 };

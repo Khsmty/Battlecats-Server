@@ -11,20 +11,20 @@ module.exports = {
   async execute(interaction: CommandInteraction) {
     await interaction.deferReply();
 
-    const userId = interaction.options.getUser('user').id;
+    const userId = interaction.options.getUser('user')?.id;
     const messages: Message[] = [];
     let beforeId;
 
     for (let i = 0; i < 5; i++) {
       try {
-        const fetchMsgs: Collection<Snowflake, Message> = await (interaction.client.channels.cache
-          .get('822771682157658122') as TextChannel)
-          ?.messages.fetch({ limit: 100, before: beforeId });
+        const fetchMsgs: Collection<Snowflake, Message> = await (
+          interaction.client.channels.cache.get('822771682157658122') as TextChannel
+        )?.messages.fetch({ limit: 100, before: beforeId });
 
         beforeId = fetchMsgs!.last()!.id;
 
         const messageWithImages = fetchMsgs
-          .filter((msg) => msg.attachments.first() && msg.author.id === userId)
+          .filter((msg: any) => msg.attachments.first() && msg.author.id === userId)
           .map((msg) => msg);
 
         for (const msg of messageWithImages) {

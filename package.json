@@ -1,8 +1,8 @@
 {
   "scripts": {
     "start": "npx tsc && node dist/index",
-    "lint": "npx eslint . --fix",
-    "regist": "node regist"
+    "lint": "npx prettier . --fix",
+    "regist": "node dist/regist"
   },
   "engines": {
     "node": "16.9.1"
@@ -20,6 +20,7 @@
     "mysql": "^2.18.1",
     "node-cron": "^3.0.0",
     "node-fetch": "^2.6.2",
+    "path": "^0.12.7",
     "request": "^2.88.2",
     "serp": "^2.1.0"
   },

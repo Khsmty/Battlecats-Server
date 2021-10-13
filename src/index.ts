@@ -1,13 +1,14 @@
 import { MessageEmbed, TextChannel, Role } from 'discord.js';
 import Bot from './Components/Bot';
-import { config } from 'dotenv';
+import * as dotenv from 'dotenv';
 import cron from 'node-cron';
 import http from 'http';
 import events from './events.json';
 import fs from 'fs';
+import config from './config.json';
 
-// dotenv
-config();
+// .envから値の読み込み
+dotenv.config();
 
 // Webサーバーの作成
 http
@@ -31,7 +32,7 @@ cron.schedule('0,15 * * * *', async () => {
         ?.roles.cache.filter((role: Role) => role.name.includes(event.role))
         .first()?.id;
 
-      const notifyChannel: any = await client.channels.cache.get('805732155606171658');
+      const notifyChannel: any = client.channels.cache.get('805732155606171658');
       notifyChannel?.send(`<@&${mentionRole}> ${event.name}`);
     }
   }
@@ -59,24 +60,46 @@ cron.schedule('0,15 * * * *', async () => {
   }
 });
 
-const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
+setInterval(() => {
+  Bot.db.query('SELECT * FROM `threadCloseQueue`', (e: any, rows: any) => {
+    for (const row of rows) {
+      if (row.date <= Date.now()) {
+        const channel = client.channels.cache.get(row.channel) as TextChannel;
+        channel?.setName('空きチャンネル');
+        channel?.setParent(config.threadClosedCategoryId);
+
+        (client.channels.cache.get(config.threadCreateChannel) as TextChannel)?.messages
+          .fetch(rows[0].listMessageId)
+          .then((msg) => {
+            msg.edit({
+              embeds: [msg.embeds[0].setColor('RED')],
+            });
+          });
+
+        Bot.db.query('DELETE FROM `threadCloseQueue` WHERE `channelId` = ?', [row.channelId]);
+      }
+    }
+  });
+}, 10000);
+
+const commandFiles = fs.readdirSync('./dist/Commands').filter((file) => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
+  const command = require(`./Commands/${file}`);
   Bot.commands.set(command.data.name, command);
 }
 
-const messageCommandFiles = fs.readdirSync('./messageCommands').filter((file) => file.endsWith('.js'));
+const messageCommandFiles = fs.readdirSync('./dist/MessageCommands').filter((file) => file.endsWith('.js'));
 
 for (const file of messageCommandFiles) {
-  const command = require(`./messageCommands/${file}`);
+  const command = require(`./MessageCommands/${file}`);
   Bot.messageCommands.set(command.name, command);
 }
 
-const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'));
+const eventFiles = fs.readdirSync('./dist/Events').filter((file) => file.endsWith('.js'));
 
 for (const file of eventFiles) {
-  const event = require(`./events/${file}`);
+  const event = require(`./Events/${file}`);
   if (event.once) {
     client.once(event.name, (...args: any) => event.execute(...args));
   } else {
