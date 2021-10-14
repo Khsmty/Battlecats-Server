@@ -6,6 +6,7 @@ import http from 'http';
 import events from './events.json';
 import fs from 'fs';
 import config from './config.json';
+import path from 'path';
 
 // .envから値の読み込み
 dotenv.config();
@@ -115,10 +116,10 @@ setInterval(() => {
       }
     }
   );
-}, 10000); // 600000);
+}, 600000);
 
 const commandFiles = fs
-  .readdirSync('./dist/Commands')
+  .readdirSync(path.resolve(__dirname, 'Commands'))
   .filter((file) => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -127,7 +128,7 @@ for (const file of commandFiles) {
 }
 
 const messageCommandFiles = fs
-  .readdirSync('./dist/MessageCommands')
+  .readdirSync(path.resolve(__dirname, 'MessageCommands'))
   .filter((file) => file.endsWith('.js'));
 
 for (const file of messageCommandFiles) {
@@ -136,7 +137,7 @@ for (const file of messageCommandFiles) {
 }
 
 const eventFiles = fs
-  .readdirSync('./dist/Events')
+  .readdirSync(path.resolve(__dirname, 'Events'))
   .filter((file) => file.endsWith('.js'));
 
 for (const file of eventFiles) {

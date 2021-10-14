@@ -59,7 +59,7 @@ module.exports = {
             'INSERT INTO `threadCloseQueue` (`channelId`, `date`, `listMessageId`) VALUES (?, ?, ?)',
             [
               interaction.channelId,
-              new Date(Date.now() + 5000), // 3600000),
+              new Date(Date.now() + 3600000),
               rows[0].listMessageId,
             ]
           );

@@ -1,1 +1,1 @@
-web: npx tsc && npm start
+web: npm run build && npm run regist && npm start
