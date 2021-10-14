@@ -6,7 +6,7 @@ dotenv.config();
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const clientId = '897477971512819713';
+const clientId = '822018223422570497';
 
 const commands = [];
 const commandFiles = fs
