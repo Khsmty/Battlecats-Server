@@ -146,11 +146,11 @@ module.exports = {
           .map((role) => role.id)
           .filter((f) => panelRoles.includes(f));
 
-        // targetMemberRoles.remove(userRoles);
-        // targetMemberRoles.add(interaction.values);
-
         if (userRoles.length < interaction.values.length) {
           targetMemberRoles.add(interaction.values.filter((i) => userRoles.indexOf(i) === -1));
+        } else if (userRoles.length === interaction.values.length) {
+          targetMemberRoles.remove(userRoles);
+          targetMemberRoles.add(interaction.values);
         } else {
           targetMemberRoles.remove(userRoles.filter((i) => interaction.values.indexOf(i) === -1));
         }
