@@ -13,8 +13,10 @@ module.exports = {
     .setName('close')
     .setDescription('スレッドをCloseします。'),
   async execute(interaction: CommandInteraction) {
-    const commandChannel = interaction.channel as TextChannel;
-    if (commandChannel?.parentId !== config.thread.openCategory) {
+    if (
+      (interaction.channel as TextChannel)?.parentId !==
+      config.thread.openCategory
+    ) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
