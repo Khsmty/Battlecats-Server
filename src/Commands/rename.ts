@@ -74,7 +74,7 @@ module.exports = {
             });
 
           (interaction.channel as TextChannel)?.messages
-            .fetch(rows[0].firstMessageUrl.split('/').pop())
+            .fetch(rows[0].firstMessageId)
             .then((msg) => {
               msg.edit({
                 embeds: [msg.embeds[0], msg.embeds[1].setTitle(newTitle)],

@@ -35,6 +35,19 @@ module.exports = {
         });
         return;
       }
+      if (message.content.length > 100) {
+        message.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(':x: エラー')
+              .setDescription(
+                'メッセージ内容が100文字を超えているため、スレッドを作成できません。'
+              )
+              .setColor('RED'),
+          ],
+        });
+        return;
+      }
 
       Bot.db.query(
         'SELECT * FROM `threadChannels` WHERE `inUse` = ?',
@@ -113,8 +126,8 @@ module.exports = {
                     });
 
                     Bot.db.query(
-                      'UPDATE `threads` SET `firstMessageUrl` = ?, `listMessageId` = ? WHERE `channelId` = ? AND `closed` = ?',
-                      [firstMessage.url, listMessage.id, useChannel.id, false]
+                      'UPDATE `threads` SET `firstMessageId` = ?, `listMessageId` = ? WHERE `channelId` = ? AND `closed` = ?',
+                      [firstMessage.id, listMessage.id, useChannel.id, false]
                     );
                   }
                 );

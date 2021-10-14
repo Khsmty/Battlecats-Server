@@ -1,11 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import {
-  TextChannel,
-  Permissions,
-  MessageEmbed,
-  CommandInteraction,
-} from 'discord.js';
+import { MessageEmbed, CommandInteraction } from 'discord.js';
 import Bot from '../Components/Bot';
+import config from '../config.json'
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -28,7 +24,9 @@ module.exports = {
       [`%${query}%`],
       (e, rows) => {
         for (const row of rows) {
-          results.push(`[${row.title}](${row.firstMessageUrl})`);
+          results.push(
+            `[${row.title}](https://discord.com/channels/${config.guildId}/${row.channelId}/${row.firstMessageId})`
+          );
         }
 
         interaction.editReply({
