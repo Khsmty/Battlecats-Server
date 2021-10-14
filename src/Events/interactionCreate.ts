@@ -56,7 +56,8 @@ module.exports = {
             new MessageActionRow().addComponents(
               new MessageSelectMenu()
                 .setCustomId(`rolepanel-${panelType}`)
-                .setMinValues(1)
+                .setMinValues(0)
+                .setMaxValues(selectOptions.length)
                 .addOptions(selectOptions)
             ),
           ],
