@@ -11,6 +11,7 @@ jobs:
       - name: Build
         run: |
           yarn install
+          yarn prettier . -w
           yarn tsc
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
