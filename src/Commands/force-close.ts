@@ -45,6 +45,13 @@ module.exports = {
             });
           }
 
+          const channel = interaction.client.channels.cache.get(
+            interaction.channelId
+          ) as TextChannel;
+
+          await channel.setName('空きチャンネル');
+          await channel.setParent(config.thread.closedCategory);
+
           interaction.reply({
             embeds: [
               new MessageEmbed()
