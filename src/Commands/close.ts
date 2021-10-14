@@ -11,7 +11,7 @@ import config from '../config.json';
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('close')
-    .setDescription('スレッドをCloseします。(取り消し不可)'),
+    .setDescription('スレッドをCloseします。'),
   async execute(interaction: CommandInteraction) {
     const commandChannel = interaction.channel as TextChannel;
     if (commandChannel?.parentId !== config.thread.openCategory) {
