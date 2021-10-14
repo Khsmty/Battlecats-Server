@@ -24,7 +24,12 @@ module.exports = {
         });
     } catch (e) {
       message.reply({
-        embeds: [new MessageEmbed().setTitle('エラー').setDescription(`\`\`\`js\n${e}\n\`\`\``).setColor('RED')],
+        embeds: [
+          new MessageEmbed()
+            .setTitle('エラー')
+            .setDescription(`\`\`\`js\n${e}\n\`\`\``)
+            .setColor('RED'),
+        ],
       });
     }
   },

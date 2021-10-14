@@ -7,21 +7,36 @@ module.exports = {
 
     const messageChannel: any = message.channel;
 
-    if (message.guildId === '755774191613247568' || message.guildId === '796606104410783784') {
+    if (
+      message.guildId === '755774191613247568' ||
+      message.guildId === '796606104410783784'
+    ) {
       (message.client.channels.cache.get('872863093359800330') as TextChannel)
         .send({
           embeds: [
             new MessageEmbed()
               .setTitle('メッセージ削除')
-              .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+              .setAuthor(
+                message.author.tag,
+                message.author.displayAvatarURL({ dynamic: true })
+              )
               .addField('メッセージ', message.content || '*なし*')
-              .addField('添付ファイル', message.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') || '*なし*')
-              .addField('チャンネル', `${messageChannel} (#${messageChannel.name}/${messageChannel.id})`, true)
+              .addField(
+                '添付ファイル',
+                message.attachments
+                  .map((a) => `[URL](${a.proxyURL})`)
+                  .join(', ') || '*なし*'
+              )
+              .addField(
+                'チャンネル',
+                `${messageChannel} (#${messageChannel.name}/${messageChannel.id})`,
+                true
+              )
               .addField(
                 'カテゴリ',
-                `${messageChannel.parent ? messageChannel.parent.name : '*なし*'} (${
-                  messageChannel.parentId || '*なし*'
-                })`,
+                `${
+                  messageChannel.parent ? messageChannel.parent.name : '*なし*'
+                } (${messageChannel.parentId || '*なし*'})`,
                 true
               )
               .setTimestamp()

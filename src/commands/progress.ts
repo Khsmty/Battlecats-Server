@@ -1,12 +1,21 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Message, Snowflake, TextChannel, Collection, CommandInteraction } from 'discord.js';
+import {
+  Message,
+  Snowflake,
+  TextChannel,
+  Collection,
+  CommandInteraction,
+} from 'discord.js';
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('progress')
     .setDescription('メンバーの進行状況を検索します。')
     .addUserOption((option) =>
-      option.setName('user').setDescription('進行状況を検索するユーザーを入力してください。').setRequired(true)
+      option
+        .setName('user')
+        .setDescription('進行状況を検索するユーザーを入力してください。')
+        .setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {
     await interaction.deferReply();
@@ -18,13 +27,17 @@ module.exports = {
     for (let i = 0; i < 5; i++) {
       try {
         const fetchMsgs: Collection<Snowflake, Message> = await (
-          interaction.client.channels.cache.get('822771682157658122') as TextChannel
+          interaction.client.channels.cache.get(
+            '822771682157658122'
+          ) as TextChannel
         )?.messages.fetch({ limit: 100, before: beforeId });
 
         beforeId = fetchMsgs!.last()!.id;
 
         const messageWithImages = fetchMsgs
-          .filter((msg: any) => msg.attachments.first() && msg.author.id === userId)
+          .filter(
+            (msg: any) => msg.attachments.first() && msg.author.id === userId
+          )
           .map((msg) => msg);
 
         for (const msg of messageWithImages) {
@@ -35,12 +48,17 @@ module.exports = {
       }
     }
 
-    if (!messages[0]) return interaction.editReply('進行状況が見つかりませんでした。');
+    if (!messages[0])
+      return interaction.editReply('進行状況が見つかりませんでした。');
 
     const images: string[] = [];
     messages
-      .filter((msg) => messages[0].createdTimestamp - msg.createdTimestamp < 300000)
-      .forEach((msg) => msg.attachments.forEach((attachment) => images.push(attachment.url)));
+      .filter(
+        (msg) => messages[0].createdTimestamp - msg.createdTimestamp < 300000
+      )
+      .forEach((msg) =>
+        msg.attachments.forEach((attachment) => images.push(attachment.url))
+      );
 
     await interaction.editReply({ files: images });
   },
