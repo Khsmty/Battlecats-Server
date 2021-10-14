@@ -1,19 +1,19 @@
-name: Eslint
+name: Prettier
 
 on: [push, pull_request]
 
 jobs:
-  lint:
+  prettier:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 16.9.1
-      - name: Eslint
+      - name: Prettier
         run: |
           yarn install
-          yarn eslint . --fix
+          yarn prettier . -w
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
-          commit_message: Lint
+          commit_message: Format
