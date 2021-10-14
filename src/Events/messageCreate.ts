@@ -1,11 +1,4 @@
-import {
-  MessageEmbed,
-  MessageActionRow,
-  MessageButton,
-  Interaction,
-  TextChannel,
-  Message,
-} from 'discord.js';
+import { MessageEmbed, TextChannel, Message } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 
