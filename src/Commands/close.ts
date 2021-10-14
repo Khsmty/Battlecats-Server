@@ -56,11 +56,10 @@ module.exports = {
           });
 
           Bot.db.query(
-            'INSERT INTO `threadCloseQueue` (`channelId`, `date`, `listMessageId`) VALUES (?, ?, ?)',
+            'INSERT INTO `threadCloseQueue` (`channelId`, `date`) VALUES (?, ?)',
             [
               interaction.channelId,
               new Date(Date.now() + 3600000),
-              rows[0].listMessageId,
             ]
           );
         }
