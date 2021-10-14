@@ -1,1 +1,1 @@
-web: npm run build && npm run regist && npm start
+web: npm run regist && npm start

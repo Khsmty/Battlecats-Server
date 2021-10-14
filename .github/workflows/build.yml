@@ -1,17 +1,17 @@
-name: Prettier
-on: [push, pull_request]
+name: Build
+on: push
 jobs:
-  prettier:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 16.9.1
-      - name: Prettier
+      - name: Build
         run: |
           yarn install
-          yarn prettier . -w
+          yarn tsc
       - uses: stefanzweifel/git-auto-commit-action@v3.0.0
         with:
-          commit_message: Format
+          commit_message: Build
