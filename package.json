@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "start": "node index",
-    "lint": "npx eslint . --fix",
-    "regist": "node regist"
+    "start": "node dist/index",
+    "build": "npx tsc",
+    "lint": "npx prettier . --fix",
+    "regist": "node dist/regist"
   },
   "engines": {
     "node": "16.9.1"
@@ -20,19 +21,19 @@
     "mysql": "^2.18.1",
     "node-cron": "^3.0.0",
     "node-fetch": "^2.6.2",
+    "path": "^0.12.7",
     "request": "^2.88.2",
     "serp": "^2.1.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
+    "@types/mysql": "^2.15.19",
+    "@types/node-cron": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-standard": "^5.0.0",
-    "prettier": "^2.3.2"
+    "node": "^16.10.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
   }
 }
