@@ -27,7 +27,7 @@ module.exports = {
           .catch(() => interaction.editReply('エラーが発生しました。'));
       }
     } else if (interaction.isButton()) {
-      const targetMember = interaction.member!.roles as GuildMemberRoleManager;
+      const targetMemberRoles = interaction.member!.roles as GuildMemberRoleManager;
       const buttonId = interaction.customId;
 
       if (buttonId.startsWith('rolepanel-')) {
@@ -46,7 +46,7 @@ module.exports = {
             label: roleData.name,
             value: roleData.id,
             emoji: roleData.emoji,
-            default: targetMember.cache.has(roleData.id),
+            default: targetMemberRoles.cache.has(roleData.id),
           });
         }
 
@@ -134,7 +134,7 @@ module.exports = {
         });
       }
     } else if (interaction.isSelectMenu()) {
-      const targetMember = interaction.member!.roles as GuildMemberRoleManager;
+      const targetMemberRoles = interaction.member!.roles as GuildMemberRoleManager;
       const selectId = interaction.customId;
 
       if (selectId.startsWith('rolepanel-')) {
@@ -142,12 +142,18 @@ module.exports = {
         const rolesData = require(`../RolepanelData/${panelType}.json`);
 
         const panelRoles = rolesData.map((role: { id: string }) => role.id);
-        const userRoles = targetMember.cache
+        const userRoles = targetMemberRoles.cache
           .map((role) => role.id)
           .filter((f) => panelRoles.includes(f));
 
-        targetMember.remove(userRoles);
-        targetMember.add(interaction.values);
+        // targetMemberRoles.remove(userRoles);
+        // targetMemberRoles.add(interaction.values);
+
+        if (userRoles.length < interaction.values.length) {
+          targetMemberRoles.add(interaction.values.filter((i) => userRoles.indexOf(i) === -1));
+        } else {
+          targetMemberRoles.remove(userRoles.filter((i) => interaction.values.indexOf(i) === -1));
+        }
 
         interaction.update({
           embeds: [
