@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageEmbed, CommandInteraction } from 'discord.js';
 import Bot from '../Components/Bot';
-import config from '../config.json'
+import config from '../config.json';
 
 module.exports = {
   data: new SlashCommandBuilder()
