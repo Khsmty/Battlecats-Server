@@ -57,10 +57,7 @@ module.exports = {
 
           Bot.db.query(
             'INSERT INTO `threadCloseQueue` (`channelId`, `date`) VALUES (?, ?)',
-            [
-              interaction.channelId,
-              new Date(Date.now() + 3600000),
-            ]
+            [interaction.channelId, new Date(Date.now() + 3600000)]
           );
         }
       }
