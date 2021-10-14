@@ -140,7 +140,7 @@ module.exports = {
         const panelType: string = selectId.slice(10);
         const rolesData = require(`../RolepanelData/${panelType}.json`);
 
-        const panelRoles = rolesData.map((role: { id: string; }) => role.id);
+        const panelRoles = rolesData.map((role: { id: string }) => role.id);
         const userRoles = targetMember.cache
           .map((role) => role.id)
           .filter((f) => panelRoles.includes(f));
