@@ -11,11 +11,7 @@ module.exports = {
       newMessage.guildId === '755774191613247568' ||
       newMessage.guildId === '796606104410783784'
     ) {
-      (
-        newMessage.client.channels.cache.get(
-          '872863093359800330'
-        ) as TextChannel
-      )
+      (newMessage.client.channels.cache.get('872863093359800330') as TextChannel)
         ?.send({
           embeds: [
             new MessageEmbed()
@@ -29,9 +25,7 @@ module.exports = {
               .addField('編集後', newMessage.content || '*なし*')
               .addField(
                 '添付ファイル',
-                newMessage.attachments
-                  .map((a) => `[URL](${a.proxyURL})`)
-                  .join(', ') || '*なし*'
+                newMessage.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') || '*なし*'
               )
               .addField(
                 'チャンネル',
@@ -40,9 +34,9 @@ module.exports = {
               )
               .addField(
                 'カテゴリ',
-                `${
-                  messageChannel.parent ? messageChannel.parent.name : '*なし*'
-                } (${messageChannel.parentId || '*なし*'})`,
+                `${messageChannel.parent ? messageChannel.parent.name : '*なし*'} (${
+                  messageChannel.parentId || '*なし*'
+                })`,
                 true
               )
               .setTimestamp()

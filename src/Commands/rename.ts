@@ -1,10 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import {
-  TextChannel,
-  Permissions,
-  MessageEmbed,
-  CommandInteraction,
-} from 'discord.js';
+import { TextChannel, Permissions, MessageEmbed, CommandInteraction } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 
@@ -46,25 +41,22 @@ module.exports = {
             embeds: [
               new MessageEmbed()
                 .setTitle(':x: エラー')
-                .setDescription(
-                  'このスレッドのタイトルを変更する権限がありません。'
-                )
+                .setDescription('このスレッドのタイトルを変更する権限がありません。')
                 .setColor('RED'),
             ],
             ephemeral: true,
           });
         } else {
-          Bot.db.query(
-            'UPDATE `threads` SET `title` = ? WHERE `channelId` = ? AND `closed` = ?',
-            [newTitle, interaction.channelId, false]
-          );
+          Bot.db.query('UPDATE `threads` SET `title` = ? WHERE `channelId` = ? AND `closed` = ?', [
+            newTitle,
+            interaction.channelId,
+            false,
+          ]);
 
           (interaction.channel as TextChannel).setName(newTitle);
 
           (
-            interaction.client.channels.cache.get(
-              config.thread.createChannel
-            ) as TextChannel
+            interaction.client.channels.cache.get(config.thread.createChannel) as TextChannel
           )?.messages
             .fetch(rows[0].listMessageId)
             .then((msg) => {
@@ -85,9 +77,7 @@ module.exports = {
             embeds: [
               new MessageEmbed()
                 .setTitle(':white_check_mark: 成功')
-                .setDescription(
-                  `スレッドのタイトルを「${newTitle}」に変更しました。`
-                )
+                .setDescription(`スレッドのタイトルを「${newTitle}」に変更しました。`)
                 .setColor('GREEN'),
             ],
           });

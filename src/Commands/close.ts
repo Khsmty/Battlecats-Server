@@ -1,22 +1,12 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import {
-  TextChannel,
-  Permissions,
-  MessageEmbed,
-  CommandInteraction,
-} from 'discord.js';
+import { TextChannel, Permissions, MessageEmbed, CommandInteraction } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('close')
-    .setDescription('スレッドをCloseします。'),
+  data: new SlashCommandBuilder().setName('close').setDescription('スレッドをCloseします。'),
   async execute(interaction: CommandInteraction) {
-    if (
-      (interaction.channel as TextChannel)?.parentId !==
-      config.thread.openCategory
-    ) {
+    if ((interaction.channel as TextChannel)?.parentId !== config.thread.openCategory) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -57,10 +47,10 @@ module.exports = {
             ],
           });
 
-          Bot.db.query(
-            'INSERT INTO `threadCloseQueue` (`channelId`, `date`) VALUES (?, ?)',
-            [interaction.channelId, new Date(Date.now() + 3600000)]
-          );
+          Bot.db.query('INSERT INTO `threadCloseQueue` (`channelId`, `date`) VALUES (?, ?)', [
+            interaction.channelId,
+            new Date(Date.now() + 3600000),
+          ]);
         }
       }
     );

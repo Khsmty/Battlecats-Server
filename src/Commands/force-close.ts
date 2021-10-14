@@ -1,10 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import {
-  TextChannel,
-  Permissions,
-  MessageEmbed,
-  CommandInteraction,
-} from 'discord.js';
+import { TextChannel, Permissions, MessageEmbed, CommandInteraction } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 
@@ -17,9 +12,7 @@ module.exports = {
       'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
       [interaction.channelId, false],
       async (e, rows) => {
-        if (
-          !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')
-        ) {
+        if (!(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')) {
           return interaction.reply({
             embeds: [
               new MessageEmbed()
@@ -30,10 +23,7 @@ module.exports = {
             ephemeral: true,
           });
         } else {
-          if (
-            (interaction.channel as TextChannel)?.parentId !==
-            config.thread.openCategory
-          ) {
+          if ((interaction.channel as TextChannel)?.parentId !== config.thread.openCategory) {
             return interaction.reply({
               embeds: [
                 new MessageEmbed()
@@ -67,9 +57,7 @@ module.exports = {
             [interaction.channelId, false],
             (e, rows) => {
               (
-                interaction.client.channels.cache.get(
-                  config.thread.createChannel
-                ) as TextChannel
+                interaction.client.channels.cache.get(config.thread.createChannel) as TextChannel
               )?.messages
                 .fetch(rows[0].listMessageId)
                 .then((msg) => {
@@ -80,15 +68,16 @@ module.exports = {
             }
           );
           // チャンネルを空きチャンネルとしてマーク
-          Bot.db.query(
-            'UPDATE `threadChannels` SET `inUse` = ? WHERE `channelId` = ?',
-            [false, interaction.channelId]
-          );
+          Bot.db.query('UPDATE `threadChannels` SET `inUse` = ? WHERE `channelId` = ?', [
+            false,
+            interaction.channelId,
+          ]);
           // スレッドをClose済としてマーク
-          Bot.db.query(
-            'UPDATE `threads` SET `closed` = ? WHERE `channelId` = ? AND `closed` = ?',
-            [true, interaction.channelId, false]
-          );
+          Bot.db.query('UPDATE `threads` SET `closed` = ? WHERE `channelId` = ? AND `closed` = ?', [
+            true,
+            interaction.channelId,
+            false,
+          ]);
         }
       }
     );

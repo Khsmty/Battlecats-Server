@@ -17,10 +17,7 @@ module.exports = {
       return interaction.reply('先にボイスチャンネルに参加してください。');
 
     new DiscordTogether(interaction.client)
-      .createTogetherCode(
-        (interaction.member as any)?.voice.channelId,
-        'youtube'
-      )
+      .createTogetherCode((interaction.member as any)?.voice.channelId, 'youtube')
       .then(async (invite: { code: string }) => {
         await interaction.reply({
           embeds: [

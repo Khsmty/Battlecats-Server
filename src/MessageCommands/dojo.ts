@@ -16,8 +16,7 @@ module.exports = {
       if (!args[1] || !args[2] || !args[3] || !message.attachments.first())
         return message.reply('必要な引数が不足しています。');
 
-      const sendCh: any =
-        message.client.channels.cache.get('893791664278220840');
+      const sendCh: any = message.client.channels.cache.get('893791664278220840');
       const sendImage = await sendCh?.send({
         files: [
           {
@@ -58,9 +57,7 @@ module.exports = {
             const userData = await message.client.users.fetch(rows[i].userId);
 
             await message.channel.send({
-              content: `**${i + 1}**位 **${userData.username}**#${
-                userData.discriminator
-              } さん`,
+              content: `**${i + 1}**位 **${userData.username}**#${userData.discriminator} さん`,
               files: [
                 {
                   attachment: rows[i].imageUrl,
