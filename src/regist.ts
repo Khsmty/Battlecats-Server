@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log(require('child_process').exec('ls'))
+console.log(require('child_process').exec('ls'));
 
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
