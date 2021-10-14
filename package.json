@@ -23,7 +23,8 @@
     "node-fetch": "^2.6.2",
     "path": "^0.12.7",
     "request": "^2.88.2",
-    "serp": "^2.1.0"
+    "serp": "^2.1.0",
+    "typescript": "^4.4.4"
   },
   "devDependencies": {
     "@types/mysql": "^2.15.19",
@@ -33,7 +34,6 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "node": "^16.10.0",
-    "prettier": "^2.4.1",
-    "typescript": "^4.4.3"
+    "prettier": "^2.4.1"
   }
 }
