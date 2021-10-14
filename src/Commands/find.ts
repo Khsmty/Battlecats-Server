@@ -35,7 +35,11 @@ module.exports = {
           embeds: [
             new MessageEmbed()
               .setTitle(`「${query}」の検索結果`)
-              .setDescription(results.join('\n\n'))
+              .setDescription(
+                results[0]
+                  ? results.join('\n\n')
+                  : '*検索結果がありませんでした*'
+              )
               .setColor('BLURPLE'),
           ],
         });
