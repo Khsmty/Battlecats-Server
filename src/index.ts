@@ -77,7 +77,7 @@ setInterval(() => {
           ) as TextChannel;
 
           await channel.setName('空きチャンネル');
-          await channel.setParent(config.threadClosedCategoryId);
+          await channel.setParent(config.thread.closedCategory);
 
           channel.send({
             embeds: [
@@ -89,7 +89,9 @@ setInterval(() => {
 
           // スレッド一覧の埋め込み色を赤色にする
           (
-            client.channels.cache.get(config.threadCreateChannel) as TextChannel
+            client.channels.cache.get(
+              config.thread.createChannel
+            ) as TextChannel
           )?.messages
             .fetch(rows[0].listMessageId)
             .then((msg) => {

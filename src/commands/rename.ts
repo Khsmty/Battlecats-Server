@@ -22,7 +22,7 @@ module.exports = {
     const newTitle: any = interaction.options.getString('new-title');
 
     const commandChannel = interaction.channel as TextChannel;
-    if (commandChannel?.parentId !== config.threadOpenCategoryId) {
+    if (commandChannel?.parentId !== config.thread.openCategory) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -63,7 +63,7 @@ module.exports = {
 
           (
             interaction.client.channels.cache.get(
-              config.threadCreateChannel
+              config.thread.createChannel
             ) as TextChannel
           )?.messages
             .fetch(rows[0].listMessageId)

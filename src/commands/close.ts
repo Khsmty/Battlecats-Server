@@ -14,7 +14,7 @@ module.exports = {
     .setDescription('スレッドをCloseします。(取り消し不可)'),
   async execute(interaction: CommandInteraction) {
     const commandChannel = interaction.channel as TextChannel;
-    if (commandChannel?.parentId !== config.threadOpenCategoryId) {
+    if (commandChannel?.parentId !== config.thread.openCategory) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()

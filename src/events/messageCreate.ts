@@ -21,7 +21,7 @@ module.exports = {
     }
 
     // スレッド作成
-    if (message.channelId === config.threadCreateChannel) {
+    if (message.channelId === config.thread.createChannel) {
       if (!message.content) {
         message.reply({
           embeds: [
@@ -64,7 +64,7 @@ module.exports = {
               useChannelDb.channelId
             );
 
-            useChannel.setParent(config.threadOpenCategoryId);
+            useChannel.setParent(config.thread.openCategory);
             useChannel.setName(message.content);
 
             Bot.db.query(
@@ -126,7 +126,7 @@ module.exports = {
     }
 
     if (
-      (message.channel as TextChannel).parentId === config.threadOpenCategoryId
+      (message.channel as TextChannel).parentId === config.thread.openCategory
     ) {
       Bot.db.query(
         'SELECT * FROM `threadCloseQueue` WHERE `channelId` = ?',
