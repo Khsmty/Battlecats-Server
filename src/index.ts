@@ -95,22 +95,26 @@ setInterval(async () => {
     const lastMessageCollection = await channel.messages.fetch({ limit: 1 });
     const lastMessage: Message = lastMessageCollection.first();
 
-    if (lastMessage.createdTimestamp + 172800000 < Date.now()) {
-      channel.send({
-        embed: [
-          new MessageEmbed()
-            .setDescription(
-              '2日間以上メッセージがないため、\n1時間後にCloseされます。\nメッセージを送信するとCloseをキャンセルできます。'
-            )
-            .setColor('RED'),
-        ],
-      });
+    Bot.db.query('SELECT `threadCloseQueue` WHERE `channelId` = ?', [channel.id], (e, rows) => {
+      if (!rows || !rows[0]) {
+        if (lastMessage.createdTimestamp + 172800000 < Date.now()) {
+          channel.send({
+            embeds: [
+              new MessageEmbed()
+                .setDescription(
+                  '2日間以上メッセージがないため、\n1時間後にCloseされます。\nメッセージを送信するとCloseをキャンセルできます。'
+                )
+                .setColor('RED'),
+            ],
+          });
 
-      Bot.db.query('INSERT INTO `threadCloseQueue` (`channelId`, `date`) VALUES (?, ?)', [
-        channel.id,
-        new Date(Date.now() + 3600000),
-      ]);
-    }
+          Bot.db.query('INSERT INTO `threadCloseQueue` (`channelId`, `date`) VALUES (?, ?)', [
+            channel.id,
+            new Date(Date.now() + 3600000),
+          ]);
+        }
+      }
+    });
   }
 }, 600000);
 
