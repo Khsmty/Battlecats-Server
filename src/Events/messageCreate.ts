@@ -22,8 +22,8 @@ module.exports = {
       const group = result.groups;
 
       message.client.channels
-        .fetch(group.channelId)
-        .then((channel) => channel.messages.fetch(group.messageId))
+        .fetch(group!.channelId)
+        .then((channel: any) => channel.messages.fetch(group!.messageId))
         .then((targetMessage) => {
           const expandmsg = new MessageEmbed()
             .setAuthor(targetMessage.author.tag, targetMessage.author.displayAvatarURL())
@@ -35,7 +35,7 @@ module.exports = {
                   : 'BLURPLE'
                 : 'BLURPLE'
             )
-            .setImage(targetMessage.attachments?.map((a) => a.url).shift() ?? null)
+            .setImage(targetMessage.attachments?.map((a: any) => a.url).shift() ?? null)
             .setFooter(`#${targetMessage.channel.name}`)
             .setTimestamp(targetMessage.createdTimestamp);
           const jumpButton = new MessageButton()
@@ -48,8 +48,8 @@ module.exports = {
             components: [new MessageActionRow().addComponents(jumpButton)],
           });
 
-          targetMessage.embeds.forEach((embed) => {
-            message.channel.send({ embeds: [embed] });
+          targetMessage.embeds.forEach((embed: any) => {
+            (message.channel as TextChannel).send({ embeds: [embed] });
           });
         })
         .catch((e) => {});
