@@ -15,50 +15,45 @@ module.exports = {
 
     // メッセージリンク展開
     const messageUrlPattern =
-        /http(?:s)?:\/\/(?:.*)?discord(?:app)?\.com\/channels\/(?:\d{17,19})\/(?<channelId>\d{17,19})\/(?<messageId>\d{17,19})/g
-      let result
+      /http(?:s)?:\/\/(?:.*)?discord(?:app)?\.com\/channels\/(?:\d{17,19})\/(?<channelId>\d{17,19})\/(?<messageId>\d{17,19})/g;
+    let result;
 
-      while ((result = messageUrlPattern.exec(message.content)) !== null) {
-        const group = result.groups
+    while ((result = messageUrlPattern.exec(message.content)) !== null) {
+      const group = result.groups;
 
-        message.client.channels
-          .fetch(group.channelId)
-          .then((channel) => channel.messages.fetch(group.messageId))
-          .then((targetMessage) => {
-            const expandmsg = new MessageEmbed()
-              .setAuthor(
-                targetMessage.author.tag,
-                targetMessage.author.displayAvatarURL(),
-              )
-              .setDescription(targetMessage.content)
-              .setColor(
-                targetMessage.member
-                  ? targetMessage.member.roles.highest
-                    ? targetMessage.member.roles.highest.color
-                    : 'BLURPLE'
-                  : 'BLURPLE',
-              )
-              .setImage(
-                targetMessage.attachments?.map((a) => a.url).shift() ?? null,
-              )
-              .setFooter(`#${targetMessage.channel.name}`)
-              .setTimestamp(targetMessage.createdTimestamp)
-            const jumpButton = new MessageButton()
-              .setLabel('元メッセージへ')
-              .setStyle('LINK')
-              .setURL(targetMessage.url)
+      message.client.channels
+        .fetch(group.channelId)
+        .then((channel) => channel.messages.fetch(group.messageId))
+        .then((targetMessage) => {
+          const expandmsg = new MessageEmbed()
+            .setAuthor(targetMessage.author.tag, targetMessage.author.displayAvatarURL())
+            .setDescription(targetMessage.content)
+            .setColor(
+              targetMessage.member
+                ? targetMessage.member.roles.highest
+                  ? targetMessage.member.roles.highest.color
+                  : 'BLURPLE'
+                : 'BLURPLE'
+            )
+            .setImage(targetMessage.attachments?.map((a) => a.url).shift() ?? null)
+            .setFooter(`#${targetMessage.channel.name}`)
+            .setTimestamp(targetMessage.createdTimestamp);
+          const jumpButton = new MessageButton()
+            .setLabel('元メッセージへ')
+            .setStyle('LINK')
+            .setURL(targetMessage.url);
 
-            message.channel.send({
-              embeds: [expandmsg],
-              components: [new MessageActionRow().addComponents(jumpButton)],
-            })
+          message.channel.send({
+            embeds: [expandmsg],
+            components: [new MessageActionRow().addComponents(jumpButton)],
+          });
 
-            targetMessage.embeds.forEach((embed) => {
-              message.channel.send({ embeds: [embed] })
-            })
-          })
-          .catch((e) => {})
-      }
+          targetMessage.embeds.forEach((embed) => {
+            message.channel.send({ embeds: [embed] });
+          });
+        })
+        .catch((e) => {});
+    }
 
     // スレッド作成
     if (message.channelId === config.thread.createChannel) {
