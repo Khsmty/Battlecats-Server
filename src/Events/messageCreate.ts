@@ -1,20 +1,36 @@
 import { MessageEmbed, MessageButton, MessageActionRow, TextChannel, Message } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
-import Update from '../Components/Board';
+import UpdateBoard from '../Components/Board';
 
 module.exports = {
   name: 'messageCreate',
   async execute(message: Message) {
+    // DISBOARD
     if (
-      message.author.id === message.client.user?.id &&
-      message.embeds[0] &&
-      message.embeds[0].title?.includes('ディスコード')
+      message.author.id === '302050872383242240' &&
+      message.embeds[0].image?.url === 'https://disboard.org/images/bot-command-image-bump.png'
     ) {
-      Update(message);
+      UpdateBoard(message);
     }
 
-    // Botによるメッセージは無視する
+    // Chahan
+    if (
+      message.author.id === '302050872383242240' &&
+      message.embeds[0].description?.includes('upに成功しました。')
+    ) {
+      UpdateBoard(message);
+    }
+
+    // GlowBoard
+    if (
+      message.author.id === '832614051514417202' &&
+      message.embeds[0].description?.includes('サーバーの表示順位をアップしました!')
+    ) {
+      UpdateBoard(message);
+    }
+
+    // Botによるメッセージは無視
     if (message.author.bot) return;
 
     // お知らせ自動公開

@@ -1,8 +1,16 @@
 import { MessageEmbed, Message, TextChannel } from 'discord.js';
+import UpdateBoard from '../Components/Board';
 
 module.exports = {
   name: 'messageUpdate',
   async execute(oldMessage: Message, newMessage: Message) {
+    if (
+      newMessage.author.id === '761562078095867916' &&
+      newMessage.embeds[0].fields[0].name.includes('をアップしたよ!')
+    ) {
+      UpdateBoard(newMessage);
+    }
+
     if (newMessage.author.bot) return;
 
     const messageChannel: any = newMessage.channel;
