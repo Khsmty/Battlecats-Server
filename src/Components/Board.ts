@@ -78,7 +78,7 @@ async function Update(message: Message) {
     updateTime = new Date(Date.now() + 5400000);
   }
 
-  embed.setDescription(`${time(updateTime, 'R')} にお知らせします！`);
+  embed.setDescription(`${time(updateTime, 'T')}(${time(updateTime, 'R')}) にお知らせします！`);
 
   (message.channel as TextChannel)?.send({
     embeds: [embed],
