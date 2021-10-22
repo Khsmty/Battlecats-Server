@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { time } from '@discordjs/builders';
 import Bot from './Bot';
 
@@ -80,7 +80,7 @@ async function Update(message: Message) {
 
   embed.setDescription(`${time(updateTime, 'R')} にお知らせします！`);
 
-  message.reply({
+  (message.channel as TextChannel)?.send({
     embeds: [embed],
   });
 
