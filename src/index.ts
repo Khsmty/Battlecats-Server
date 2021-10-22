@@ -33,8 +33,9 @@ cron.schedule('0,15 * * * *', async () => {
         ?.roles.cache.filter((role: Role) => role.name.includes(event.role))
         .first()?.id;
 
-      const notifyChannel: any = client.channels.cache.get('805732155606171658');
-      notifyChannel?.send(`<@&${mentionRole}> ${event.name}`);
+      (client.channels.cache.get('805732155606171658') as TextChannel)?.send(
+        `<@&${mentionRole}> ${event.name}`
+      );
     }
   }
 });
