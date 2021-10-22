@@ -6,28 +6,32 @@ import UpdateBoard from '../Components/Board';
 module.exports = {
   name: 'messageCreate',
   async execute(message: Message) {
-    // DISBOARD
-    if (
-      message.author.id === '302050872383242240' &&
-      message.embeds[0].image?.url === 'https://disboard.org/images/bot-command-image-bump.png'
-    ) {
-      UpdateBoard(message);
-    }
+    if (!message.guild) return;
 
-    // Chahan
-    if (
-      message.author.id === '302050872383242240' &&
-      message.embeds[0].description?.includes('upに成功しました。')
-    ) {
-      UpdateBoard(message);
-    }
+    if (message.channelId === config.upChannel) {
+      // DISBOARD
+      if (
+        message.author.id === '302050872383242240' &&
+        message.embeds[0].image?.url === 'https://disboard.org/images/bot-command-image-bump.png'
+      ) {
+        UpdateBoard(message);
+      }
 
-    // GlowBoard
-    if (
-      message.author.id === '832614051514417202' &&
-      message.embeds[0].description?.includes('サーバーの表示順位をアップしました!')
-    ) {
-      UpdateBoard(message);
+      // Chahan
+      if (
+        message.author.id === '302050872383242240' &&
+        message.embeds[0].description?.includes('upに成功しました。')
+      ) {
+        UpdateBoard(message);
+      }
+
+      // GlowBoard
+      if (
+        message.author.id === '832614051514417202' &&
+        message.embeds[0].description?.includes('サーバーの表示順位をアップしました!')
+      ) {
+        UpdateBoard(message);
+      }
     }
 
     // Botによるメッセージは無視
