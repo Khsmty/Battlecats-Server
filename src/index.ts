@@ -42,7 +42,7 @@ cron.schedule('0,15 * * * *', async () => {
 
 setInterval(async () => {
   // Closeキューを処理
-  Bot.db.query('SELECT * FROM `threadCloseQueue`', async (e: any, rows: any) => {
+  Bot.db.query('SELECT * FROM `threadCloseQueue`', async (e: any, rows: any[]) => {
     if (!rows || !rows[0]) return;
 
     for (const row of rows) {
@@ -118,6 +118,40 @@ setInterval(async () => {
     });
   }
 }, 600000);
+
+setInterval(() => {
+  Bot.db.query('SELECT * FROM `updateNotify`', async (e: any, rows: any[]) => {
+    if (!rows || !rows[0]) return;
+
+    const channel = client.channels.cache.get(config.upChannel) as TextChannel;
+
+    for (const row of rows) {
+      if (row.date <= Date.now()) {
+        let updateCommand;
+        if (row.boardType === 'disboard') {
+          updateCommand = '!d bump';
+        } else if (row.boardType === 'dissoku') {
+          updateCommand = '/dissoku up';
+        } else if (row.boardType === 'chahan') {
+          updateCommand = 'c!up';
+        } else if (row.boardType === 'glow') {
+          updateCommand = 'g.toss';
+        }
+
+        channel.send({
+          embeds: [
+            new MessageEmbed()
+              .setTitle('Upできます！')
+              .setDescription(`\`${updateCommand}\` を送信してUpできます！`)
+              .setColor('BLURPLE'),
+          ],
+        });
+
+        Bot.db.query('DELETE FROM `updateNotify` WHERE `boardType` = ?', [row.boardType]);
+      }
+    }
+  });
+}, 10000);
 
 const commandFiles = fs
   .readdirSync(path.resolve(__dirname, 'Commands'))

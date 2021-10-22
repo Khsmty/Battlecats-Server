@@ -1,10 +1,15 @@
 import { MessageEmbed, MessageButton, MessageActionRow, TextChannel, Message } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
+import Update from '../Components/Board';
 
 module.exports = {
   name: 'messageCreate',
   async execute(message: Message) {
+    if (message.author.id === message.client.user?.id && message.embeds[0] && message.embeds[0].title?.includes('ディスコード')) {
+      Update(message);
+    }
+
     // Botによるメッセージは無視する
     if (message.author.bot) return;
 
