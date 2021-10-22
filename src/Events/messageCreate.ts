@@ -19,7 +19,7 @@ module.exports = {
 
       // Chahan
       if (
-        message.author.id === '302050872383242240' &&
+        message.author.id === '727981800240185454' &&
         message.embeds[0].description?.includes('upに成功しました。')
       ) {
         UpdateBoard(message);
