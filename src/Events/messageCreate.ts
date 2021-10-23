@@ -39,7 +39,7 @@ module.exports = {
     if (message.author.bot) return;
 
     // Pinメッセージ
-    Pin(message.channel as TextChannel)
+    Pin(message.channel as TextChannel);
 
     // お知らせ自動公開
     if (message.channel.type === 'GUILD_NEWS') {

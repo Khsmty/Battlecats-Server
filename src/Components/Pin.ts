@@ -23,6 +23,6 @@ export default async function (channel: TextChannel) {
 
     setTimeout(() => {
       Bot.pins = Bot.pins.filter((id: string) => id !== channel.id);
-    }, 1000)
+    }, 1000);
   }
 }
