@@ -2,6 +2,7 @@ import { MessageEmbed, MessageButton, MessageActionRow, TextChannel, Message } f
 import Bot from '../Components/Bot';
 import config from '../config.json';
 import UpdateBoard from '../Components/Board';
+import Pin from '../Components/Pin';
 
 module.exports = {
   name: 'messageCreate',
@@ -36,6 +37,9 @@ module.exports = {
 
     // Botによるメッセージは無視
     if (message.author.bot) return;
+
+    // Pinメッセージ
+    Pin(message.channel as TextChannel)
 
     // お知らせ自動公開
     if (message.channel.type === 'GUILD_NEWS') {

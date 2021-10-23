@@ -2,7 +2,7 @@ import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import { time } from '@discordjs/builders';
 import Bot from './Bot';
 
-async function Update(message: Message) {
+export default async function (message: Message) {
   const title = message.embeds[0].title;
   let boardType;
 
@@ -89,5 +89,3 @@ async function Update(message: Message) {
     updateTime,
   ]);
 }
-
-export default Update;

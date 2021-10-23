@@ -99,6 +99,6 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*.ts", "src/RolepanelData/*.json"],
+  "include": ["src/**/*.ts", "src/Data/**/*.json"],
   "exclude": ["node_modues"]
 }

@@ -32,7 +32,7 @@ module.exports = {
 
       if (buttonId.startsWith('rolepanel-')) {
         const panelType: string = buttonId.slice(10);
-        const rolesData = require(`../RolepanelData/${panelType}.json`);
+        const rolesData = require(`../Data/Rolepanel/${panelType}.json`);
         const messages: any = {
           channel: '表示/非表示にするチャンネルを選択してください。',
           progress: '自分に当てはまる進行状況を選択してください。',
@@ -139,7 +139,7 @@ module.exports = {
 
       if (selectId.startsWith('rolepanel-')) {
         const panelType: string = selectId.slice(10);
-        const rolesData = require(`../RolepanelData/${panelType}.json`);
+        const rolesData = require(`../Data/Rolepanel/${panelType}.json`);
 
         const panelRoles = rolesData.map((role: { id: string }) => role.id);
         const userRoles = targetMemberRoles.cache

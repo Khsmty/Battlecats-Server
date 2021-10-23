@@ -18,4 +18,5 @@ export default class Bot {
   });
   static commands: Collection<String, any> = new Collection();
   static messageCommands: Collection<String, any> = new Collection();
+  static pins: any = [];
 }
