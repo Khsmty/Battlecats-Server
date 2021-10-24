@@ -23,52 +23,6 @@ export default async function (message: Message) {
 
   const embed = new MessageEmbed().setTitle('Upを確認しました').setColor('GREEN');
 
-  if (boardType !== 'disboard') {
-    const countDb = () => {
-      return new Promise((resolve) => {
-        Bot.db.query('SELECT * FROM `updateCount` WHERE `userId` = ?', [authorId], (e, rows) => {
-          if (!rows || !rows[0]) {
-            Bot.db.query('INSERT INTO `updateCount` (`userId`, `count`) VALUES (?, ?)', [
-              authorId,
-              1,
-            ]);
-            resolve(1);
-          } else {
-            Bot.db.query('UPDATE `updateCount` SET `count` = ? WHERE `userId` = ?', [
-              rows[0].count + 1,
-              authorId,
-            ]);
-            resolve(rows[0].count + 1);
-          }
-        });
-      });
-    };
-
-    const countSort = () => {
-      return new Promise((resolve) => {
-        Bot.db.query(
-          'SELECT * FROM `updateCount` ORDER BY `count` DESC',
-          (e: any, rows: unknown) => {
-            if (!rows) {
-              resolve([]);
-            }
-
-            resolve(rows);
-          }
-        );
-      });
-    };
-
-    const updateCount: any = await countDb();
-    const countList: any = await countSort();
-
-    const countFind = countList.findIndex((index: { userId: string }) => {
-      return index.userId === authorId;
-    });
-
-    embed.addField('あなたの総Up数', `**${String(updateCount)}**回 (${countFind + 1}位)`);
-  }
-
   let updateTime: any;
   if (boardType === 'disboard') {
     updateTime = new Date(Date.now() + 7200000);
