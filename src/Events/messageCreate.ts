@@ -35,11 +35,11 @@ module.exports = {
       }
     }
 
-    // Botによるメッセージは無視
-    if (message.author.bot) return;
-
     // Pinメッセージ
     Pin(message.channel as TextChannel);
+
+    // Botによるメッセージは無視
+    if (message.author.bot) return;
 
     // お知らせ自動公開
     if (message.channel.type === 'GUILD_NEWS') {
