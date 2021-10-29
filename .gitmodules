@@ -1,0 +1,4 @@
+[submodule "Battlecats-api"]
+	path = Battlecats-api
+	url = git@github.com:tubuanha/Battlecats-api.git
+	branch = master
