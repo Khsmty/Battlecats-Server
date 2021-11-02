@@ -28,7 +28,7 @@ module.exports = {
       if (!type) {
         text += part.value;
       } else {
-        text += '[' + type + ' ' + part.value + ' ]';
+        text += ` \`[${type} ${part.value} ]\` `;
       }
     }
 
