@@ -27,9 +27,8 @@ module.exports = {
         .send({
           embeds: [
             new MessageEmbed()
-              .setTitle('メッセージ削除')
               .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-              .addField('メッセージ', message.content || '*なし*')
+              .setDescription(message.content || '*なし*')
               .addField(
                 '添付ファイル',
                 attachFiles.map((a) => `[URL](${a})`).join(', ') || '*なし*'

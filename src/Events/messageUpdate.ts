@@ -25,7 +25,7 @@ module.exports = {
     for (const part of diff) {
       const type = part.added ? '+' : part.removed ? '-' : null;
 
-      if (type) {
+      if (!type) {
         text += part.value;
       } else {
         text += '[' + type + ' ' + part.value + ' ]';
@@ -55,7 +55,6 @@ module.exports = {
         ?.send({
           embeds: [
             new MessageEmbed()
-              .setTitle('メッセージ編集')
               .setAuthor(
                 newMessage.author.tag,
                 newMessage.author.displayAvatarURL({ dynamic: true })
