@@ -7,6 +7,21 @@ module.exports = {
 
     const messageChannel: any = message.channel;
 
+    const attachFiles: string[] = [];
+    for (const attachment of message.attachments.map((attachment) => attachment)) {
+      const sendMsg = await (
+        message.client.channels.cache.get('904889227085508658') as TextChannel
+      )?.send({
+        files: [
+          {
+            attachment: attachment.url,
+            name: String(attachment.name),
+          },
+        ],
+      });
+      attachFiles.push(...sendMsg.attachments.map((attachment) => attachment.url));
+    }
+
     if (message.guildId === '755774191613247568' || message.guildId === '796606104410783784') {
       (message.client.channels.cache.get('872863093359800330') as TextChannel)
         .send({
@@ -17,7 +32,7 @@ module.exports = {
               .addField('メッセージ', message.content || '*なし*')
               .addField(
                 '添付ファイル',
-                message.attachments.map((a) => `[URL](${a.proxyURL})`).join(', ') || '*なし*'
+                attachFiles.map((a) => `[URL](${a})`).join(', ') || '*なし*'
               )
               .addField(
                 'チャンネル',
