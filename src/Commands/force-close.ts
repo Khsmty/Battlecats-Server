@@ -12,7 +12,7 @@ module.exports = {
       'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
       [interaction.channelId, false],
       async (e, rows) => {
-        if (!(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')) {
+        if (!message.member?.roles.cache.has('903921596241182731')) {
           return interaction.reply({
             embeds: [
               new MessageEmbed()
