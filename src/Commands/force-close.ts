@@ -19,7 +19,7 @@ module.exports = {
       [interaction.channelId, false],
       async (e, rows) => {
         if (
-          !(interaction.member?.roles.cache as GuildMemberRoleManager)?.has('903921596241182731')
+          !(interaction.member?.roles as GuildMemberRoleManager)?.cache.has('903921596241182731')
         ) {
           return interaction.reply({
             embeds: [
