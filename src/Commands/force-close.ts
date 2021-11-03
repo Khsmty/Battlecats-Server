@@ -1,5 +1,11 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { TextChannel, Permissions, MessageEmbed, CommandInteraction, GuildMemberRoleManager } from 'discord.js';
+import {
+  TextChannel,
+  Permissions,
+  MessageEmbed,
+  CommandInteraction,
+  GuildMemberRoleManager,
+} from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 
@@ -12,7 +18,9 @@ module.exports = {
       'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
       [interaction.channelId, false],
       async (e, rows) => {
-        if (!(interaction.member?.roles.cache as GuildMemberRoleManager)?.has('903921596241182731')) {
+        if (
+          !(interaction.member?.roles.cache as GuildMemberRoleManager)?.has('903921596241182731')
+        ) {
           return interaction.reply({
             embeds: [
               new MessageEmbed()
