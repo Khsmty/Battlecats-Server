@@ -67,6 +67,19 @@ module.exports = {
           }
         }
       );
+    } else if (args[0] === 'delete') {
+      const fetchMsgs: Collection<Snowflake, Message> = await(
+        message.channel as TextChannel
+      )?.messages.fetch({ limit: 100 });
+      const targetMsgs = fetchMsgs
+        .filter((msg: any) => msg.attachments.first() && msg.content.includes('位') && msg.author.id === message.client.user.id)
+        .map((msg) => msg)
+
+      targetMsgs
+        .filter((msg) => targetMsgs[0].createdTimestamp - msg.createdTimestamp < 180000)
+        .forEach((msg) => msg.delete());
+      
+      message.reply('削除しました。')
     }
   },
 };
