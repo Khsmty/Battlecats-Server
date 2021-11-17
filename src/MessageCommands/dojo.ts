@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, Collection, Snowflake, TextChannel } from 'discord.js';
 import Bot from '../Components/Bot';
 
 module.exports = {
@@ -76,13 +76,13 @@ module.exports = {
           (msg: any) =>
             msg.attachments.first() &&
             msg.content.includes('位') &&
-            msg.author.id === message.client.user.id
+            msg.author.id === message.client.user?.id
         )
-        .map((msg) => msg);
+        .map((msg: any) => msg);
 
       targetMsgs
-        .filter((msg) => targetMsgs[0].createdTimestamp - msg.createdTimestamp < 180000)
-        .forEach((msg) => msg.delete());
+        .filter((msg: any) => targetMsgs[0].createdTimestamp - msg.createdTimestamp < 180000)
+        .forEach((msg: any) => msg.delete());
 
       message.reply('削除しました。');
     }
