@@ -82,7 +82,7 @@ module.exports = {
 
       targetMsgs
         .filter((msg: any) => targetMsgs[0].createdTimestamp - msg.createdTimestamp < 180000)
-        .forEach((msg: any) => msg.delete());
+        .forEach(async (msg: any) => await msg.delete());
 
       message.reply('削除しました。');
     }
