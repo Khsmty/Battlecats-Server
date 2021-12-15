@@ -8,7 +8,7 @@ module.exports = {
 
     (member.client.channels.cache.get(config.welcomeChannel) as TextChannel).send(
       `${member} さん、**${member.guild.name}** へようこそ！\n` +
-        'まず、<#755803035564900372> をご確認ください！\nチャンネルの使い方は <#894400458624483360> をご覧ください。'
+        'まず、<#755803035564900372> をご確認ください。'
     );
     member.roles.add(config.memberRole);
   },

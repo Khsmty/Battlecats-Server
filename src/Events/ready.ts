@@ -6,5 +6,9 @@ module.exports = {
   execute(client: Client) {
     console.log(`Ready! Logged in as ${client.user?.tag}`);
     client.user?.setActivity('にゃんこ大戦争', { type: 'COMPETING' });
+
+    setInterval(() => {
+      client.user?.setActivity('にゃんこ大戦争', { type: 'COMPETING' });
+    }, 1000 * 60 * 60);
   },
 };
