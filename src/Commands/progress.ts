@@ -38,7 +38,13 @@ module.exports = {
       }
     }
 
-    if (!messages[0]) return interaction.editReply('進行状況が見つかりませんでした。');
+    if (!messages[0]) {
+      interaction.editReply({
+        content: '進行状況が見つかりませんでした。',
+        ephemeral: true,
+      });
+      return;
+    }
 
     const images: string[] = [];
     messages
