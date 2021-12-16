@@ -12,8 +12,6 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {
-    await interaction.deferReply();
-
     const userId = interaction.options.getUser('user')?.id;
     const messages: Message[] = [];
     let beforeId;
@@ -39,7 +37,7 @@ module.exports = {
     }
 
     if (!messages[0]) {
-      interaction.editReply({
+      interaction.reply({
         content: '進行状況が見つかりませんでした。',
         ephemeral: true,
       });
@@ -51,6 +49,6 @@ module.exports = {
       .filter((msg) => messages[0].createdTimestamp - msg.createdTimestamp < 300000)
       .forEach((msg) => msg.attachments.forEach((attachment) => images.push(attachment.url)));
 
-    await interaction.editReply({ files: images });
+    await interaction.reply({ files: images });
   },
 };
