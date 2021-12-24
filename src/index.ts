@@ -1,6 +1,7 @@
-import { MessageEmbed, Message, TextChannel, Role, CategoryChannel } from 'discord.js';
+import { MessageEmbed, Message, Channel, TextChannel, Role, CategoryChannel } from 'discord.js';
 import Bot from './Components/Bot';
-import * as dotenv from 'dotenv';
+import Web from './Web';
+import dotenv from 'dotenv';
 import cron from 'node-cron';
 import http from 'http';
 import events from './events.json';
@@ -33,9 +34,10 @@ cron.schedule('0,15 * * * *', async () => {
         ?.roles.cache.filter((role: Role) => role.name.includes(event.role))
         .first()?.id;
 
-      (client.channels.cache.get('805732155606171658') as TextChannel)?.send(
-        `<@&${mentionRole}> ${event.name}`
-      );
+      const notifyChannel: Channel | undefined = client.channels.cache.get('805732155606171658');
+      if (!notifyChannel!.isText()) continue;
+
+      notifyChannel.send(`<@&${mentionRole}> ${event.name}`);
     }
   }
 });
@@ -183,5 +185,7 @@ for (const file of eventFiles) {
     client.on(event.name, (...args: any) => event.execute(...args));
   }
 }
+
+Web();
 
 client.login(process.env.DISCORD_TOKEN);

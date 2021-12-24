@@ -1,0 +1,34 @@
+<%- include('includes/header', { title: 'ユーザー認証' }) %>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <div class="top px-4 my-5">
+    <h1 class="display-7 fw-bold text-center">ユーザー認証</h1>
+    <div class="col-lg-6 mx-auto" style="margin-top: 1.3rem;">
+      <% if (ok) { %>
+        <p class="lead mb-4">
+          認証が完了しました。サーバーを利用できるようになりました。<br>
+          このページは閉じても問題ありません。
+        </p>
+      <% } else { %>
+        <p class="lead mb-4">
+          以下の「私はロボットではありません」にチェックを付けてください。<br>
+          ※チェックを付けると、<a href="https://discord.com/channels/755774191613247568/755803035564900372"
+            target="_blank">ガイドライン</a>を読み、同意したとみなします。
+        </p>
+
+        <form method="POST" id="captcha">
+          <div class="g-recaptcha" data-sitekey="6Lfj7MQdAAAAAHETHeSuuVFwlBr0H6iQ0QE97UVa" data-callback="onSubmit"></div>
+          <input type="hidden" name="id" value="<%= id %>">
+        </form>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    function onSubmit(token) {
+      document.getElementById('captcha').submit();
+    }
+  </script>
+
+  <%- include('includes/footer') %>

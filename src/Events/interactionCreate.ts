@@ -65,71 +65,9 @@ module.exports = {
         });
       }
 
-      if (buttonId === 'rule-en') {
+      if (buttonId === 'sendVerifyURL') {
         interaction.reply({
-          embeds: [
-            new MessageEmbed()
-              .setTitle('Welcome')
-              .setDescription(
-                'Welcome to the "アプリにゃんこ大戦争", a fan community of The battle cats!\n' +
-                  '\n' +
-                  'We have many members, from advanced players to beginners.\n' +
-                  '\n' +
-                  'The primary language of this server is Japanese.\n' +
-                  'Many of our members do not speak English.\n' +
-                  'Please be considerate by using [Google Translate](https://translate.google.com/).\n' +
-                  '\n' +
-                  '> **What you can do with this server**\n' +
-                  '- Questions and discussions about the The battle cats\n' +
-                  '- Post your creative works\n' +
-                  '- Score events and other events'
-              )
-              .setColor('#fffab0'),
-            new MessageEmbed()
-              .setTitle('Rules')
-              .setDescription(
-                'The following actions will result in usage restrictions on the server.\n' +
-                  'Please use the server with good morals and manners.\n' +
-                  '\n' +
-                  "- Violation of the [Discord's terms of service](https://discord.com/terms).\n" +
-                  '- Violation of the [PONOS application license agreement](https://ponos.s3.dualstack.ap-northeast-1.amazonaws.com/reg/license/index.html).\n' +
-                  '- Requesting or exposing personal information.\n' +
-                  '- Attachment of content that prohibits viewing by people under 18 years old.\n' +
-                  '- Other items that the administrator deems inappropriate.\n' +
-                  '\n' +
-                  'If you find any rule violation, please contact <#815703267765780491>.\n' +
-                  '* In general, we cannot intervene in personal problems.'
-              )
-              .setColor('#c0ffb0'),
-            new MessageEmbed()
-              .setDescription(
-                '> **About Strike**\n' +
-                  'This is the number of points for violations. It is given when there is a rule violation.\n' +
-                  'When Strikes accumulate, punishments are automatically applied.\n' +
-                  '\n' +
-                  '> **BCU and spoiler information**\n' +
-                  'Please be sure to post any BCU (Battle Cats Ultimate) scraps or spoiler information at <#760081975255367711>.\n' +
-                  '\n' +
-                  'Some people do not like spoilers and are looking forward to the official announcement. We ask for your cooperation.'
-              )
-              .setColor('#c0ffb0'),
-            new MessageEmbed()
-              .setTitle(':beginner: Dear Newcomer')
-              .setDescription(
-                'Write a greeting and introduce yourself!\n' +
-                  'It lets people know who you are.\n' +
-                  '↳ <#755803561715302490>\n' +
-                  '\n' +
-                  "Let's post Officer's Club and Cat Dictionary!\n" +
-                  'If you know the characters you have in advance, it will be easier for them to advise you.\n' +
-                  '↳ <#822771682157658122>\n' +
-                  '\n' +
-                  'You can customize the channels you view, the icon to the right of your name,\n' +
-                  'and event notifications.\n' +
-                  '↳ <#879299491117817866>'
-              )
-              .setColor('#b0eaff'),
-          ],
+          content: `以下のURLからユーザー認証を完了させてください。\nhttps://battlecats-server.tubuanha.com/v/${interaction.user.id}`,
           ephemeral: true,
         });
       }
