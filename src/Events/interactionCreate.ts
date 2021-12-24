@@ -66,7 +66,7 @@ module.exports = {
       }
 
       if (buttonId === 'sendVerifyURL') {
-        if ((interaction.member.roles as GuildMemberRoleManager).cache.has('759556295770243093')) {
+        if ((interaction.member!.roles as GuildMemberRoleManager).cache.has('759556295770243093')) {
           return interaction.reply({
             content: 'あなたは既に認証されています。',
             ephemeral: true,
