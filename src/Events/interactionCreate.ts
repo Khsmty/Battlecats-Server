@@ -66,6 +66,13 @@ module.exports = {
       }
 
       if (buttonId === 'sendVerifyURL') {
+        if ((interaction.member.roles as GuildMemberRoleManager).cache.has('759556295770243093')) {
+          return interaction.reply({
+            content: 'あなたは既に認証されています。',
+            ephemeral: true,
+          });
+        }
+
         interaction.reply({
           content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats-server.tubuanha.com/v/${interaction.user.id}>`,
           ephemeral: true,
