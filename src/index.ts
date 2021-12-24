@@ -12,13 +12,6 @@ import path from 'path';
 // .envから値の読み込み
 dotenv.config();
 
-// Webサーバーの作成
-http
-  .createServer((req, res) => {
-    res.end('It works!');
-  })
-  .listen(process.env.PORT || 8080);
-
 const client = Bot.client;
 
 // MySQLサーバーへ接続
