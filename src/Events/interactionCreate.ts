@@ -67,7 +67,7 @@ module.exports = {
 
       if (buttonId === 'sendVerifyURL') {
         interaction.reply({
-          content: `以下のURLからユーザー認証を完了させてください。\nhttps://battlecats-server.tubuanha.com/v/${interaction.user.id}`,
+          content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats-server.tubuanha.com/v/${interaction.user.id}>`,
           ephemeral: true,
         });
       }
