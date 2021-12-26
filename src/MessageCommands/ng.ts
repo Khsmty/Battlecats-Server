@@ -15,7 +15,7 @@ module.exports = {
     if (args[0] === 'add') {
       if (!args[1] || !args[2]) return message.reply('必要な引数が不足しています。');
 
-      if (['1', '2'].includes(args[1])) {
+      if (!['1', '2'].includes(args[1])) {
         return message.reply('type:\n' + '1: 削除\n' + '2: モデレーター通知');
       }
 
