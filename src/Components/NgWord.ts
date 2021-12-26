@@ -4,8 +4,17 @@ import config from '../config.json';
 import Bot from './Bot';
 
 export default function (message: Message) {
-  Bot.db.query('SELECT * FROM `ng` WHERE `word` LIKE ?', [`%${message.content}%`], (e, rows) => {
+  Bot.db.query('SELECT * FROM `ng` WHERE', (e, rows) => {
     if (!rows || !rows[0]) return;
+
+    let inNgWord: boolean = false;
+    for (const row of rows) {
+      if (message.content.includes(row.word)) {
+        inNgWord = true;
+      }
+    }
+
+    if (!inNgWord) return;
 
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
