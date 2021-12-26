@@ -1,4 +1,4 @@
-import { MessageEmbed, Message, Channel, TextChannel, Role, CategoryChannel } from 'discord.js';
+import { MessageEmbed, Message, AnyChannel, TextChannel, Role, CategoryChannel } from 'discord.js';
 import Bot from './Components/Bot';
 import Web from './Web';
 import dotenv from 'dotenv';
@@ -27,7 +27,7 @@ cron.schedule('0,15 * * * *', async () => {
         ?.roles.cache.filter((role: Role) => role.name.includes(event.role))
         .first()?.id;
 
-      const notifyChannel: Channel | undefined = client.channels.cache.get('805732155606171658');
+      const notifyChannel: AnyChannel | undefined = client.channels.cache.get('805732155606171658');
       if (!notifyChannel!.isText()) continue;
 
       notifyChannel.send(`<@&${mentionRole}> ${event.name}`);

@@ -3,7 +3,7 @@ import { MessageEmbed, Message } from 'discord.js';
 
 module.exports = {
   name: 'eval',
-  async execute(message: Message, args: any[]) {
+  async execute(message: Message, args: String[]) {
     if (message.author.id !== '723052392911863858') return;
 
     try {

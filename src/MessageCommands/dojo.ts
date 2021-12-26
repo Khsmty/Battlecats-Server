@@ -3,7 +3,7 @@ import Bot from '../Components/Bot';
 
 module.exports = {
   name: 'dojo',
-  async execute(message: Message, args: any[]) {
+  async execute(message: Message, args: String[]) {
     if (
       !message.member?.roles.cache.has('868797324699242507') &&
       !message.member?.permissions.has('ADMINISTRATOR')

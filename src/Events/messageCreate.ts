@@ -1,4 +1,11 @@
-import { MessageEmbed, MessageButton, MessageActionRow, TextChannel, Message } from 'discord.js';
+import {
+  MessageEmbed,
+  MessageButton,
+  MessageActionRow,
+  AnyChannel,
+  TextChannel,
+  Message,
+} from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 import UpdateBoard from '../Components/Board';
@@ -45,6 +52,43 @@ module.exports = {
     if (message.channel.type === 'GUILD_NEWS') {
       message.crosspost();
     }
+
+    // NGワードチェック
+    Bot.db.query('SELECT * FROM `ng` WHERE `word` LIKE ?', [`%${message.content}%`], (e, rows) => {
+      if (rows[0]) {
+        const embed: MessageEmbed = new MessageEmbed().setDescription(message.content);
+
+        if (rows[0].delmsg) {
+          message.delete();
+
+          message.channel.send({
+            content: `<@!${message.author.id}>`,
+            embeds: [
+              new MessageEmbed()
+                .setColor('RED')
+                .setDescription(
+                  `メッセージ内に NGワード「${rows[0].word}」が含まれていたため、削除しました。`
+                ),
+            ],
+          });
+
+          embed.setColor('RED').setTitle('NGワード削除');
+        } else {
+          embed.setColor('YELLOW').setTitle('NGワード検出');
+        }
+
+        const ngLogChannel: AnyChannel | undefined = message.client.channels.cache.get(
+          config.channels.ngLog
+        );
+
+        if (!ngLogChannel || !ngLogChannel.isText()) return;
+
+        ngLogChannel.send({
+          content: `<@&${config.roles.mod}>`,
+          embeds: [embed],
+        });
+      }
+    });
 
     // メッセージリンク展開
     const messageUrlPattern =
