@@ -39,7 +39,7 @@ module.exports = {
         let str: string = ':one:: 削除, :two:: モデレーター通知\n\n';
 
         for (const row of rows) {
-          str += `${row.perfect ? ':one:' : ':two:'}: ${rows.word}\n`;
+          str += `${row.delmsg ? ':one:' : ':two:'}: ${row.word}\n`;
         }
 
         message.reply(str);
