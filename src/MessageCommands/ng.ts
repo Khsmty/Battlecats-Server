@@ -1,14 +1,11 @@
 import { Message } from 'discord.js';
 import Bot from '../Components/Bot';
+import config from '../config.json';
 
 module.exports = {
   name: 'ng',
   async execute(message: Message, args: string[]) {
-    if (
-      !message.member?.roles.cache.has('868797324699242507') &&
-      !message.member?.permissions.has('ADMINISTRATOR')
-    )
-      return;
+    if (!message.member?.roles.cache.has(config.roles.mod)) return;
 
     if (!args[0]) return message.reply('必要な引数が不足しています。');
 
