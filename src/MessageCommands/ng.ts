@@ -17,7 +17,7 @@ module.exports = {
       }
 
       Bot.db.query(
-        'INSEERT INTO `ng` (`delmsg`, `word`) VALUES (?, ?)',
+        'INSERT INTO `ng` (`delmsg`, `word`) VALUES (?, ?)',
         [args[1] === '1', args[2]],
         (e) => {
           message.reply('NGワードを新規登録しました。');
