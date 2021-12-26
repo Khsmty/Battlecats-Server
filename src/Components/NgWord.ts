@@ -7,20 +7,20 @@ export default function (message: Message) {
   Bot.db.query('SELECT * FROM `ng`', (e, rows) => {
     if (!rows || !rows[0]) return;
 
-    let inNgWord: boolean = false;
+    let ngWord: any = false;
     for (const row of rows) {
       if (message.content.toLowerCase().includes(row.word)) {
-        inNgWord = true;
+        ngWord = row;
       }
     }
 
-    if (!inNgWord) return;
+    if (!ngWord) return;
 
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
       .setDescription(message.content);
 
-    if (rows[0].delmsg) {
+    if (ngWord.delmsg) {
       message.delete();
 
       message.channel.send({
@@ -29,7 +29,7 @@ export default function (message: Message) {
           new MessageEmbed()
             .setColor('RED')
             .setDescription(
-              `メッセージ内に NGワード「||${rows[0].word}||」が含まれていたため、削除しました。`
+              `メッセージ内に NGワード「||${ngWord.word}||」が含まれていたため、削除しました。`
             ),
         ],
       });
