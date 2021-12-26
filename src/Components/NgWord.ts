@@ -9,7 +9,7 @@ export default function (message: Message) {
 
     let inNgWord: boolean = false;
     for (const row of rows) {
-      if (message.content.includes(row.word)) {
+      if (message.content.toLowerCase().includes(row.word)) {
         inNgWord = true;
       }
     }
