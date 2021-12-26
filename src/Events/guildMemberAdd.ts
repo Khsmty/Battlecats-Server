@@ -10,6 +10,5 @@ module.exports = {
       `${member} さん、**${member.guild.name}** へようこそ！\n` +
         'まず、<#755803035564900372> をご確認ください。'
     );
-    member.roles.add(config.memberRole);
   },
 };
