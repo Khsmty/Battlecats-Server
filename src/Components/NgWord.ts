@@ -18,7 +18,8 @@ export default function (message: Message) {
 
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
-      .setDescription(message.content);
+      .setDescription(message.content)
+      .setFooter(`#${message.channel.name}`);
 
     if (ngWord.delmsg) {
       message.delete();
@@ -36,7 +37,7 @@ export default function (message: Message) {
 
       embed.setColor('RED').setTitle('NGワード削除');
     } else {
-      embed.setColor('YELLOW').setTitle('NGワード検出');
+      embed.setColor('YELLOW').setTitle('NGワード検出').setURL(message.url);
     }
 
     const ngLogChannel: AnyChannel | undefined = message.client.channels.cache.get(
