@@ -4,7 +4,7 @@ import config from '../config.json';
 import Bot from './Bot';
 
 export default function (message: Message) {
-  Bot.db.query('SELECT * FROM `ng` WHERE', (e, rows) => {
+  Bot.db.query('SELECT * FROM `ng`', (e, rows) => {
     if (!rows || !rows[0]) return;
 
     let inNgWord: boolean = false;
