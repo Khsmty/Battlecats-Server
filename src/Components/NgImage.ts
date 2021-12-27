@@ -15,7 +15,6 @@ export default function (message: Message) {
         width: e.thumbnail.width,
         height: e.thumbnail.height,
         url: e.thumbnail.url,
-        name: e.thumbnail.url.split('/').pop(),
       })
     );
 
@@ -56,7 +55,7 @@ export default function (message: Message) {
         files: [
           {
             attachment: attachment.url,
-            name: String(attachment.name),
+            name: attachment.url.split('/').pop(),
           },
         ],
       });
