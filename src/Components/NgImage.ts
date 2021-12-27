@@ -39,7 +39,7 @@ export default function (message: Message) {
 
       let ngWord: any = false;
       for (const row of rows) {
-        if (text.toLowerCase().includes(row.word)) {
+        if (text.toLowerCase().replace(/ |\n/g, '').includes(row.word)) {
           ngWord = row;
         }
       }
