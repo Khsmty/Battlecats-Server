@@ -6,7 +6,7 @@ import Bot from './Bot';
 export default function (message: Message) {
   const msgChannel: AnyChannel = message.channel;
   if (!msgChannel.isText()) return;
-  
+
   Bot.db.query('SELECT * FROM `ng`', (e, rows) => {
     if (!rows || !rows[0]) return;
 
