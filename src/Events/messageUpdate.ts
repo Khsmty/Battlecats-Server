@@ -3,6 +3,7 @@ import UpdateBoard from '../Components/Board';
 import config from '../config.json';
 import { diffChars } from 'diff';
 import NgWord from '../Components/NgWord';
+import NgImage from '../Components/NgImage';
 
 module.exports = {
   name: 'messageUpdate',
@@ -88,5 +89,6 @@ module.exports = {
     if (newMessage.content) {
       NgWord(newMessage);
     }
+    NgImage(newMessage);
   },
 };

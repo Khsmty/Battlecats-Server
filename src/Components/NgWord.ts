@@ -50,7 +50,6 @@ export default function (message: Message) {
     if (!ngLogChannel || !ngLogChannel.isText()) return;
 
     ngLogChannel.send({
-      content: `<@&${config.roles.mod}>`,
       embeds: [embed],
     });
   });

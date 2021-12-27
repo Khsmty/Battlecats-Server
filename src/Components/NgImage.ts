@@ -6,6 +6,19 @@ import axios from 'axios';
 export default function (message: Message) {
   if (!message.guild || message.guildId !== config.guildId) return;
 
+  const attachments: any = message.attachments.map((a) => a);
+
+  message.embeds
+    .filter((e) => e.type === 'image')
+    .map((e: any) =>
+      attachments.push({
+        width: e.thumbnail.width,
+        height: e.thumbnail.height,
+        url: e.thumbnail.url,
+        name: e.thumbnail.url.split('/').pop(),
+      })
+    );
+
   if (!message.attachments.first()) return;
 
   const msgChannel: any = message.channel;
@@ -13,7 +26,7 @@ export default function (message: Message) {
   Bot.db.query('SELECT * FROM `ng`', async (e, rows) => {
     if (!rows || !rows[0]) return;
 
-    for (const attachment of message.attachments.values()) {
+    for (const attachment of attachments) {
       if (!attachment.height && !attachment.width) continue;
 
       const img = await axios.get(attachment.url, { responseType: 'arraybuffer' });
@@ -48,7 +61,7 @@ export default function (message: Message) {
         ],
       });
 
-      message.delete();
+      message.delete().catch(() => {});
 
       message.channel.send({
         content: `<@!${message.author.id}>`,
@@ -68,7 +81,6 @@ export default function (message: Message) {
       if (!ngLogChannel || !ngLogChannel.isText()) return;
 
       ngLogChannel.send({
-        content: `<@&${config.roles.mod}>`,
         embeds: [
           new MessageEmbed()
             .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
