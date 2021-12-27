@@ -11,6 +11,7 @@ import config from '../config.json';
 import UpdateBoard from '../Components/Board';
 import Pin from '../Components/Pin';
 import NgWord from '../Components/NgWord';
+import NgImage from '../Components/NgImage';
 
 module.exports = {
   name: 'messageCreate',
@@ -58,6 +59,7 @@ module.exports = {
     if (message.content && !message.content.startsWith(config.prefix + 'ng')) {
       NgWord(message);
     }
+    NgImage(message);
 
     // メッセージリンク展開
     const messageUrlPattern =
