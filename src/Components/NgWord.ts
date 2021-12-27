@@ -4,6 +4,9 @@ import config from '../config.json';
 import Bot from './Bot';
 
 export default function (message: Message) {
+  const msgChannel: AnyChannel = message.channel;
+  if (!msgChannel.isText()) return;
+  
   Bot.db.query('SELECT * FROM `ng`', (e, rows) => {
     if (!rows || !rows[0]) return;
 
@@ -19,7 +22,7 @@ export default function (message: Message) {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
       .setDescription(message.content)
-      .setFooter(`#${message.channel.name}`);
+      .setFooter(`#${msgChannel.name}`);
 
     if (ngWord.delmsg) {
       message.delete();
