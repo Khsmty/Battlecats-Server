@@ -1,11 +1,11 @@
-import { assertReturnOfBuilder } from '@discordjs/builders/dist/interactions/slashCommands/Assertions';
-import { Message, MessageEmbed, AnyChannel } from 'discord.js';
+import { Message, MessageEmbed, AnyChannel, TextChannel } from 'discord.js';
 import config from '../config.json';
 import Bot from './Bot';
 
 export default function (message: Message) {
-  const msgChannel: AnyChannel = message.channel;
-  if (!msgChannel.isText()) return;
+  if (!message.guild || message.guildId !== config.guildId) return;
+
+  const msgChannel: any = message.channel;
 
   Bot.db.query('SELECT * FROM `ng`', (e, rows) => {
     if (!rows || !rows[0]) return;

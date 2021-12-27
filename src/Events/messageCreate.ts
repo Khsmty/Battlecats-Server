@@ -55,7 +55,7 @@ module.exports = {
     }
 
     // NGワードチェック
-    if (message.content) {
+    if (message.content && !message.content.startsWith(config.prefix + 'ng')) {
       NgWord(message);
     }
 

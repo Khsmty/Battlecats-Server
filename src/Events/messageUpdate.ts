@@ -2,6 +2,7 @@ import { MessageEmbed, Message, TextChannel } from 'discord.js';
 import UpdateBoard from '../Components/Board';
 import config from '../config.json';
 import { diffChars } from 'diff';
+import NgWord from '../Components/NgWord';
 
 module.exports = {
   name: 'messageUpdate',
@@ -81,6 +82,11 @@ module.exports = {
           ],
         })
         .catch(() => {});
+    }
+
+    // NGワードチェック
+    if (newMessage.content) {
+      NgWord(newMessage);
     }
   },
 };
