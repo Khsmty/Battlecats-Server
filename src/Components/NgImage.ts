@@ -1,9 +1,7 @@
 import { Message, MessageEmbed, AnyChannel } from 'discord.js';
 import config from '../config.json';
 import Bot from './Bot';
-import { createWorker } from 'tesseract.js';
 import axios from 'axios';
-import { buffer } from 'stream/consumers';
 
 export default function (message: Message) {
   if (!message.guild || message.guildId !== config.guildId) return;
