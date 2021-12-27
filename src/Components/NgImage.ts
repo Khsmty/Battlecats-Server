@@ -18,7 +18,7 @@ export default function (message: Message) {
       })
     );
 
-  if (!message.attachments.first()) return;
+  if (!attachments[0]) return;
 
   const msgChannel: any = message.channel;
 
