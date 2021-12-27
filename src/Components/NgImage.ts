@@ -2,6 +2,8 @@ import { Message, MessageEmbed, AnyChannel } from 'discord.js';
 import config from '../config.json';
 import Bot from './Bot';
 import { createWorker } from 'tesseract.js';
+import axios from 'axios';
+import { buffer } from 'stream/consumers';
 
 export default function (message: Message) {
   if (!message.guild || message.guildId !== config.guildId) return;
@@ -16,17 +18,14 @@ export default function (message: Message) {
     for (const attachment of message.attachments.values()) {
       if (!attachment.height && !attachment.width) continue;
 
-      const worker = createWorker({
-        logger: (m) => console.log(m),
-      });
+      const img = await axios.get(attachment.url, { responseType: 'arraybuffer' });
+      const imgBase64 = Buffer.from(img.data, 'binary').toString('base64');
 
-      worker.load();
-      worker.loadLanguage('jpn');
-      worker.initialize('jpn');
-      const {
-        data: { text },
-      } = await worker.recognize(attachment.url);
-      worker.terminate();
+      const ocr = await axios.post('https://ocr-example.herokuapp.com/base64', {
+        base64: imgBase64,
+        languages: 'eng,jpn',
+      });
+      const text = ocr.data.result;
 
       let ngWord: any = false;
       for (const row of rows) {
