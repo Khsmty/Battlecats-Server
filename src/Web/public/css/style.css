@@ -40,6 +40,10 @@
   text-align: center;
   width: 300px;
 }
+.header-title {
+  text-decoration: none;
+  color: black;
+}
 
 @media screen and (min-width: 992px) {
   .navbar {
