@@ -59,7 +59,14 @@ export default function (message: Message) {
           },
         ],
       });
-
+      
+      const embed: MessageEmbed = new MessageEmbed()
+        .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
+        .setDescription(text)
+        .setImage(String(sendMsg.attachments.first()?.url))
+        .setFooter(`#${msgChannel.name}`);
+      
+      if (ngWord.delmsg) {
       message.delete().catch(() => {});
 
       message.channel.send({
@@ -72,6 +79,11 @@ export default function (message: Message) {
             ),
         ],
       });
+        
+        embed.setColor('RED').setTitle('NG画像削除');
+      } else {
+        embed.setColor('YELLOW').setTitle('NG画像検出').setURL(message.url);
+      }
 
       const ngLogChannel: AnyChannel | undefined = message.client.channels.cache.get(
         config.channels.ngLog
@@ -80,15 +92,7 @@ export default function (message: Message) {
       if (!ngLogChannel || !ngLogChannel.isText()) return;
 
       ngLogChannel.send({
-        embeds: [
-          new MessageEmbed()
-            .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
-            .setTitle('NG画像削除')
-            .setDescription(text)
-            .setImage(String(sendMsg.attachments.first()?.url))
-            .setFooter(`#${msgChannel.name}`)
-            .setColor('RED'),
-        ],
+        embeds: [embed],
       });
     }
   });
