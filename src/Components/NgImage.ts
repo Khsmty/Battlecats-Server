@@ -59,27 +59,27 @@ export default function (message: Message) {
           },
         ],
       });
-      
+
       const embed: MessageEmbed = new MessageEmbed()
         .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
         .setDescription(text)
         .setImage(String(sendMsg.attachments.first()?.url))
         .setFooter(`#${msgChannel.name}`);
-      
-      if (ngWord.delmsg) {
-      message.delete().catch(() => {});
 
-      message.channel.send({
-        content: `<@!${message.author.id}>`,
-        embeds: [
-          new MessageEmbed()
-            .setColor('RED')
-            .setDescription(
-              `画像内に NGワード「||${ngWord.word}||」が含まれていたため、削除しました。`
-            ),
-        ],
-      });
-        
+      if (ngWord.delmsg) {
+        message.delete().catch(() => {});
+
+        message.channel.send({
+          content: `<@!${message.author.id}>`,
+          embeds: [
+            new MessageEmbed()
+              .setColor('RED')
+              .setDescription(
+                `画像内に NGワード「||${ngWord.word}||」が含まれていたため、削除しました。`
+              ),
+          ],
+        });
+
         embed.setColor('RED').setTitle('NG画像削除');
       } else {
         embed.setColor('YELLOW').setTitle('NG画像検出').setURL(message.url);
