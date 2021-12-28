@@ -13,7 +13,7 @@ module.exports = {
       if (!args[1] || !args[2]) return message.reply('必要な引数が不足しています。');
 
       if (!['1', '2'].includes(args[1])) {
-        return message.reply('type:\n' + '1: 削除\n' + '2: モデレーター通知');
+        return message.reply('type:\n' + '1: :put_litter_in_its_place: 削除\n' + '2: :bellhop: モデレーター通知');
       }
 
       Bot.db.query(
@@ -33,10 +33,10 @@ module.exports = {
       Bot.db.query('SELECT * FROM `ng`', (e, rows) => {
         if (!rows || !rows[0]) return message.reply('NGワードが登録されていません。');
 
-        let str: string = ':one:: 削除, :two:: モデレーター通知\n\n';
+        let str: string = ':put_litter_in_its_place:: 削除, :bellhop:: モデレーター通知\n\n';
 
         for (const row of rows) {
-          str += `${row.delmsg ? ':one:' : ':two:'}: ${row.word}\n`;
+          str += `${row.delmsg ? ':put_litter_in_its_place:' : ':bellhop:'}: ${row.word}\n`;
         }
 
         message.reply(str);
