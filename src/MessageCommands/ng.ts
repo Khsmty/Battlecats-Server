@@ -13,7 +13,9 @@ module.exports = {
       if (!args[1] || !args[2]) return message.reply('必要な引数が不足しています。');
 
       if (!['1', '2'].includes(args[1])) {
-        return message.reply('type:\n' + '1: :put_litter_in_its_place: 削除\n' + '2: :bellhop: モデレーター通知');
+        return message.reply(
+          'type:\n' + '1: :put_litter_in_its_place: 削除\n' + '2: :bellhop: モデレーター通知'
+        );
       }
 
       Bot.db.query(
