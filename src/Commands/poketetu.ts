@@ -7,7 +7,7 @@ google.options({ auth: process.env.GOOGLE_API_KEY });
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('poketettei')
+    .setName('poketetu')
     .setDescription('ポケモン徹底攻略を検索します。')
     .addStringOption((option) =>
       option.setName('query').setDescription('検索キーワードを入力してください。').setRequired(true)
