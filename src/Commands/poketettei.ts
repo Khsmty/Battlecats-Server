@@ -23,7 +23,7 @@ module.exports = {
       ? result.data.items
           .map(
             (item: { title?: string | null; link?: string | null }) =>
-              `[${item.title!.replace(/ (\||-) ポケモン徹底攻略/, '')}](${item.link})`
+              `[${item.title!.replace(/(｜| - )ポケモン徹底攻略/, '')}](${item.link})`
           )
           .slice(0, 5)
       : [];
