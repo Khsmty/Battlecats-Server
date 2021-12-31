@@ -37,11 +37,9 @@ export default function (message: Message) {
           languages: 'eng,jpn',
         })
         .catch(() => {
-          continue;
+          return;
         });
       const text = ocr.data.result;
-
-      if (!text) continue;
 
       let ngWord: any = false;
       for (const row of rows) {
