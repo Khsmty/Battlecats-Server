@@ -31,7 +31,7 @@ export default function (message: Message) {
       const img = await axios.get(attachment.url, { responseType: 'arraybuffer' });
       const imgBase64 = Buffer.from(img.data, 'binary').toString('base64');
 
-      const ocr = await axios
+      const ocr: any = await axios
         .post('https://ocr-example.herokuapp.com/base64', {
           base64: imgBase64,
           languages: 'eng,jpn',
