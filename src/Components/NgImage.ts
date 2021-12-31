@@ -37,6 +37,8 @@ export default function (message: Message) {
       });
       const text = ocr.data.result;
 
+      if (!text) continue;
+
       let ngWord: any = false;
       for (const row of rows) {
         if (text.toLowerCase().replace(/ |\n/g, '').includes(row.word)) {
