@@ -68,17 +68,21 @@ export default function (message: Message) {
 
       if (ngWord.delmsg) {
         message.delete().catch(() => {});
+        
+        const authorEmbed: MessageEmbed = new MessageEmbed()
+          .setColor('RED')
+          .setDescription(
+            `画像内に NGワード「||${ngWord.word}||」が含まれていたため、削除しました。`
+          )
 
-        message.channel.send({
-          content: `<@!${message.author.id}>`,
-          embeds: [
-            new MessageEmbed()
-              .setColor('RED')
-              .setDescription(
-                `画像内に NGワード「||${ngWord.word}||」が含まれていたため、削除しました。`
-              ),
-          ],
-        });
+        message.author.send({
+          embeds: [authorEmbed],
+        }).catch(() => {
+          message.channel.send({
+            content: `<@!${message.author.id}>`,
+            embeds: [authorEmbed],
+          })
+        })
 
         embed.setColor('RED').setTitle('NG画像削除');
       } else {
