@@ -10,15 +10,6 @@ export default function () {
   const app: express.Express = express();
   const md = new MarkdownIt();
 
-  const renderMd = (res: express.Response, title: string, fileName: string) => {
-    res.render('md', {
-      title,
-      md: md.render(
-        fs.readFileSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`)).toString()
-      ),
-    });
-  };
-
   app
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
@@ -37,10 +28,6 @@ export default function () {
 
   app.get('/', (_req, res) => {
     res.render('index');
-  });
-
-  app.get('/guidelines', (_req, res) => {
-    renderMd(res, 'ガイドライン', 'guidelines');
   });
 
   app.get('/join', async (_req, res) => {
@@ -101,8 +88,23 @@ export default function () {
     }
   });
 
-  app.get('*', (_req, res) => {
-    res.status(404).render('404');
+  app.get('*', (req, res) => {
+    const fileName = req.url.slice(1);
+    const fileExists = fs.existsSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`));
+
+    if (fileExists) {
+      const file = fs
+        .readFileSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`))
+        .toString();
+      const title = file.split('\n')[0].split('# ')[1];
+
+      res.render('md', {
+        title,
+        md: md.render(file),
+      });
+    } else {
+      res.status(404).render('404');
+    }
   });
 
   app.listen(process.env.PORT || 3000, () => {
