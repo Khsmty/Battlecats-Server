@@ -3,9 +3,21 @@ import ejs from 'ejs';
 import path from 'path';
 import Bot from '../Components/Bot';
 import axios from 'axios';
+import MarkdownIt from 'markdown-it';
+import fs from 'fs';
 
 export default function () {
   const app: express.Express = express();
+  const md = new MarkdownIt();
+
+  const renderMd = (res: express.Response, title: string, fileName: string) => {
+    res.render('md', {
+      title,
+      md: md.render(
+        fs.readFileSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`)).toString()
+      ),
+    });
+  };
 
   app
     .use(express.json())
@@ -27,6 +39,10 @@ export default function () {
     res.render('index');
   });
 
+  app.get('/guidelines', (_req, res) => {
+    renderMd(res, 'ガイドライン', 'guidelines');
+  });
+
   app.get('/join', async (_req, res) => {
     const api = await axios.get('https://discord.com/api/guilds/755774191613247568/widget.json');
     const joinLink = api.data.instant_invite;
@@ -39,15 +55,19 @@ export default function () {
       return res.status(404).render('404');
     }
 
-    const member = Bot.client.guilds.cache
-      .get('755774191613247568')
-      ?.members.fetch(String(req.params.userId));
+    try {
+      const member = Bot.client.guilds.cache
+        .get('755774191613247568')
+        ?.members.fetch(String(req.params.userId));
 
-    if (!member) {
-      return res.status(404).render('404');
+      if (!member) {
+        return res.status(404).render('404');
+      }
+
+      res.render('verify', { id: req.params.userId, ok: false });
+    } catch (e) {
+      res.status(404).render('404');
     }
-
-    res.render('verify', { id: req.params.userId, ok: false });
   });
 
   app.post('/v/:userId', async (req, res) => {
@@ -55,26 +75,30 @@ export default function () {
       return res.status(404).render('404');
     }
 
-    const api = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-    );
+    try {
+      const api = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+      );
 
-    if (!api.data.success) {
-      return res.status(404).render('404');
+      if (!api.data.success) {
+        return res.status(404).render('404');
+      }
+
+      const member = Bot.client.guilds.cache
+        .get('755774191613247568')
+        ?.members.cache.get(String(req.body.id));
+
+      if (!member) {
+        return res.status(404).render('404');
+      }
+
+      await member.roles.add('759556295770243093').catch(() => {});
+
+      res.render('verify', { id: req.params.userId, ok: true });
+    } catch (e) {
+      res.status(404).render('404');
     }
-
-    const member = Bot.client.guilds.cache
-      .get('755774191613247568')
-      ?.members.cache.get(String(req.body.id));
-
-    if (!member) {
-      return res.status(404).render('404');
-    }
-
-    await member.roles.add('759556295770243093').catch(() => {});
-
-    res.render('verify', { id: req.params.userId, ok: true });
   });
 
   app.get('*', (_req, res) => {
