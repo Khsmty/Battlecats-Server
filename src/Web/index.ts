@@ -76,7 +76,7 @@ export default function () {
       return res.status(404).render('404');
     }
 
-    await member.roles.add('759556295770243093').catch(() => {});
+    await member!.roles.add('759556295770243093').catch(() => {});
 
     res.render('verify', { id: req.params.userId, ok: true });
   });
