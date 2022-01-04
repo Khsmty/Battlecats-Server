@@ -72,7 +72,7 @@ export default function () {
       member = Bot.client.guilds.cache
         .get('755774191613247568')
         ?.members.cache.get(String(req.body.id));
-      
+
       await member!.roles?.add('759556295770243093').catch(() => {});
     } catch (e) {
       return res.status(404).render('404');
