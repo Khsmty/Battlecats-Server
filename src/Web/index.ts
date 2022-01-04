@@ -53,11 +53,7 @@ export default function () {
   });
 
   app.post('/v/:userId', async (req, res) => {
-    if (
-      !req.body ||
-      !req.body['g-recaptcha-response'] ||
-      !req.params.userId
-    ) {
+    if (!req.body || !req.body['g-recaptcha-response'] || !req.params.userId) {
       return res.status(404).render('404');
     }
 
@@ -69,14 +65,14 @@ export default function () {
     if (!api.data.success) {
       return res.status(404).render('404');
     }
-    
+
     let member;
 
     try {
       member = Bot.client.guilds.cache
         .get('755774191613247568')
-        ?.members.cache.get(String(req.body.id))
-    } catch(e) {
+        ?.members.cache.get(String(req.body.id));
+    } catch (e) {
       return res.status(404).render('404');
     }
 
