@@ -49,17 +49,13 @@ export default function () {
     })
 
       res.render('verify', { id: req.params.userId, ok: false });
-    } catch (e) {
-      res.status(404).render('404');
-    }
   });
 
   app.post('/v/:userId', async (req, res) => {
     if (!req.body || !req.body['g-recaptcha-response'] || !req.params.userId || isNaN(!req.params.userId)) {
       return res.status(404).render('404');
     }
-
-    try {
+    
       const api = await axios.post(
         `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
@@ -80,9 +76,6 @@ export default function () {
       await member.roles.add('759556295770243093').catch(() => {});
 
       res.render('verify', { id: req.params.userId, ok: true });
-    } catch (e) {
-      res.status(404).render('404');
-    }
   });
 
   app.get('*', (req, res) => {
