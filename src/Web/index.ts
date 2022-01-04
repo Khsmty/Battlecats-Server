@@ -44,38 +44,45 @@ export default function () {
 
     Bot.client.guilds.cache
       .get('755774191613247568')
-      ?.members.fetch(String(req.params.userId)).catch(() => {
-    return res.status(404).render('404');
-    })
+      ?.members.fetch(String(req.params.userId))
+      .catch(() => {
+        return res.status(404).render('404');
+      });
 
-      res.render('verify', { id: req.params.userId, ok: false });
+    res.render('verify', { id: req.params.userId, ok: false });
   });
 
   app.post('/v/:userId', async (req, res) => {
-    if (!req.body || !req.body['g-recaptcha-response'] || !req.params.userId || isNaN(!req.params.userId)) {
+    if (
+      !req.body ||
+      !req.body['g-recaptcha-response'] ||
+      !req.params.userId ||
+      isNaN(!req.params.userId)
+    ) {
       return res.status(404).render('404');
     }
-    
-      const api = await axios.post(
-        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
-        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-      );
 
-      if (!api.data.success) {
-        return res.status(404).render('404');
-      }
+    const api = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
 
-      const member = Bot.client.guilds.cache
-        .get('755774191613247568')
-        ?.members.cache.get(String(req.body.id)).catch(() => {});
+    if (!api.data.success) {
+      return res.status(404).render('404');
+    }
 
-      if (!member) {
-        return res.status(404).render('404');
-      }
+    const member = Bot.client.guilds.cache
+      .get('755774191613247568')
+      ?.members.cache.get(String(req.body.id))
+      .catch(() => {});
 
-      await member.roles.add('759556295770243093').catch(() => {});
+    if (!member) {
+      return res.status(404).render('404');
+    }
 
-      res.render('verify', { id: req.params.userId, ok: true });
+    await member.roles.add('759556295770243093').catch(() => {});
+
+    res.render('verify', { id: req.params.userId, ok: true });
   });
 
   app.get('*', (req, res) => {
