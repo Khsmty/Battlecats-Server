@@ -38,7 +38,7 @@ export default function () {
   });
 
   app.get('/v/:userId', (req, res) => {
-    if (!req.params.userId || isNaN(req.params.userId)) {
+    if (!req.params.userId) {
       return res.status(404).render('404');
     }
 
@@ -56,8 +56,7 @@ export default function () {
     if (
       !req.body ||
       !req.body['g-recaptcha-response'] ||
-      !req.params.userId ||
-      isNaN(!req.params.userId)
+      !req.params.userId
     ) {
       return res.status(404).render('404');
     }
@@ -70,13 +69,14 @@ export default function () {
     if (!api.data.success) {
       return res.status(404).render('404');
     }
+    
+    let member;
 
-    const member = Bot.client.guilds.cache
-      .get('755774191613247568')
-      ?.members.cache.get(String(req.body.id))
-      .catch(() => {});
-
-    if (!member) {
+    try {
+      member = Bot.client.guilds.cache
+        .get('755774191613247568')
+        ?.members.cache.get(String(req.body.id))
+    } catch() {
       return res.status(404).render('404');
     }
 
