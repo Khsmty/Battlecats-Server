@@ -4,6 +4,7 @@ import config from '../config.json';
 import { diffChars } from 'diff';
 import NgWord from '../Components/NgWord';
 import NgImage from '../Components/NgImage';
+import TokenDelete from '../Components/TokenDelete';
 
 module.exports = {
   name: 'messageUpdate',
@@ -88,6 +89,7 @@ module.exports = {
     // NGワードチェック
     if (newMessage.content) {
       NgWord(newMessage);
+      TokenDelete(newMessage);
     }
     NgImage(newMessage);
   },
