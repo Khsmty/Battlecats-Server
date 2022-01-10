@@ -9,7 +9,7 @@ export default function (message: Message) {
   const attachments: any = message.attachments.map((a: any) => a);
 
   message.embeds
-    .filter((e: { type: string; }) => e.type === 'image')
+    .filter((e: { type: string }) => e.type === 'image')
     .map((e: any) =>
       attachments.push({
         width: e.thumbnail.width,
@@ -19,7 +19,7 @@ export default function (message: Message) {
     );
 
   message.embeds
-    .filter((e: { type: string; }) => e.type === 'rich')
+    .filter((e: { type: string }) => e.type === 'rich')
     .map((e: any) => {
       if (e.image) {
         attachments.push({
