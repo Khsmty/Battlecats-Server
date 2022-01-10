@@ -77,6 +77,8 @@ export default function () {
 
           await member!.roles?.add('759556295770243093');
 
+          Bot.db.query('DELETE FROM `verifyKey` WHERE `key` = ?', [req.params.key]);
+
           res.render('verify', { complete: true });
         } catch (e) {
           res.status(404).render('404');
