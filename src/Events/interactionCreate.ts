@@ -6,6 +6,7 @@ import {
   GuildMemberRoleManager,
 } from 'discord.js';
 import Bot from '../Components/Bot';
+import VerifyCreate from '../Components/VerifyCreate';
 
 module.exports = {
   name: 'interactionCreate',
@@ -66,17 +67,7 @@ module.exports = {
       }
 
       if (buttonId === 'sendVerifyURL') {
-        if ((interaction.member!.roles as GuildMemberRoleManager).cache.has('759556295770243093')) {
-          return interaction.reply({
-            content: 'あなたは既に認証されています。',
-            ephemeral: true,
-          });
-        }
-
-        interaction.reply({
-          content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats.win/v/${interaction.user.id}>`,
-          ephemeral: true,
-        });
+        VerifyCreate(interaction);
       }
     } else if (interaction.isSelectMenu()) {
       const targetMemberRoles = interaction.member!.roles as GuildMemberRoleManager;

@@ -5,7 +5,7 @@
   <div class="top px-4 my-5">
     <h1 class="display-7 fw-bold text-center">ユーザー認証</h1>
     <div class="col-lg-6 mx-auto" style="margin-top: 1.3rem;">
-      <% if (ok) { %>
+      <% if (complete) { %>
         <p class="lead mb-4">
           認証が完了しました。サーバーを利用できるようになりました。<br>
           このページは閉じても問題ありません。
@@ -19,7 +19,6 @@
           <form method="POST" id="captcha">
             <div class="g-recaptcha" data-sitekey="6Lfj7MQdAAAAAHETHeSuuVFwlBr0H6iQ0QE97UVa" data-callback="onSubmit">
             </div>
-            <input type="hidden" name="id" value="<%= id %>">
           </form>
           <% } %>
     </div>

@@ -1,6 +1,7 @@
 import express from 'express';
 import ejs from 'ejs';
 import path from 'path';
+import config from '../config.json';
 import Bot from '../Components/Bot';
 import axios from 'axios';
 import MarkdownIt from 'markdown-it';
@@ -37,23 +38,22 @@ export default function () {
     res.redirect(joinLink);
   });
 
-  app.get('/v/:userId', (req, res) => {
-    if (!req.params.userId) {
+  app.get('/v/:key', (req, res) => {
+    if (!req.params.key) {
       return res.status(404).render('404');
     }
 
-    Bot.client.guilds.cache
-      .get('755774191613247568')
-      ?.members.fetch(String(req.params.userId))
-      .catch(() => {
-        return res.status(404).render('404');
-      });
-
-    res.render('verify', { id: req.params.userId, ok: false });
+    Bot.db.query('SELECT * FROM `verifyKey` WHERE `key` = ?', [req.params.key], (e, rows) => {
+      if (!rows || !rows[0]) {
+        res.status(404).render('404');
+      } else {
+        res.render('verify', { complete: false });
+      }
+    });
   });
 
-  app.post('/v/:userId', async (req, res) => {
-    if (!req.body || !req.body['g-recaptcha-response'] || !req.params.userId) {
+  app.post('/v/:key', async (req, res) => {
+    if (!req.body || !req.body['g-recaptcha-response'] || !req.params.key) {
       return res.status(404).render('404');
     }
 
@@ -66,19 +66,23 @@ export default function () {
       return res.status(404).render('404');
     }
 
-    let member;
+    Bot.db.query('SELECT * FROM `verifyKey` WHERE `key` = ?', [req.params.key], async (e, rows) => {
+      if (!rows || !rows[0]) {
+        res.status(404).render('404');
+      } else {
+        try {
+          const member = Bot.client.guilds.cache
+            .get(config.guildId)
+            ?.members.cache.get(rows[0].userId);
 
-    try {
-      member = Bot.client.guilds.cache
-        .get('755774191613247568')
-        ?.members.cache.get(String(req.body.id));
+          await member!.roles?.add('759556295770243093');
 
-      await member!.roles?.add('759556295770243093').catch(() => {});
-    } catch (e) {
-      return res.status(404).render('404');
-    }
-
-    res.render('verify', { id: req.params.userId, ok: true });
+          res.render('verify', { complete: true });
+        } catch (e) {
+          res.status(404).render('404');
+        }
+      }
+    });
   });
 
   app.get('*', (req, res) => {
