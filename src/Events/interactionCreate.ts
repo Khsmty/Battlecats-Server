@@ -74,7 +74,7 @@ module.exports = {
         }
 
         interaction.reply({
-          content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats-server.tubuanha.com/v/${interaction.user.id}>`,
+          content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats.win/v/${interaction.user.id}>`,
           ephemeral: true,
         });
       }
