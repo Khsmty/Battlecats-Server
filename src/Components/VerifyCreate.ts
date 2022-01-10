@@ -10,7 +10,6 @@ export default function (interaction: ButtonInteraction) {
     });
   }
 
-  let urlKey: string = '';
   Bot.db.query(
     'SELECT * FROM `verifyKey` WHERE `userId` = ?',
     [interaction.user.id],
@@ -26,15 +25,16 @@ export default function (interaction: ButtonInteraction) {
           generateKey,
         ]);
 
-        urlKey = generateKey;
+        interaction.reply({
+          content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats.win/v/${generateKey}>`,
+          ephemeral: true,
+        });
       } else {
-        urlKey = rows[0].key;
+        interaction.reply({
+          content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats.win/v/${rows[0].key}>`,
+          ephemeral: true,
+        });
       }
     }
   );
-
-  interaction.reply({
-    content: `以下のURLからユーザー認証を完了させてください。\n<https://battlecats.win/v/${urlKey}>`,
-    ephemeral: true,
-  });
 }
