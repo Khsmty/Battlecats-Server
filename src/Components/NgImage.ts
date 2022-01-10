@@ -17,7 +17,7 @@ export default function (message: Message) {
         url: e.thumbnail.url,
       })
     );
-  
+
   message.embeds
     .filter((e) => e.type === 'rich')
     .map((e: any) => {
@@ -26,7 +26,7 @@ export default function (message: Message) {
           width: e.image.width,
           height: e.image.height,
           url: e.image.url,
-        })
+        });
       }
     });
 
