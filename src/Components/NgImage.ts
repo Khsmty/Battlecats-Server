@@ -17,6 +17,18 @@ export default function (message: Message) {
         url: e.thumbnail.url,
       })
     );
+  
+  message.embeds
+    .filter((e) => e.type === 'rich')
+    .map((e: any) => {
+      if (e.image) {
+        attachments.push({
+          width: e.image.width,
+          height: e.image.height,
+          url: e.image.url,
+        })
+      }
+    });
 
   if (!attachments[0]) return;
 
