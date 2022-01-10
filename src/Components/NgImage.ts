@@ -28,6 +28,13 @@ export default function (message: Message) {
           url: e.image.url,
         });
       }
+      if (e.thumbnail) {
+        attachments.push({
+          width: e.thumbnail.width,
+          height: e.thumbnail.height,
+          url: e.thumbnail.url,
+        });
+      }
     });
 
   if (!attachments[0]) return;
