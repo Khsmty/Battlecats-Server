@@ -76,3 +76,10 @@ pre {
   background-color: #f7f7f7;
   border-radius: 3px;
 }
+code {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: #0000000a;
+  border-radius: 3px
+}
