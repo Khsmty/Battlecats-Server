@@ -99,7 +99,8 @@ table tr {
   background-color: #fff;
   border-top: 1px solid #ccc;
 }
-table th, table td {
+table th,
+table td {
   padding: 6px 13px;
   border: 1px solid #ddd;
 }
