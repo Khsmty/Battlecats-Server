@@ -6,6 +6,9 @@ import Bot from '../Components/Bot';
 import axios from 'axios';
 import MarkdownIt from 'markdown-it';
 import fs from 'fs';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export default function () {
   const app: express.Express = express();
