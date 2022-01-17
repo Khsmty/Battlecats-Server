@@ -1,12 +1,15 @@
 {
   "scripts": {
-    "start": "node dist/index",
-    "build": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build && npm run applycommands && npm run startonly",
+    "startonly": "node dist/index",
+    "build": "npm run clear && tsc",
+    "clear": "rimraf dist/",
     "lint": "npx prettier . --fix",
-    "regist": "node dist/regist"
+    "applycommands": "node dist/regist"
   },
   "engines": {
-    "node": "16.11.1",
+    "node": ">=16.6.0",
     "npm": "8.1.0"
   },
   "dependencies": {
@@ -26,6 +29,7 @@
     "mysql": "^2.18.1",
     "node-cron": "^3.0.0",
     "path": "^0.12.7",
+    "rimraf": "^3.0.2",
     "typescript": "^4.4.4"
   },
   "devDependencies": {
