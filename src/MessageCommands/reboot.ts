@@ -22,6 +22,6 @@ module.exports = {
 
     await message.channel.send('Rebooting...');
 
-    process.exit(0);
+    process.exit();
   },
 };
