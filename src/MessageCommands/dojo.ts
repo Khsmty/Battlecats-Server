@@ -28,7 +28,7 @@ module.exports = {
       Bot.db.query(
         'SELECT * FROM `dojo` WHERE `userId` = ? AND `type` = ?',
         [args[2], args[1]],
-        async (e, rows) => {
+        async (e: any, rows: any[]) => {
           if (!rows[0]) {
             Bot.db.query(
               'INSERT INTO `dojo` (`userId`, `type`, `imageUrl`, `score`) VALUES (?, ?, ?, ?)',
@@ -50,19 +50,17 @@ module.exports = {
       Bot.db.query(
         'SELECT * FROM `dojo` WHERE `type` = ? ORDER BY `score` DESC',
         [args[1]],
-        async (e, rows) => {
+        async (e: any, rows: string | any[]) => {
           if (!rows[0]) return message.reply('スコアが登録されていません。');
 
           for (let i = 0; i < rows.length; i++) {
             try {
-              const userData = await message.client.guilds
-                .resolve('755774191613247568')
-                .members.resolve(rows[i].userId);
+              const userData = message.client.guilds.resolve('755774191613247568')?.members.resolve(rows[i].userId);
               if (!userData) continue;
 
-              let userName = `**${userData.username}**#${userData.discriminator}`;
+              let userName = `**${userData.user.username}**#${userData.user.discriminator}`;
               if (userData.nickname) {
-                userName = `**${userData.nickname}** (${userData.username}#${userData.discriminator})`;
+                userName = `**${userData.nickname}** (${userData.user.username}#${userData.user.discriminator})`;
               }
 
               await message.channel.send({
