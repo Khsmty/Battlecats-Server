@@ -54,16 +54,26 @@ module.exports = {
           if (!rows[0]) return message.reply('スコアが登録されていません。');
 
           for (let i = 0; i < rows.length; i++) {
-            const userData = await message.client.users.fetch(rows[i].userId);
+            try {
+            const userData = await message.client.guilds.resolve('755774191613247568').members.resolve(rows[i].userId);
+            if (!userData) continue;
+
+            let userName = `**${userData.username}**#${userData.discriminator}`;
+            if (userData.nickname) {
+              userName = `**${userData.nickname}** (${userData.username}#${userData.discriminator})`;
+            }
 
             await message.channel.send({
-              content: `**${i + 1}**位 **${userData.username}**#${userData.discriminator} さん`,
+              content: `**${i + 1}**位 ${userName} さん`,
               files: [
                 {
                   attachment: rows[i].imageUrl,
                 },
               ],
             });
+            } catch (e) {
+              await message.channel.send('エラーが発生しました...');
+            }
           }
         }
       );
