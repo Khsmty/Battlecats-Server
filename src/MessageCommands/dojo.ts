@@ -55,7 +55,9 @@ module.exports = {
 
           for (let i = 0; i < rows.length; i++) {
             try {
-              const userData = message.client.guilds.resolve('755774191613247568')?.members.resolve(rows[i].userId);
+              const userData = message.client.guilds
+                .resolve('755774191613247568')
+                ?.members.resolve(rows[i].userId);
               if (!userData) continue;
 
               let userName = `**${userData.user.username}**#${userData.user.discriminator}`;
