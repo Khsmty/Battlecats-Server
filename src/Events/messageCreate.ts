@@ -129,12 +129,18 @@ module.exports = {
         });
         return;
       }
-      
-      Bot.db.query('SELECT * FROM `threads` WHERE `ownerId` = ? AND `closed` = ?', [message.author.id, false], (e, rows) => {
-        if (rows.length >= 3) {
-          return message.reply(':x: スレッドの作成個数が上限に達しました。先にアクティブなスレッドを close してください。');
+
+      Bot.db.query(
+        'SELECT * FROM `threads` WHERE `ownerId` = ? AND `closed` = ?',
+        [message.author.id, false],
+        (e, rows) => {
+          if (rows.length >= 3) {
+            return message.reply(
+              ':x: スレッドの作成個数が上限に達しました。先にアクティブなスレッドを close してください。'
+            );
+          }
         }
-      });
+      );
 
       Bot.db.query('SELECT * FROM `threadChannels` WHERE `inUse` = ?', [false], (e, rows) => {
         if (!rows[0]) {
