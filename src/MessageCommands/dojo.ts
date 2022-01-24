@@ -74,7 +74,7 @@ module.exports = {
                 ],
               });
             } catch (e) {
-              await message.channel.send('エラーが発生しました...');
+              await message.channel.send(':x: ユーザーが見つかりません');
               continue;
             }
           }
