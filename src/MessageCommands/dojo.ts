@@ -55,7 +55,9 @@ module.exports = {
 
           for (let i = 0; i < rows.length; i++) {
             try {
-              const userData = message.guild?.members.resolve(rows[i].userId);
+              const userData = await message.client.guilds
+                .cache.get('755774191613247568')
+                ?.members.fetch(rows[i].userId);
               if (!userData) continue;
 
               let userName = `**${userData.user.username}**#${userData.user.discriminator}`;
