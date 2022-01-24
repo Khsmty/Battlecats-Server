@@ -55,8 +55,8 @@ module.exports = {
 
           for (let i = 0; i < rows.length; i++) {
             try {
-              const userData = await message.client.guilds
-                .cache.get('755774191613247568')
+              const userData = await message.client.guilds.cache
+                .get('755774191613247568')
                 ?.members.fetch(rows[i].userId);
               if (!userData) continue;
 
