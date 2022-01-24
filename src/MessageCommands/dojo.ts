@@ -58,7 +58,7 @@ module.exports = {
               const userData = message.client.guilds
                 .resolve('755774191613247568')
                 ?.members.resolve(rows[i].userId);
-              if (!userData) continue;
+              // if (!userData) continue;
 
               let userName = `**${userData.user.username}**#${userData.user.discriminator}`;
               if (userData.nickname) {
@@ -74,7 +74,7 @@ module.exports = {
                 ],
               });
             } catch (e) {
-              await message.channel.send('エラーが発生しました...');
+              continue message.channel.send('エラーが発生しました...');
             }
           }
         }
