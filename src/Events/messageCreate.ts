@@ -91,12 +91,12 @@ module.exports = {
             })
             .setTimestamp(targetMessage.createdTimestamp);
 
-          message.channel.send({
-            embeds: [expandmsg],
-          });
+          const sendEmbeds: MessageEmbed[] = [expandmsg];
 
-          targetMessage.embeds.forEach((embed: any) => {
-            message.channel.send({ embeds: [embed] });
+          sendEmbeds.push(...targetMessage.embeds);
+
+          message.channel.send({
+            embeds: sendEmbeds,
           });
         })
         .catch((e) => {});
