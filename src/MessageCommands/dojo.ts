@@ -74,7 +74,10 @@ module.exports = {
                 ],
               });
             } catch (e) {
-              await message.channel.send(':x: ユーザーが見つかりません');
+              await message.channel.send(`**${i + 1}**位 :x: ユーザーが見つかりません`);
+
+              Bot.db.query('DELETE FROM `dojo` WHERE `userId` = ?', [rows[i].userId]);
+
               continue;
             }
           }
