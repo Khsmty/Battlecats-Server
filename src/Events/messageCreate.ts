@@ -2,7 +2,6 @@ import {
   MessageEmbed,
   MessageButton,
   MessageActionRow,
-  AnyChannel,
   TextChannel,
   Message,
 } from 'discord.js';
@@ -71,35 +70,28 @@ module.exports = {
     while ((result = messageUrlPattern.exec(message.content)) !== null) {
       const group = result.groups;
 
+      if (message.content.match(/^http(?:s)?:\/\/(?:.*)?discord(?:app)?\.com\/channels\/(?:\d{17,19})\/\d{17,19}\/\d{17,19}$/)) {
+        message.delete();
+      }
+
       message.client.channels
         .fetch(group!.channelId)
         .then((channel: any) => channel.messages.fetch(group!.messageId))
         .then((targetMessage) => {
           const expandmsg = new MessageEmbed()
-            .setAuthor(targetMessage.author.tag, targetMessage.author.displayAvatarURL())
-            .setDescription(targetMessage.content)
-            .setColor(
-              targetMessage.member
-                ? targetMessage.member.roles.highest
-                  ? targetMessage.member.roles.highest.color
-                  : 'BLURPLE'
-                : 'BLURPLE'
-            )
-            .setImage(targetMessage.attachments?.map((a: any) => a.url).shift() ?? null)
-            .setFooter(`#${targetMessage.channel.name}`)
+            .setAuthor({ name: targetMessage.author.tag, iconURL: targetMessage.author.displayAvatarURL() })
+            .setDescription(targetMessage.content + '\n\n[元メッセージへ](' + targetMessage.url + ')')
+            .setColor('BLURPLE')
+            .setImage(targetMessage.attachments?.map((a: any) => a.url).shift())
+            .setFooter({ text: '#' + targetMessage.channel.name + ' | Quoted by ' + message.author.tag })
             .setTimestamp(targetMessage.createdTimestamp);
-          const jumpButton = new MessageButton()
-            .setLabel('元メッセージへ')
-            .setStyle('LINK')
-            .setURL(targetMessage.url);
 
           message.channel.send({
             embeds: [expandmsg],
-            components: [new MessageActionRow().addComponents(jumpButton)],
           });
 
           targetMessage.embeds.forEach((embed: any) => {
-            (message.channel as TextChannel).send({ embeds: [embed] });
+            message.channel.send({ embeds: [embed] });
           });
         })
         .catch((e) => {});
@@ -133,7 +125,7 @@ module.exports = {
       Bot.db.query(
         'SELECT * FROM `threads` WHERE `ownerId` = ? AND `closed` = ?',
         [message.author.id, false],
-        (e, rows) => {
+        (e: any, rows: string | any[]) => {
           if (rows.length >= 3) {
             return message.reply(
               ':x: スレッドの作成個数が上限に達しました。先にアクティブなスレッドを close してください。'
@@ -142,7 +134,7 @@ module.exports = {
         }
       );
 
-      Bot.db.query('SELECT * FROM `threadChannels` WHERE `inUse` = ?', [false], (e, rows) => {
+      Bot.db.query('SELECT * FROM `threadChannels` WHERE `inUse` = ?', [false], (e: any, rows: string | any[]) => {
         if (!rows[0]) {
           message.reply({
             embeds: [
@@ -169,11 +161,11 @@ module.exports = {
           Bot.db.query(
             'INSERT INTO `threads` (`channelId`, `ownerId`, `title`) VALUES (?, ?, ?)',
             [useChannel.id, message.author.id, message.content],
-            (e) => {
+            (e: any) => {
               Bot.db.query(
                 'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
                 [useChannel.id, false],
-                async (e, rows) => {
+                async (e: any, rows: { ID: any; }[]) => {
                   const firstMessage: Message = await useChannel.send({
                     content: `${message.author} スレッドを作成しました。`,
                     embeds: [
@@ -224,7 +216,7 @@ module.exports = {
       Bot.db.query(
         'SELECT * FROM `threadCloseQueue` WHERE `channelId` = ?',
         [message.channelId],
-        (e, rows) => {
+        (e: any, rows: any[]) => {
           if (!rows || !rows[0]) return;
 
           Bot.db.query('DELETE FROM `threadCloseQueue` WHERE `channelId` = ?', [message.channelId]);
