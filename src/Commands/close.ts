@@ -16,7 +16,7 @@ module.exports = {
     Bot.db.query(
       'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
       [interaction.channelId, false],
-      async (e: any, rows: { ownerId: string; }[]) => {
+      async (e: any, rows: { ownerId: string }[]) => {
         if (
           rows[0].ownerId !== interaction.user.id &&
           !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')
@@ -29,36 +29,38 @@ module.exports = {
           const channel = interaction.channel;
           if (!channel || channel.type !== 'GUILD_TEXT') return;
 
-        await channel.setName('空きチャンネル');
-        await channel.setParent(config.thread.closedCategory);
+          await channel.setName('空きチャンネル');
+          await channel.setParent(config.thread.closedCategory);
 
-        await interaction.reply(':white_check_mark: スレッドを close しました。');
+          await interaction.reply(':white_check_mark: スレッドを close しました。');
 
-        // スレッド一覧の埋め込み色を赤色にする
-        Bot.db.query(
-          'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
-          [interaction.channelId, false],
-          (e: any, rows: { listMessageId: string; }[]) => {
-            (interaction.client.channels.cache.get(config.thread.createChannel) as TextChannel)?.messages
-              .fetch(rows[0].listMessageId)
-              .then((msg) => {
-                msg.edit({
-                  embeds: [msg.embeds[0].setColor('RED')],
+          // スレッド一覧の埋め込み色を赤色にする
+          Bot.db.query(
+            'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
+            [interaction.channelId, false],
+            (e: any, rows: { listMessageId: string }[]) => {
+              (
+                interaction.client.channels.cache.get(config.thread.createChannel) as TextChannel
+              )?.messages
+                .fetch(rows[0].listMessageId)
+                .then((msg) => {
+                  msg.edit({
+                    embeds: [msg.embeds[0].setColor('RED')],
+                  });
                 });
-              });
-          }
-        );
-        // チャンネルを空きチャンネルとしてマーク
-        Bot.db.query('UPDATE `threadChannels` SET `inUse` = ? WHERE `channelId` = ?', [
-          false,
-          interaction.channelId,
-        ]);
-        // スレッドをClose済としてマーク
-        Bot.db.query('UPDATE `threads` SET `closed` = ? WHERE `channelId` = ? AND `closed` = ?', [
-          true,
-          interaction.channelId,
-          false,
-        ]);
+            }
+          );
+          // チャンネルを空きチャンネルとしてマーク
+          Bot.db.query('UPDATE `threadChannels` SET `inUse` = ? WHERE `channelId` = ?', [
+            false,
+            interaction.channelId,
+          ]);
+          // スレッドをClose済としてマーク
+          Bot.db.query('UPDATE `threads` SET `closed` = ? WHERE `channelId` = ? AND `closed` = ?', [
+            true,
+            interaction.channelId,
+            false,
+          ]);
         }
       }
     );
