@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { TextChannel, Permissions, MessageEmbed, CommandInteraction } from 'discord.js';
+import { TextChannel, Permissions, CommandInteraction } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 
@@ -8,12 +8,7 @@ module.exports = {
   async execute(interaction: CommandInteraction) {
     if ((interaction.channel as TextChannel)?.parentId !== config.thread.openCategory) {
       return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-            .setTitle(':x: エラー')
-            .setDescription('このチャンネルはCloseできません。')
-            .setColor('RED'),
-        ],
+        content: ':x: このチャンネルは close できません。',
         ephemeral: true,
       });
     }
@@ -21,36 +16,49 @@ module.exports = {
     Bot.db.query(
       'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
       [interaction.channelId, false],
-      async (e, rows) => {
+      async (e: any, rows: { ownerId: string; }[]) => {
         if (
           rows[0].ownerId !== interaction.user.id &&
           !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')
         ) {
           return interaction.reply({
-            embeds: [
-              new MessageEmbed()
-                .setTitle(':x: エラー')
-                .setDescription('このスレッドをCloseする権限がありません。')
-                .setColor('RED'),
-            ],
+            content: ':x: このチャンネルを close する権限がありません。',
             ephemeral: true,
           });
         } else {
-          interaction.reply({
-            embeds: [
-              new MessageEmbed()
-                .setTitle(':white_check_mark: 成功')
-                .setDescription(
-                  '1時間後にCloseされます。\nメッセージを送信するとCloseをキャンセルできます。'
-                )
-                .setColor('GREEN'),
-            ],
-          });
+          const channel = interaction.channel;
+          if (!channel || channel.type !== 'GUILD_TEXT') return;
 
-          Bot.db.query('INSERT INTO `threadCloseQueue` (`channelId`, `date`) VALUES (?, ?)', [
-            interaction.channelId,
-            new Date(Date.now() + 3600000),
-          ]);
+        await channel.setName('空きチャンネル');
+        await channel.setParent(config.thread.closedCategory);
+
+        await interaction.reply(':white_check_mark: スレッドを close しました。');
+
+        // スレッド一覧の埋め込み色を赤色にする
+        Bot.db.query(
+          'SELECT * FROM `threads` WHERE `channelId` = ? AND `closed` = ?',
+          [interaction.channelId, false],
+          (e: any, rows: { listMessageId: string; }[]) => {
+            (interaction.client.channels.cache.get(config.thread.createChannel) as TextChannel)?.messages
+              .fetch(rows[0].listMessageId)
+              .then((msg) => {
+                msg.edit({
+                  embeds: [msg.embeds[0].setColor('RED')],
+                });
+              });
+          }
+        );
+        // チャンネルを空きチャンネルとしてマーク
+        Bot.db.query('UPDATE `threadChannels` SET `inUse` = ? WHERE `channelId` = ?', [
+          false,
+          interaction.channelId,
+        ]);
+        // スレッドをClose済としてマーク
+        Bot.db.query('UPDATE `threads` SET `closed` = ? WHERE `channelId` = ? AND `closed` = ?', [
+          true,
+          interaction.channelId,
+          false,
+        ]);
         }
       }
     );
