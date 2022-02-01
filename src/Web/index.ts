@@ -95,8 +95,8 @@ export default function () {
     const fileName = req.url.slice(1);
     const fileExists = fs.existsSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`));
 
-    if (redirect[fileName]) {
-      res.status(301).redirect(redirect[fileName]);
+    if (redirect[fileName]: any) {
+      res.status(301).redirect(redirect[fileName]: any);
     } else if (fileExists) {
       const file = fs
         .readFileSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`))
