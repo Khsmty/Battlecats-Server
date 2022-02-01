@@ -2,6 +2,7 @@ import express from 'express';
 import ejs from 'ejs';
 import path from 'path';
 import config from '../config.json';
+import redirect from './redirect.json';
 import Bot from '../Components/Bot';
 import axios from 'axios';
 import MarkdownIt from 'markdown-it';
@@ -94,7 +95,9 @@ export default function () {
     const fileName = req.url.slice(1);
     const fileExists = fs.existsSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`));
 
-    if (fileExists) {
+    if (redirect[fileName]) {
+      res.status(301).redirect(redirect[fileName])
+    } else if (fileExists) {
       const file = fs
         .readFileSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`))
         .toString();
