@@ -92,11 +92,12 @@ export default function () {
   });
 
   app.get('*', (req, res) => {
-    const fileName = req.url.slice(1);
+    const fileName: string = req.url.slice(1);
+    const rediectLink: string = redirect[fileName]
     const fileExists = fs.existsSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`));
 
-    if (redirect[fileName]: any) {
-      res.status(301).redirect(redirect[fileName]: any);
+    if (refirectLink) {
+      res.status(301).redirect(redirect[fileName]);
     } else if (fileExists) {
       const file = fs
         .readFileSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`))
