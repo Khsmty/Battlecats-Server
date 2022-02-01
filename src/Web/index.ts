@@ -93,7 +93,7 @@ export default function () {
 
   app.get('*', (req, res) => {
     const fileName: string = req.url.slice(1);
-    const redirectLink: any = redirectLinks[fileName];
+    const redirectLink: string = redirectLinks[fileName];
     const fileExists = fs.existsSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`));
 
     if (redirectLink) {
