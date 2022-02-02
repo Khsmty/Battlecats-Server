@@ -90,7 +90,7 @@ export default function () {
     });
   });
 
-  const redirectLinks = fs.readFileSync(path.join(__dirname, './redirect.json'), 'utf8');
+  const redirectLinks = fs.readFileSync(path.resolve(__dirname, '../../src/Web/redirect.json'), 'utf8');
 
   app.get('*', (req, res) => {
     const fileName: any = req.url.slice(1);
