@@ -2,7 +2,6 @@ import express from 'express';
 import ejs from 'ejs';
 import path from 'path';
 import config from '../config.json';
-import redirectLinks from './redirect.json';
 import Bot from '../Components/Bot';
 import axios from 'axios';
 import MarkdownIt from 'markdown-it';
@@ -91,9 +90,11 @@ export default function () {
     });
   });
 
+  const redirectLinks = fs.readFileSync(path.join(__dirname, './redirect.json'), 'utf8');
+
   app.get('*', (req, res) => {
-    const fileName: string = req.url.slice(1);
-    const redirectLink: string = redirectLinks[fileName];
+    const fileName: any = req.url.slice(1);
+    const redirectLink = redirectLinks[fileName] || null;
     const fileExists = fs.existsSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`));
 
     if (redirectLink) {
