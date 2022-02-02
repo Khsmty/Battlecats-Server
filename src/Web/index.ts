@@ -100,7 +100,7 @@ export default function () {
     const fileExists = fs.existsSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`));
 
     if (redirectLink) {
-      res.status(301).redirect(redirectLink);
+      res.redirect(redirectLink);
     } else if (fileExists) {
       const file = fs
         .readFileSync(path.resolve(__dirname, `../../src/Web/md/${fileName}.md`))
