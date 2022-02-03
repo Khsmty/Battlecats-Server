@@ -19,7 +19,8 @@ module.exports = {
       async (e: any, rows: { ownerId: string }[]) => {
         if (
           rows[0].ownerId !== interaction.user.id &&
-          !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR')
+          !(interaction.member!.permissions as Permissions).has('ADMINISTRATOR') &&
+          !(interaction.member?.roles as GuildMemberRoleManager)?.cache.has('903921596241182731')
         ) {
           return interaction.reply({
             content: ':x: このチャンネルを close する権限がありません。',
