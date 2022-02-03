@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { TextChannel, Permissions, CommandInteraction } from 'discord.js';
+import { TextChannel, Permissions, CommandInteraction, GuildMemberRoleManager } from 'discord.js';
 import Bot from '../Components/Bot';
 import config from '../config.json';
 
