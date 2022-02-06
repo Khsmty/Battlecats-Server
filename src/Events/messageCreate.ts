@@ -69,7 +69,7 @@ module.exports = {
           /^http(?:s)?:\/\/(?:.*)?discord(?:app)?\.com\/channels\/(?:\d{17,19})\/\d{17,19}\/\d{17,19}$/
         )
       ) {
-        message.delete();
+        message.delete().catch(() => {});
       }
 
       message.client.channels
