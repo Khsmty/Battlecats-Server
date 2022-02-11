@@ -4,8 +4,6 @@ import Bot from './Bot';
 import axios from 'axios';
 
 export default function (message: Message) {
-  if (!message.guild || message.guildId !== config.guildId) return;
-
   const attachments: any = message.attachments.map((a: any) => a);
 
   message.embeds

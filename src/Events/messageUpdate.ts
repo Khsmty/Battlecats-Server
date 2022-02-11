@@ -2,9 +2,7 @@ import { MessageEmbed, Message, TextChannel } from 'discord.js';
 import UpdateBoard from '../Components/Board';
 import config from '../config.json';
 import { diffChars } from 'diff';
-import NgWord from '../Components/NgWord';
-import NgImage from '../Components/NgImage';
-import TokenDelete from '../Components/TokenDelete';
+import NgDetect from '../Components/NgDetect';
 
 module.exports = {
   name: 'messageUpdate',
@@ -87,10 +85,6 @@ module.exports = {
     }
 
     // NGワードチェック
-    if (newMessage.content) {
-      NgWord(newMessage);
-      TokenDelete(newMessage);
-    }
-    NgImage(newMessage);
+    NgDetect(newMessage);
   },
 };

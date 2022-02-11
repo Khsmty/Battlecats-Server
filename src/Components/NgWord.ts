@@ -1,13 +1,13 @@
-import { Message, MessageEmbed, AnyChannel, TextChannel } from 'discord.js';
+import { Message, MessageEmbed, AnyChannel } from 'discord.js';
 import config from '../config.json';
 import Bot from './Bot';
 
 export default function (message: Message) {
-  if (!message.guild || message.guildId !== config.guildId) return;
+  if (!message.content) return;
 
   const msgChannel: any = message.channel;
 
-  Bot.db.query('SELECT * FROM `ng`', (e, rows) => {
+  Bot.db.query('SELECT * FROM `ng`', (e: any, rows: any[]) => {
     if (!rows || !rows[0]) return;
 
     let ngWord: any = false;
@@ -22,7 +22,7 @@ export default function (message: Message) {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL() })
       .setDescription(message.content)
-      .setFooter(`#${msgChannel.name}`);
+      .setFooter({ text: `#${msgChannel.name}` });
 
     if (ngWord.delmsg) {
       message.delete().catch(() => {});

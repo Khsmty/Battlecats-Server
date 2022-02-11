@@ -2,7 +2,7 @@ import { Message, MessageEmbed, AnyChannel, TextChannel } from 'discord.js';
 import config from '../config.json';
 
 export default function (message: Message) {
-  if (!message.guild || message.guildId !== config.guildId) return;
+  if (!message.content) return;
 
   const msgChannel: any = message.channel;
 
