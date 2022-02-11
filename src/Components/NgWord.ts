@@ -56,6 +56,7 @@ export default function (message: Message) {
     if (!ngLogChannel || !ngLogChannel.isText()) return;
 
     ngLogChannel.send({
+      content: '<@&903921596241182731>',
       embeds: [embed],
     });
   });
