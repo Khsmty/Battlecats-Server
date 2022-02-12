@@ -51,7 +51,7 @@ export default function (message: Message) {
 
         const ocr: any = await axios.post('https://ocr-example.herokuapp.com/base64', {
           base64: imgBase64,
-          languages: 'eng,jpn',
+          languages: 'jpn,eng',
         });
         const text = ocr.data.result;
 
