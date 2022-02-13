@@ -52,7 +52,9 @@ module.exports = {
     try {
       await interaction.reply({ files: images });
     } catch (e) {
-      await interaction.reply(':x: ファイルザイズが大きすぎるか画像の数が多すぎるため、送信できませんでした。');
+      await interaction.reply(
+        ':x: ファイルザイズが大きすぎるか画像の数が多すぎるため、送信できませんでした。'
+      );
     }
   },
 };
