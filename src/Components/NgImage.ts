@@ -4,6 +4,7 @@ import Bot from './Bot';
 import axios from 'axios';
 
 export default function (message: Message) {
+  /**
   const attachments: any = message.attachments.map((a: any) => a);
 
   message.embeds
@@ -124,4 +125,5 @@ export default function (message: Message) {
       }
     }
   });
+  */
 }
