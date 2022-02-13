@@ -1,8 +1,8 @@
 {
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && npm run applycommands && npm run startonly",
-    "startonly": "node dist/index",
+    "start": "npm run build && npm run applycommands && npm run onlystart",
+    "onlystart": "node dist/index",
     "build": "npm run clear && tsc",
     "clear": "rimraf dist/",
     "lint": "npx prettier . --fix",
