@@ -49,6 +49,10 @@ module.exports = {
       .filter((msg) => messages[0].createdTimestamp - msg.createdTimestamp < 300000)
       .forEach((msg) => msg.attachments.forEach((attachment) => images.push(attachment.url)));
 
-    await interaction.reply({ files: images });
+    try {
+      await interaction.reply({ files: images });
+    } catch (e) {
+      await interaction.reply(':x: ファイルザイズが大きすぎるか画像の数が多すぎるため、送信できませんでした。');
+    }
   },
 };
