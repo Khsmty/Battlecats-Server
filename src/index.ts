@@ -17,7 +17,7 @@ const client = Bot.client;
 // MySQLサーバーへ接続
 Bot.db.connect();
 
-cron.schedule('0,15 * * * *', async () => {
+cron.schedule('0,15,21 * * * *', async () => {
   for (const event of events) {
     const timeLag = Date.now() - Date.parse(event.date);
 
