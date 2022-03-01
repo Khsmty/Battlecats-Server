@@ -9,6 +9,7 @@
   },
   "welcomeChannel": "755776056417452075",
   "upChannel": "819845198783053884",
+  "shibariChannel": "870842854824611840",
   "memberRole": "759556295770243093",
   "channels": {
     "ngLog": "924684286618120192"
@@ -16,5 +17,8 @@
   "roles": {
     "mod": "903921596241182731",
     "member": "759556295770243093"
-  }
+  },
+
+  "shibariUsername": "",
+  "shibariPassword": ""
 }

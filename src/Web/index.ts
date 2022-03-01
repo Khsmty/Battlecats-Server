@@ -7,6 +7,7 @@ import axios from 'axios';
 import MarkdownIt from 'markdown-it';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
+import basicAuth from 'express-basic-auth';
 
 dotenv.config();
 
@@ -29,6 +30,24 @@ export default function () {
 
     next();
   });
+
+  // AdminApp
+  const adminApp = express.Router();
+
+  adminApp.use(
+    basicAuth({
+      users: {
+        [config.shibariUsername]: config.shibariPassword,
+      },
+    })
+  );
+
+  adminApp.get('/shibari', (req, res) => {
+    res.render('admin/shibari');
+  });
+
+  app.use('/admin', adminApp);
+  //
 
   app.get('/', (_req, res) => {
     res.render('index');

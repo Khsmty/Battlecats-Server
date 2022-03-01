@@ -100,6 +100,26 @@ setInterval(() => {
       }
     }
   });
+
+  Bot.db.query('SELECT * FROM `shibari`', async (e: any, rows: any[]) => {
+    if (!rows || !rows[0]) return;
+
+    for (const row of rows) {
+      if (row.date <= Date.now()) {
+        const channel = client.channels.resolve(config.shibariChannel) as TextChannel;
+
+        channel.send({
+          embeds: [
+            new MessageEmbed()
+              .setDescription(row.text)
+              .setColor('BLURPLE'),
+          ],
+        });
+
+        Bot.db.query('DELETE FROM `shibari` WHERE `ID` = ?', [row.ID]);
+      }
+    }
+  }
 }, 10000);
 
 const commandFiles = fs
