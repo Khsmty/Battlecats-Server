@@ -73,7 +73,7 @@ setInterval(() => {
     if (!rows || !rows[0]) return;
 
     for (const row of rows) {
-      if (Date.parse(row.date) + 1000 * 60 * 60 * 9 <= Date.now()) {
+      if (Date.parse(row.date) - 1000 * 60 * 60 * 9 <= Date.now()) {
         const channel = client.channels.resolve(config.shibariChannel) as TextChannel;
 
         channel.send({
