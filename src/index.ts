@@ -109,17 +109,13 @@ setInterval(() => {
         const channel = client.channels.resolve(config.shibariChannel) as TextChannel;
 
         channel.send({
-          embeds: [
-            new MessageEmbed()
-              .setDescription(row.text)
-              .setColor('BLURPLE'),
-          ],
+          embeds: [new MessageEmbed().setDescription(row.text).setColor('BLURPLE')],
         });
 
         Bot.db.query('DELETE FROM `shibari` WHERE `ID` = ?', [row.ID]);
       }
     }
-  }
+  });
 }, 10000);
 
 const commandFiles = fs
