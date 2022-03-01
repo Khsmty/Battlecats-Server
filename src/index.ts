@@ -69,6 +69,24 @@ setInterval(async () => {
 }, 600000);
 
 setInterval(() => {
+  Bot.db.query('SELECT * FROM `shibari`', async (e: any, rows: any[]) => {
+    if (!rows || !rows[0]) return;
+
+    for (const row of rows) {
+      if (Date.parse(row.date) + 1000 * 60 * 60 * 9 <= Date.now()) {
+        const channel = client.channels.resolve(config.shibariChannel) as TextChannel;
+
+        channel.send({
+          embeds: [new MessageEmbed().setDescription(row.text).setColor('BLURPLE')],
+        });
+
+        Bot.db.query('DELETE FROM `shibari` WHERE `ID` = ?', [row.ID]);
+      }
+    }
+  });
+}, 60000);
+
+setInterval(() => {
   Bot.db.query('SELECT * FROM `updateNotify`', async (e: any, rows: any[]) => {
     if (!rows || !rows[0]) return;
 
@@ -97,22 +115,6 @@ setInterval(() => {
         });
 
         Bot.db.query('DELETE FROM `updateNotify` WHERE `boardType` = ?', [row.boardType]);
-      }
-    }
-  });
-
-  Bot.db.query('SELECT * FROM `shibari`', async (e: any, rows: any[]) => {
-    if (!rows || !rows[0]) return;
-
-    for (const row of rows) {
-      if (row.date <= Date.now()) {
-        const channel = client.channels.resolve(config.shibariChannel) as TextChannel;
-
-        channel.send({
-          embeds: [new MessageEmbed().setDescription(row.text).setColor('BLURPLE')],
-        });
-
-        Bot.db.query('DELETE FROM `shibari` WHERE `ID` = ?', [row.ID]);
       }
     }
   });
