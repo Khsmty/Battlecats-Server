@@ -1,16 +1,45 @@
-<%- include('includes/header', { title: '縛りプレイ管理' }) %>
+<%- include('../includes/header', { title: '縛りプレイ管理' }) %>
 
-  <div class="top px-4 my-5 text-center">
-    <h1 class="display-5 fw-bold">404 Not Found</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">
-        ページが見つかりません。
-      </p>
-      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a href="/join" class="btn btn-primary btn-lg px-4 gap-3"><i class="fab fa-discord"></i>&nbsp;参加する</a>
-        <a href="/" class="btn btn-secondary btn-lg px-4">トップへ戻る</a>
-      </div>
+  <div class="top px-4 my-5">
+    <h1 class="h3">縛りプレイ管理</h1>
+
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        <% for (const row of rows) { %>
+          <li class="list-group-item">
+            <div class="container overflow-hidden">
+              <div class="row">
+                <div class="col-10">
+                  <%= row.text.replace(/\\n/, '<br />' ) %>
+                </div>
+                <div class="col-2">
+                  <%= new Date(row.date).toLocaleString('ja-JP') %>
+                </div>
+                <div class="col-10"></div>
+                <div class="col-2">
+                  <button type="button" class="btn btn-danger">削除</button>
+                </div>
+              </div>
+            </div>
+          </li>
+          <% } %>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>追加</h4>
+      <form action="/admin/shibari" method="post">
+        <div class="mb-3">
+          <label for="text" class="form-label">テキスト</label>
+          <textarea class="form-control" id="text" name="text" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="datetime" class="form-label">日時</label>
+          <input type="datetime-local" id="datetime" name="date">
+        </div>
+        <button type="button" class="btn btn-success">追加</button>
+      </form>
     </div>
   </div>
 
-  <%- include('includes/footer') %>
+  <%- include('../includes/footer') %>

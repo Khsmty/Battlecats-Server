@@ -43,7 +43,11 @@ export default function () {
   );
 
   adminApp.get('/shibari', (req, res) => {
-    res.render('admin/shibari');
+    Bot.db.query('SELECT * FROM `shibari`', (e: any, rows: any[]) => {
+      if (!rows || !rows[0]) return res.render('admin/shibari', { rows: [] });
+
+      res.render('admin/shibari', { rows });
+    });
   });
 
   app.use('/admin', adminApp);
