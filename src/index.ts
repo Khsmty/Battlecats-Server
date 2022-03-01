@@ -75,7 +75,7 @@ setInterval(() => {
     const channel = client.channels.cache.get(config.upChannel) as TextChannel;
 
     for (const row of rows) {
-      if (row.date <= Date.now()) {
+      if (Date.parse(row.date) <= Date.now()) {
         let updateCommand;
         if (row.boardType === 'disboard') {
           updateCommand = '!d bump';
