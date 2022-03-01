@@ -7,7 +7,9 @@ import axios from 'axios';
 import MarkdownIt from 'markdown-it';
 import fs from 'fs';
 import * as dotenv from 'dotenv';
-import basicAuth from 'express-basic-auth';
+
+// @ts-ignore
+import basicAuth from 'basic-auth-connect';
 
 dotenv.config();
 
@@ -31,25 +33,12 @@ export default function () {
     next();
   });
 
-  // AdminApp
-  const adminApp = express.Router();
-
-  adminApp.use(
-    basicAuth({
-      users: { admin: 'supersecret' },
+  app.all(
+    '/admin/*',
+    basicAuth((user: string, password: string) => {
+      return user === config.shibariUsername && password === config.shibariPassword;
     })
   );
-
-  adminApp.get('/shibari', (req, res) => {
-    Bot.db.query('SELECT * FROM `shibari`', (e: any, rows: any[]) => {
-      if (!rows || !rows[0]) return res.render('admin/shibari', { rows: [] });
-
-      res.render('admin/shibari', { rows });
-    });
-  });
-
-  app.use('/admin', adminApp);
-  //
 
   app.get('/', (_req, res) => {
     res.render('index');
@@ -110,6 +99,16 @@ export default function () {
       }
     });
   });
+
+  // Admin
+  app.get('/admin/shibari', (req, res) => {
+    Bot.db.query('SELECT * FROM `shibari`', (e: any, rows: any[]) => {
+      if (!rows || !rows[0]) return res.render('admin/shibari', { rows: [] });
+
+      res.render('admin/shibari', { rows });
+    });
+  });
+  //
 
   const redirectLinks = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '../../src/Web/redirect.json'), 'utf8').toString()
