@@ -37,7 +37,7 @@ export default function () {
   adminApp.use(
     basicAuth({
       users: {
-        'shibari': config.shibariPassword,
+        shibari: config.shibariPassword,
       },
     })
   );
