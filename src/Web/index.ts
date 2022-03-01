@@ -108,6 +108,20 @@ export default function () {
       res.render('admin/shibari', { rows });
     });
   });
+
+  app.post('/admin/shibari/add', (req, res) => {
+    if (!req.body || !req.body.text || !req.body.date) return res.status(404).render('404');
+
+    Bot.db.query(
+      'INSERT INTO `shibari` (`text`, `date`) VALUES (?, ?)',
+      [req.body.text, req.body.date],
+      (e, rows) => {
+        if (e) return res.status(404).render('404');
+
+        res.redirect('/admin/shibari');
+      }
+    );
+  });
   //
 
   const redirectLinks = JSON.parse(

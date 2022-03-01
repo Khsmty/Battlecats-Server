@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-10"></div>
                 <div class="col-2">
-                  <button type="button" class="btn btn-danger">削除</button>
+                  <button type="button" class="btn btn-danger" disabled>削除</button>
                 </div>
               </div>
             </div>
@@ -28,16 +28,16 @@
 
     <div class="card">
       <h4>追加</h4>
-      <form action="/admin/shibari" method="post">
+      <form action="/admin/shibari/add" method="post">
         <div class="mb-3">
           <label for="text" class="form-label">テキスト</label>
-          <textarea class="form-control" id="text" name="text" rows="3"></textarea>
+          <textarea class="form-control" id="text" name="text" rows="3" required></textarea>
         </div>
         <div class="mb-3">
           <label for="datetime" class="form-label">日時</label>
-          <input type="datetime-local" id="datetime" name="date">
+          <input type="datetime-local" id="datetime" name="date" required>
         </div>
-        <button type="button" class="btn btn-success">追加</button>
+        <button class="btn btn-success">追加</button>
       </form>
     </div>
   </div>
