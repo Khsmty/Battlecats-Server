@@ -96,7 +96,7 @@ setInterval(() => {
       if (Date.parse(row.date) <= Date.now()) {
         let updateCommand;
         if (row.boardType === 'disboard') {
-          updateCommand = '!d bump';
+          updateCommand = '/bump';
         } else if (row.boardType === 'dissoku') {
           updateCommand = '/dissoku up';
         } else if (row.boardType === 'chahan') {
