@@ -12,7 +12,7 @@ export default function (message: Message) {
 
     let ngWord: any = false;
     for (const row of rows) {
-      if (message.content.toLowerCase().replace(/\\/g, '').includes(row.word)) {
+      if (message.content.toLowerCase().replace(/\\|\*|_|~|\||`|\u200b/g, '').includes(row.word)) {
         ngWord = row;
       }
     }
