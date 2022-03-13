@@ -15,7 +15,7 @@ dotenv.config();
 
 export default function () {
   const app: express.Express = express();
-  const md = new MarkdownIt();
+  const md = new MarkdownIt({ html: true });
 
   app
     .use(express.json())
