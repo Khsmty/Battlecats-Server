@@ -14,7 +14,7 @@ module.exports = {
       // DISBOARD
       if (
         message.author.id === '302050872383242240' &&
-        message.embeds[0].description.includes('表示順をアップしたよ')
+        message.embeds[0].description?.includes('表示順をアップしたよ')
       ) {
         UpdateBoard(message);
       }
