@@ -13,8 +13,8 @@ module.exports = {
     if (message.channelId === config.upChannel) {
       // DISBOARD
       if (
-        message.author.id === '302050872383242240' &&
-        message.embeds[0].description?.match(/表示順をアップしたよ/)
+        message.author.id === '302050872383242240' // &&
+        // message.embeds[0].description?.match(/表示順をアップしたよ/)
       ) {
         UpdateBoard(message);
       }
