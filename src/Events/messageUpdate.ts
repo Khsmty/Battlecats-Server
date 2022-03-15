@@ -14,6 +14,13 @@ module.exports = {
       ) {
         UpdateBoard(newMessage);
       }
+
+      if (
+        newMessage.author.id === '302050872383242240' &&
+        newMessage.embeds[0].description?.includes('表示順をアップしたよ')
+      ) {
+        UpdateBoard(newMessage);
+      }
     }
 
     if (newMessage.author.bot) return;
