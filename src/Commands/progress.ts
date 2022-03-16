@@ -8,7 +8,7 @@ module.exports = {
     .addUserOption((option) =>
       option
         .setName('user')
-        .setDescription('進行状況を検索するユーザーを入力してください。')
+        .setDescription('進行状況を検索するユーザー')
         .setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {

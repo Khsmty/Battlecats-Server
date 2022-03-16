@@ -10,7 +10,7 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName('new-title')
-        .setDescription('スレッドの新しいタイトルを入力してください。')
+        .setDescription('スレッドの新しいタイトル')
         .setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {

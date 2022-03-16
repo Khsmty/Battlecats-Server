@@ -8,7 +8,7 @@ module.exports = {
     .setName('find')
     .setDescription('スレッドをタイトルから検索します。')
     .addStringOption((option) =>
-      option.setName('query').setDescription('検索キーワードを入力してください。').setRequired(true)
+      option.setName('query').setDescription('検索キーワード').setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {
     await interaction.deferReply();
