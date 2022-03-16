@@ -6,10 +6,7 @@ module.exports = {
     .setName('progress')
     .setDescription('メンバーの進行状況を検索します。')
     .addUserOption((option) =>
-      option
-        .setName('user')
-        .setDescription('進行状況を検索するユーザー')
-        .setRequired(true)
+      option.setName('user').setDescription('進行状況を検索するユーザー').setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {
     const userId = interaction.options.getUser('user')?.id;
