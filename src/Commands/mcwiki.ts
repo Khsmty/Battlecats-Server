@@ -13,7 +13,7 @@ module.exports = {
     const query = interaction.options.getString('query');
 
     const api = await axios.get(
-      `https://minecraftjapan.miraheze.org/w/api.php?format=json&action=query&list=search&srlimit=5&srsearch=${decodeURIComponent(
+      `https://minecraftjapan.miraheze.org/w/api.php?format=json&action=query&list=search&srlimit=5&srsearch=${encodeURI(
         String(query)
       )}`
     );
