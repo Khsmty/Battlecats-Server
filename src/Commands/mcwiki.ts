@@ -1,9 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js';
-import { google } from 'googleapis';
-
-const customSearch = google.customsearch('v1');
-google.options({ auth: process.env.GOOGLE_API_KEY });
 
 import axios from 'axios';
 
