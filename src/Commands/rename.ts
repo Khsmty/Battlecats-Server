@@ -8,10 +8,7 @@ module.exports = {
     .setName('rename')
     .setDescription('スレッドのタイトルを変更します。')
     .addStringOption((option) =>
-      option
-        .setName('new-title')
-        .setDescription('スレッドの新しいタイトル')
-        .setRequired(true)
+      option.setName('new-title').setDescription('スレッドの新しいタイトル').setRequired(true)
     ),
   async execute(interaction: CommandInteraction) {
     const newTitle: any = interaction.options.getString('new-title');
