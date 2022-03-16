@@ -5,7 +5,7 @@ import config from '../config.json';
 module.exports = {
   name: 'reboot',
   async execute(message: Message, args: string[]) {
-    if (!config.ownerId.includes(message.author.id) return;
+    if (!config.ownerId.includes(message.author.id)) return;
 
     if (args[0] === 'update') {
       await message.channel.send('Updating...');
