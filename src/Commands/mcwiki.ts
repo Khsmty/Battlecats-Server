@@ -1,11 +1,10 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } from 'discord.js';
-
 import axios from 'axios';
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('poketetu')
+    .setName('mcwiki')
     .setDescription('Minecraft Japan Wiki 内を検索します。')
     .addStringOption((option) =>
       option.setName('query').setDescription('検索キーワード').setRequired(true)
