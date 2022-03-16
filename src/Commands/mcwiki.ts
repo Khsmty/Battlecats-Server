@@ -16,7 +16,8 @@ module.exports = {
       `https://minecraftjapan.miraheze.org/w/api.php?format=json&action=query&list=search&srlimit=5&srsearch=${query}`
     );
     const results = api.data.query.search.map(
-      (r: { title: string }) => `[${r.title}](https://minecraftjapan.miraheze.org/wiki/${r.title})`
+      (r: { title: string }) =>
+        `[${r.title}](https://minecraftjapan.miraheze.org/wiki/${r.title.replace(/ /g, '_')})`
     );
 
     await interaction.reply({
