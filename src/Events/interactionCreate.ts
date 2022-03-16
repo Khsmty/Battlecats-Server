@@ -22,10 +22,10 @@ module.exports = {
         console.error(error);
         return interaction
           .reply({
-            content: 'エラーが発生しました。',
+            content: 'エラーが発生しました。\n' + error,
             ephemeral: true,
           })
-          .catch(() => interaction.editReply('エラーが発生しました。'));
+          .catch(() => interaction.editReply('エラーが発生しました。\n' + error));
       }
     } else if (interaction.isButton()) {
       const targetMemberRoles = interaction.member!.roles as GuildMemberRoleManager;
