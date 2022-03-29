@@ -44,13 +44,6 @@ export default function () {
     res.render('index');
   });
 
-  app.get('/join', async (_req, res) => {
-    const api = await axios.get('https://discord.com/api/guilds/755774191613247568/widget.json');
-    const joinLink = api.data.instant_invite;
-
-    res.redirect(joinLink);
-  });
-
   app.get('/v/:key', (req, res) => {
     if (!req.params.key) {
       return res.status(404).render('404');
