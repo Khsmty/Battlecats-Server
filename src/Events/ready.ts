@@ -6,8 +6,6 @@ module.exports = {
   execute(client: Client) {
     console.log('Bot started.');
 
-    setInterval(() => {
-      client.user?.setActivity('わんこ大戦争', { type: 'COMPETING' });
-    }, 1000 * 60 * 60);
+    client.user?.setActivity('にゃんこ大戦争', { type: 'COMPETING' });
   },
 };
